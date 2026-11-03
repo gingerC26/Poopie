@@ -134,6 +134,7 @@ h2 {
 
 .hourglass-time {
   min-width: 3.2rem;
+  text-align: center;
 }
 
 .hourglass-icon {
@@ -452,10 +453,16 @@ h2 {
   padding: 1.25rem;
 }
 
+.subpage--tea {
+  height: 100%;
+  background-size: 100% 100%;
+}
+
 .subpage-copy {
   display: grid;
   gap: 0.4rem;
-  max-width: 22rem;
+  width: fit-content;
+  max-width: 100%;
   padding: 0.85rem 1rem;
   border-radius: 16px;
   background: color-mix(in srgb, #fff 90%, transparent);

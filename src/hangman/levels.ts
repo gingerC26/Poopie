@@ -34,8 +34,13 @@ export const LEVELS: Level[] = [
   },
   {
     id: '4',
-    word: 'TEN MINUTES',
-    page: 'games',
+    word: 'TWENTY SECONDS',
+    page: 'note',
+    background: '/backgrounds/twenty-seconds.jpg',
+    note: {
+      title: 'Twenty Seconds',
+      body: 'Make a pot of authentic Chinese tea.',
+    },
   },
   {
     id: '5',

@@ -26,7 +26,7 @@ export default function LevelSubpage({ level, onWin }: Props) {
 
   return (
     <article
-      className={`subpage ${level.background ? 'subpage--scene' : ''}`}
+      className={`subpage ${level.background ? 'subpage--scene' : ''} ${level.id === '4' ? 'subpage--tea' : ''}`}
       style={
         level.background
           ? { backgroundImage: `url(${level.background})` }

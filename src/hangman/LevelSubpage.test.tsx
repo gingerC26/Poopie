@@ -18,7 +18,11 @@ describe('LevelSubpage', () => {
     expect(screen.getByRole('heading', { name: '3D' })).toBeInTheDocument()
 
     rerender(<LevelSubpage level={LEVELS[3]} />)
-    expect(screen.getByRole('heading', { name: 'Games' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Twenty Seconds' })).toBeInTheDocument()
+    expect(screen.getByText('Make a pot of authentic Chinese tea.')).toBeInTheDocument()
+    expect(document.querySelector('.subpage--tea')).toHaveStyle({
+      backgroundImage: 'url(/backgrounds/twenty-seconds.jpg)',
+    })
 
     rerender(<LevelSubpage level={LEVELS[4]} />)
     expect(screen.getByRole('heading', { name: 'Memory' })).toBeInTheDocument()
