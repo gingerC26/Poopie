@@ -497,6 +497,10 @@ h2 {
   overflow: visible;
 }
 
+.xlb--happy {
+  overflow: visible;
+}
+
 .xlb img {
   width: 100%;
   height: auto;
@@ -505,7 +509,8 @@ h2 {
   user-select: none;
 }
 
-.xlb-spill {
+.xlb-spill,
+.xlb-win {
   position: absolute;
   inset: 0;
   pointer-events: none;
@@ -562,6 +567,69 @@ h2 {
   }
   to {
     background-position: 0 24px;
+  }
+}
+
+.xlb-hearts {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.xlb img.xlb-heart {
+  position: absolute;
+  width: 32%;
+  height: auto;
+  animation: xlb-heart-float 2.2s ease-out infinite;
+}
+
+.xlb img.xlb-heart--0 {
+  left: -18%;
+  top: 8%;
+  width: 28%;
+  animation-delay: 0s;
+}
+
+.xlb img.xlb-heart--1 {
+  left: 78%;
+  top: -6%;
+  width: 36%;
+  animation-delay: 0.35s;
+}
+
+.xlb img.xlb-heart--2 {
+  left: 8%;
+  top: -22%;
+  width: 24%;
+  animation-delay: 0.7s;
+}
+
+.xlb img.xlb-heart--3 {
+  left: 92%;
+  top: 38%;
+  width: 22%;
+  animation-delay: 1.05s;
+}
+
+.xlb img.xlb-heart--4 {
+  left: -8%;
+  top: 48%;
+  width: 30%;
+  animation-delay: 1.4s;
+}
+
+@keyframes xlb-heart-float {
+  0% {
+    transform: translateY(12%) scale(0.55);
+    opacity: 0;
+  }
+  18% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-110%) scale(1.15);
+    opacity: 0;
   }
 }
 

@@ -2,8 +2,11 @@ import { XLB_PATH_HALF_WIDTH } from './settings'
 
 export type Pt = { x: number; y: number }
 
-/** Left-center of the sauce dish, as percent of the background image. */
-export const GOAL = { x: 90.4, y: 91.2 }
+/** Center of the sauce-dish bowl, as percent of the background image. */
+export const DISH = { x: 89.4, y: 91.4 }
+export const GOAL = DISH
+const DISH_RX = 5.4
+const DISH_RY = 4.2
 
 const IMG_W = 1280
 const IMG_H = 720
@@ -97,15 +100,16 @@ function gridWalk(nc: number, nr: number): [number, number][] | null {
 function randomWaypoints(startPct: Pt): Pt[] {
   const start = toPx(startPct)
   const goal = toPx(GOAL)
+  const dishRx = (DISH_RX / 100) * IMG_W
+  const endX = Math.min(IMG_W - 10, goal.x + dishRx + 12)
   const nc = Math.random() < 0.45 ? 3 : 4
   const nr = Math.random() < 0.4 ? 2 : 3
   const walk = gridWalk(nc, nr) ?? gridWalk(3, 2)
   if (!walk) {
-    return [start, { x: goal.x, y: start.y }]
+    return [start, { x: endX, y: start.y }]
   }
-
   const col0 = start.x + HALF_PX * 2.7 + rand(8, 24)
-  const colN = goal.x - HALF_PX * 3.2 - rand(8, 20)
+  const colN = goal.x - dishRx - HALF_PX * 1.15 - rand(8, 20)
   const cols = Array.from(
     { length: nc },
     (_, i) => col0 + ((colN - col0) * i) / (nc - 1),
@@ -128,9 +132,9 @@ function randomWaypoints(startPct: Pt): Pt[] {
     pts.push(p)
   }
   const last = pts[pts.length - 1]
-  const mouth = { x: goal.x, y: last.y }
-  if (Math.abs(last.x - mouth.x) > 1) pts.push(mouth)
-  else pts[pts.length - 1] = mouth
+  const pastDish = { x: endX, y: last.y }
+  if (Math.abs(last.x - pastDish.x) > 1) pts.push(pastDish)
+  else pts[pts.length - 1] = pastDish
   return pts
 }
 
@@ -223,7 +227,18 @@ function distToPoly(p: Pt, pts: Pt[]) {
   return best
 }
 
+export function hitsDish(posPct: Pt, radiusPx = 0) {
+  const p = toPx(posPct)
+  const c = toPx(DISH)
+  const rx = (DISH_RX / 100) * IMG_W + radiusPx
+  const ry = (DISH_RY / 100) * IMG_H + radiusPx
+  const dx = (p.x - c.x) / rx
+  const dy = (p.y - c.y) / ry
+  return dx * dx + dy * dy <= 1
+}
+
 export function hitsWalls(posPct: Pt, corridor: Corridor, radiusPx: number) {
+  if (hitsDish(posPct, radiusPx)) return false
   const p = toPx(posPct)
   return (
     distToPoly(p, corridor.leftPts) < radiusPx || distToPoly(p, corridor.rightPts) < radiusPx

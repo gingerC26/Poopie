@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { buildCorridor, hitsWalls, type Corridor } from './carefulPath'
+import { buildCorridor, hitsDish, hitsWalls, type Corridor } from './carefulPath'
 import { XLB_SPILL_MS } from './settings'
 
 /** Center of the bottom lunch-box well, as percent of the background image. */
@@ -36,8 +36,11 @@ export default function CarefulGame({ title, body, background }: Props) {
   const [layout, setLayout] = useState<Box | null>(null)
   const [corridor, setCorridor] = useState<Corridor | null>(null)
   const [spilled, setSpilled] = useState(false)
+  const [happy, setHappy] = useState(false)
   const drag = useRef<{ dx: number; dy: number } | null>(null)
   const spilledRef = useRef(false)
+  const happyRef = useRef(false)
+  const corridorRef = useRef<Corridor | null>(null)
 
   function measure() {
     const field = fieldRef.current
@@ -71,6 +74,7 @@ export default function CarefulGame({ title, body, background }: Props) {
     const id = window.setTimeout(() => {
       spilledRef.current = false
       setSpilled(false)
+      corridorRef.current = null
       setCorridor(null)
       setPos(START)
     }, XLB_SPILL_MS)
@@ -99,10 +103,17 @@ export default function CarefulGame({ title, body, background }: Props) {
   function onPointerDown(event: React.PointerEvent<HTMLButtonElement>) {
     if (spilledRef.current) return
     event.preventDefault()
-    event.currentTarget.setPointerCapture(event.pointerId)
+    try {
+      event.currentTarget.setPointerCapture(event.pointerId)
+    } catch {
+      /* untrusted/synthetic pointers may not capture */
+    }
     const p = toPct(event.clientX, event.clientY)
     drag.current = { dx: p.x - pos.x, dy: p.y - pos.y }
-    setCorridor((current) => current ?? buildCorridor(START))
+    if (!corridorRef.current) {
+      corridorRef.current = buildCorridor(START)
+      setCorridor(corridorRef.current)
+    }
   }
 
   function onPointerMove(event: React.PointerEvent<HTMLButtonElement>) {
@@ -112,7 +123,12 @@ export default function CarefulGame({ title, body, background }: Props) {
       x: Math.min(97, Math.max(3, p.x - drag.current.dx)),
       y: Math.min(97, Math.max(3, p.y - drag.current.dy)),
     }
-    if (corridor && hitsWalls(next, corridor, HIT_RADIUS_PX)) {
+    const maze = corridorRef.current
+    if (!happyRef.current && hitsDish(next, HIT_RADIUS_PX)) {
+      happyRef.current = true
+      setHappy(true)
+    }
+    if (!happyRef.current && maze && hitsWalls(next, maze, HIT_RADIUS_PX)) {
       spill(next, event.currentTarget, event.pointerId)
       return
     }
@@ -165,8 +181,10 @@ export default function CarefulGame({ title, body, background }: Props) {
       )}
       <button
         type="button"
-        className={`xlb${spilled ? ' xlb--spilled' : ''}`}
-        aria-label={spilled ? 'Xiao long bao spilled' : 'Xiao long bao'}
+        className={`xlb${spilled ? ' xlb--spilled' : ''}${happy ? ' xlb--happy' : ''}`}
+        aria-label={
+          spilled ? 'Xiao long bao spilled' : happy ? 'Xiao long bao in the sauce' : 'Xiao long bao'
+        }
         style={
           layout
             ? {
@@ -187,6 +205,22 @@ export default function CarefulGame({ title, body, background }: Props) {
             <img className="xlb-face" src="/sprites/xlb-face.png" alt="" draggable={false} />
             <i className="xlb-hole" />
             <i className="xlb-stream" />
+          </span>
+        )}
+        {happy && (
+          <span className="xlb-win" aria-hidden>
+            <img className="xlb-face" src="/sprites/xlb-happy-face.png" alt="" draggable={false} />
+            <span className="xlb-hearts">
+              {[0, 1, 2, 3, 4].map((i) => (
+                <img
+                  key={i}
+                  className={`xlb-heart xlb-heart--${i}`}
+                  src="/sprites/xlb-heart.png"
+                  alt=""
+                  draggable={false}
+                />
+              ))}
+            </span>
           </span>
         )}
       </button>
