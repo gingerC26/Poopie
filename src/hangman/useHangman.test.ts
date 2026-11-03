@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { STORAGE_KEY } from './constants'
 import { lettersIn } from './levels'
 import { COOLDOWN_MS } from './settings'
-import { loadSave } from './storage'
+import { emptyGameWins, loadSave } from './storage'
 import { useHangman } from './useHangman'
 
 function guessAll(result: { current: ReturnType<typeof useHangman> }, word: string) {
@@ -128,6 +128,13 @@ describe('useHangman', () => {
     act(() => result.current.guess('C'))
     expect(loadSave().gameWins['2']).toBe(true)
     expect(result.current.won.has('2')).toBe(true)
+  })
+
+  it('ignores mini-game wins for unknown levels', () => {
+    const { result } = renderHook(() => useHangman())
+    act(() => result.current.markLevelWon('99'))
+    expect(result.current.won.size).toBe(0)
+    expect(loadSave().gameWins).toEqual(emptyGameWins())
   })
 
   it('accepts physical keyboard letters', () => {

@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { getLevel, lettersIn, LEVELS, maskWord, titleCaseWord } from './levels'
+import { getLevel, lettersIn, LEVEL_IDS, LEVELS, maskWord, titleCaseWord } from './levels'
 
 describe('levels', () => {
   it('lists six hangman gifts with unique ids', () => {
     expect(LEVELS).toHaveLength(6)
     expect(new Set(LEVELS.map((level) => level.id)).size).toBe(6)
+    expect([...LEVEL_IDS]).toEqual(LEVELS.map((level) => level.id))
   })
 
   it('finds a level by id and misses unknown ids', () => {

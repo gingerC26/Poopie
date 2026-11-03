@@ -125,5 +125,7 @@ describe('CarefulGame', () => {
     fireEvent.pointerMove(xlb, { pointerId: 1, ...clientOf({ x: 70, y: 70 }) })
     expect(screen.getByRole('button', { name: 'Xiao long bao in the sauce' })).toBeInTheDocument()
     expect(document.querySelector('.xlb--spilled')).toBeNull()
+    fireEvent.pointerMove(xlb, { pointerId: 1, ...clientOf(DISH) })
+    expect(onWin).toHaveBeenCalledTimes(1)
   })
 })

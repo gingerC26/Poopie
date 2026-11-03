@@ -21,8 +21,9 @@ describe('LevelSidebar', () => {
     const careful = screen.getByRole('button', { name: /1\. Careful/ })
     expect(careful).toHaveClass('level-btn--unlocked')
     expect(careful).toHaveClass('level-btn--won')
-    expect(careful.querySelector('.level-trophy')).toBeTruthy()
-    expect(screen.getByRole('button', { name: /2\. \?+/ })).toBeInTheDocument()
+    expect(careful.querySelector('.level-trophy-icon')).toHaveAttribute('src', '/icons/trophy.svg')
+    expect(screen.getByRole('button', { name: /2\. \?+/ }).querySelector('.level-trophy')).toBeNull()
+    expect(screen.queryByRole('button', { name: 'Clear win records' })).not.toBeInTheDocument()
   })
 
   it('clears win records from the sidebar', async () => {
