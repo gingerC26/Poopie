@@ -1,6 +1,7 @@
 import Gallery from '../pages/Gallery'
 import Games from '../pages/Games'
 import Scene from '../pages/Scene'
+import CarefulGame from './CarefulGame'
 import { titleCaseWord, type Level } from './levels'
 
 type Props = {
@@ -8,6 +9,15 @@ type Props = {
 }
 
 export default function LevelSubpage({ level }: Props) {
+  if (level.id === '1' && level.background) {
+    return (
+      <CarefulGame
+        title={level.note?.title ?? titleCaseWord(level.word)}
+        body={level.note?.body ?? ''}
+        background={level.background}
+      />
+    )
+  }
   if (level.page === 'gallery') return <Gallery />
   if (level.page === 'spline') return <Scene />
   if (level.page === 'games') return <Games />

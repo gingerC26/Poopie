@@ -424,6 +424,52 @@ h2 {
   font-weight: 600;
 }
 
+.careful-game {
+  position: relative;
+  overflow: hidden;
+}
+
+.careful-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+  user-select: none;
+}
+
+.careful-game .subpage-copy {
+  position: relative;
+  z-index: 2;
+}
+
+.xlb {
+  position: absolute;
+  z-index: 3;
+  width: 6.4%;
+  height: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  transform: translate(-50%, -50%);
+  cursor: grab;
+  touch-action: none;
+}
+
+.xlb:active {
+  cursor: grabbing;
+}
+
+.xlb img {
+  width: 100%;
+  height: auto;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+}
+
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
