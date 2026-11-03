@@ -1,8 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
+import { buildCorridor, type Corridor } from './carefulPath'
 
 /** Center of the bottom lunch-box well, as percent of the background image. */
 const START = { x: 18.7, y: 84.2 }
 const XLB_WIDTH = 6.4
+const IMG_W = 1280
+const IMG_H = 720
 
 type Props = {
   title: string
@@ -29,6 +32,7 @@ export default function CarefulGame({ title, body, background }: Props) {
   const bgRef = useRef<HTMLImageElement>(null)
   const [pos, setPos] = useState(START)
   const [layout, setLayout] = useState<Box | null>(null)
+  const [corridor, setCorridor] = useState<Corridor | null>(null)
   const drag = useRef<{ dx: number; dy: number } | null>(null)
 
   function measure() {
@@ -73,6 +77,7 @@ export default function CarefulGame({ title, body, background }: Props) {
     event.currentTarget.setPointerCapture(event.pointerId)
     const p = toPct(event.clientX, event.clientY)
     drag.current = { dx: p.x - pos.x, dy: p.y - pos.y }
+    setCorridor((current) => current ?? buildCorridor(START))
   }
 
   function onPointerMove(event: React.PointerEvent<HTMLButtonElement>) {
@@ -105,6 +110,29 @@ export default function CarefulGame({ title, body, background }: Props) {
         <h1>{title}</h1>
         <p className="lede">{body}</p>
       </div>
+      {corridor && layout && (
+        <svg
+          className="careful-maze"
+          viewBox={`0 0 ${IMG_W} ${IMG_H}`}
+          style={{
+            left: layout.left,
+            top: layout.top,
+            width: layout.width,
+            height: layout.height,
+          }}
+          aria-hidden
+        >
+          <polyline
+            className="careful-maze-floor"
+            points={corridor.floor}
+            strokeWidth={corridor.floorWidth}
+          />
+          <polyline className="careful-maze-edge" points={corridor.left} />
+          <polyline className="careful-maze-edge" points={corridor.right} />
+          <polyline className="careful-maze-wall" points={corridor.left} />
+          <polyline className="careful-maze-wall" points={corridor.right} />
+        </svg>
+      )}
       <button
         type="button"
         className="xlb"

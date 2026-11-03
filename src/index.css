@@ -445,6 +445,36 @@ h2 {
   z-index: 2;
 }
 
+.careful-maze {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.careful-maze-floor,
+.careful-maze-edge,
+.careful-maze-wall {
+  fill: none;
+  stroke-linecap: butt;
+  stroke-linejoin: miter;
+  stroke-miterlimit: 2;
+}
+
+.careful-maze-floor {
+  stroke: rgb(255 248 240 / 0.42);
+}
+
+.careful-maze-edge {
+  stroke: #c9a07a;
+  stroke-width: 18;
+}
+
+.careful-maze-wall {
+  stroke: #f4e4d2;
+  stroke-width: 12;
+}
+
 .xlb {
   position: absolute;
   z-index: 3;
