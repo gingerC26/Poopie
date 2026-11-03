@@ -202,7 +202,32 @@ export type Corridor = {
   floor: string
   left: string
   right: string
+  leftPts: Pt[]
+  rightPts: Pt[]
   floorWidth: number
+}
+
+function distToSeg(p: Pt, a: Pt, b: Pt) {
+  const ab = sub(b, a)
+  const den = ab.x * ab.x + ab.y * ab.y
+  const t = den < 1e-6 ? 0 : Math.max(0, Math.min(1, ((p.x - a.x) * ab.x + (p.y - a.y) * ab.y) / den))
+  return Math.hypot(p.x - (a.x + ab.x * t), p.y - (a.y + ab.y * t))
+}
+
+function distToPoly(p: Pt, pts: Pt[]) {
+  let best = Infinity
+  for (let i = 1; i < pts.length; i++) {
+    const d = distToSeg(p, pts[i - 1], pts[i])
+    if (d < best) best = d
+  }
+  return best
+}
+
+export function hitsWalls(posPct: Pt, corridor: Corridor, radiusPx: number) {
+  const p = toPx(posPct)
+  return (
+    distToPoly(p, corridor.leftPts) < radiusPx || distToPoly(p, corridor.rightPts) < radiusPx
+  )
 }
 
 export function buildCorridor(start: Pt): Corridor {
@@ -220,10 +245,14 @@ export function buildCorridor(start: Pt): Corridor {
   }
 
   const center = best ?? collapseColinear(randomWaypoints(start))
+  const leftPts = offsetOrtho(center, HALF_PX)
+  const rightPts = offsetOrtho(center, -HALF_PX)
   return {
     floor: pointsAttr(center),
-    left: pointsAttr(offsetOrtho(center, HALF_PX)),
-    right: pointsAttr(offsetOrtho(center, -HALF_PX)),
+    left: pointsAttr(leftPts),
+    right: pointsAttr(rightPts),
+    leftPts,
+    rightPts,
     floorWidth: HALF_PX * 2,
   }
 }

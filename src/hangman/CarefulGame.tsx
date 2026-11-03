@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
-import { buildCorridor, type Corridor } from './carefulPath'
+import { buildCorridor, hitsWalls, type Corridor } from './carefulPath'
+import { XLB_SPILL_MS } from './settings'
 
 /** Center of the bottom lunch-box well, as percent of the background image. */
 const START = { x: 18.7, y: 84.2 }
 const XLB_WIDTH = 6.4
 const IMG_W = 1280
 const IMG_H = 720
+const HIT_RADIUS_PX = (XLB_WIDTH / 100) * IMG_W * 0.4 + 9
 
 type Props = {
   title: string
@@ -33,7 +35,9 @@ export default function CarefulGame({ title, body, background }: Props) {
   const [pos, setPos] = useState(START)
   const [layout, setLayout] = useState<Box | null>(null)
   const [corridor, setCorridor] = useState<Corridor | null>(null)
+  const [spilled, setSpilled] = useState(false)
   const drag = useRef<{ dx: number; dy: number } | null>(null)
+  const spilledRef = useRef(false)
 
   function measure() {
     const field = fieldRef.current
@@ -61,6 +65,18 @@ export default function CarefulGame({ title, body, background }: Props) {
     }
   }, [])
 
+  useEffect(() => {
+    spilledRef.current = spilled
+    if (!spilled) return
+    const id = window.setTimeout(() => {
+      spilledRef.current = false
+      setSpilled(false)
+      setCorridor(null)
+      setPos(START)
+    }, XLB_SPILL_MS)
+    return () => window.clearTimeout(id)
+  }, [spilled])
+
   function toPct(clientX: number, clientY: number) {
     const field = fieldRef.current
     const img = bgRef.current
@@ -72,7 +88,16 @@ export default function CarefulGame({ title, body, background }: Props) {
     }
   }
 
+  function spill(at: { x: number; y: number }, target: HTMLButtonElement, pointerId: number) {
+    drag.current = null
+    spilledRef.current = true
+    setPos(at)
+    setSpilled(true)
+    if (target.hasPointerCapture(pointerId)) target.releasePointerCapture(pointerId)
+  }
+
   function onPointerDown(event: React.PointerEvent<HTMLButtonElement>) {
+    if (spilledRef.current) return
     event.preventDefault()
     event.currentTarget.setPointerCapture(event.pointerId)
     const p = toPct(event.clientX, event.clientY)
@@ -81,12 +106,17 @@ export default function CarefulGame({ title, body, background }: Props) {
   }
 
   function onPointerMove(event: React.PointerEvent<HTMLButtonElement>) {
-    if (!drag.current) return
+    if (!drag.current || spilledRef.current) return
     const p = toPct(event.clientX, event.clientY)
-    setPos({
+    const next = {
       x: Math.min(97, Math.max(3, p.x - drag.current.dx)),
       y: Math.min(97, Math.max(3, p.y - drag.current.dy)),
-    })
+    }
+    if (corridor && hitsWalls(next, corridor, HIT_RADIUS_PX)) {
+      spill(next, event.currentTarget, event.pointerId)
+      return
+    }
+    setPos(next)
   }
 
   function onPointerUp(event: React.PointerEvent<HTMLButtonElement>) {
@@ -135,8 +165,8 @@ export default function CarefulGame({ title, body, background }: Props) {
       )}
       <button
         type="button"
-        className="xlb"
-        aria-label="Xiao long bao"
+        className={`xlb${spilled ? ' xlb--spilled' : ''}`}
+        aria-label={spilled ? 'Xiao long bao spilled' : 'Xiao long bao'}
         style={
           layout
             ? {
@@ -152,6 +182,13 @@ export default function CarefulGame({ title, body, background }: Props) {
         onPointerCancel={onPointerUp}
       >
         <img src="/sprites/xlb.png" alt="" draggable={false} />
+        {spilled && (
+          <span className="xlb-spill" aria-hidden>
+            <img className="xlb-face" src="/sprites/xlb-face.png" alt="" draggable={false} />
+            <i className="xlb-hole" />
+            <i className="xlb-stream" />
+          </span>
+        )}
       </button>
     </article>
   )

@@ -5,3 +5,6 @@ export const XLB_PATH_HALF_WIDTH = 6.15
 /** Hourglass countdown after a guess starts a round. */
 export const COOLDOWN_MS = 60 * 1000
 // default: 60 * 1000
+
+/** How long the dumpling cries soup after hitting a wall, before reset. */
+export const XLB_SPILL_MS = 5 * 1000

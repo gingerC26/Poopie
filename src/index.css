@@ -492,12 +492,77 @@ h2 {
   cursor: grabbing;
 }
 
+.xlb--spilled {
+  cursor: default;
+  overflow: visible;
+}
+
 .xlb img {
   width: 100%;
   height: auto;
   display: block;
   pointer-events: none;
   user-select: none;
+}
+
+.xlb-spill {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.xlb img.xlb-face {
+  position: absolute;
+  left: 16.4%;
+  top: 32%;
+  width: 67.2%;
+  height: 49.6%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.xlb-hole {
+  position: absolute;
+  top: 48%;
+  left: 76%;
+  z-index: 1;
+  width: 16%;
+  height: 16%;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 30%, #7a4a22 0 28%, #3a1c0c 62%, #1a0c06 100%);
+  box-shadow:
+    inset 0 0.12em 0.18em #1a0c06,
+    0 0 0 0.06em #c4a07a;
+}
+
+.xlb-stream {
+  position: absolute;
+  top: 56%;
+  left: 69.3%;
+  z-index: 2;
+  width: 29.4%;
+  height: 102%;
+  border-radius: 40% 40% 50% 50% / 8% 8% 18% 18%;
+  background:
+    repeating-linear-gradient(
+      180deg,
+      #f6d36a 0 12px,
+      #e8b43a 12px 24px
+    );
+  background-size: 100% 24px;
+  clip-path: polygon(22% 0, 78% 0, 92% 100%, 8% 100%);
+  box-shadow: inset 0.2em 0 0.25em rgb(255 240 180 / 0.45);
+  animation: xlb-stream 0.875s linear infinite;
+}
+
+@keyframes xlb-stream {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 0 24px;
+  }
 }
 
 .card-grid {
