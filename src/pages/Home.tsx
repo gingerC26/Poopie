@@ -14,11 +14,13 @@ export default function Home() {
           levels={game.levels}
           selectedId={game.selected.id}
           unlocked={game.unlocked}
+          won={game.won}
           activeRoundId={game.round?.levelId}
           open={game.sidebarOpen}
           remainingMs={game.remainingMs}
           onSelect={game.selectLevel}
           onToggle={() => game.setSidebarOpen((open) => !open)}
+          onClearWins={game.clearGameWins}
         />
       </div>
 
@@ -34,7 +36,10 @@ export default function Home() {
       <div className="main">
         <section className="stage">
           {showSubpage ? (
-            <LevelSubpage level={game.selected} />
+            <LevelSubpage
+              level={game.selected}
+              onWin={() => game.markLevelWon(game.selected.id)}
+            />
           ) : (
             <HangmanPlay game={game} />
           )}

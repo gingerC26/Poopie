@@ -94,6 +94,42 @@ describe('useHangman', () => {
     expect(result.current.round?.levelId).toBe('1')
   })
 
+  it('records a mini-game win without dropping hangman unlocks', () => {
+    const { result } = renderHook(() => useHangman())
+    guessAll(result, 'CAREFUL')
+    act(() => result.current.markLevelWon('1'))
+    expect(result.current.won.has('1')).toBe(true)
+    expect(result.current.won.has('2')).toBe(false)
+    expect(loadSave().gameWins['1']).toBe(true)
+    expect(loadSave().unlockedIds).toContain('1')
+  })
+
+  it('clears mini-game wins without touching hangman unlocks', () => {
+    const { result } = renderHook(() => useHangman())
+    guessAll(result, 'CAREFUL')
+    act(() => result.current.markLevelWon('1'))
+    act(() => result.current.clearGameWins())
+    expect(result.current.won.has('1')).toBe(false)
+    expect(loadSave().gameWins['1']).toBe(false)
+    expect(loadSave().unlockedIds).toContain('1')
+  })
+
+  it('keeps game wins when another hangman guess is saved', () => {
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        unlockedIds: [],
+        cooldownUntil: null,
+        round: null,
+        gameWins: { '1': false, '2': true, '3': false, '4': false, '5': false, '6': false },
+      }),
+    )
+    const { result } = renderHook(() => useHangman())
+    act(() => result.current.guess('C'))
+    expect(loadSave().gameWins['2']).toBe(true)
+    expect(result.current.won.has('2')).toBe(true)
+  })
+
   it('accepts physical keyboard letters', () => {
     const { result } = renderHook(() => useHangman())
     act(() => {

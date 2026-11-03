@@ -1,11 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import { STORAGE_KEY } from './constants'
-import { loadSave, writeSave, type SaveData } from './storage'
+import { emptyGameWins, loadSave, writeSave, type SaveData } from './storage'
 
 const sample: SaveData = {
   unlockedIds: ['1'],
   cooldownUntil: 1_700_000_000_000,
   round: { levelId: '2', guessed: ['A', 'B'], wrong: 3 },
+  gameWins: { ...emptyGameWins(), '1': true },
 }
 
 describe('storage', () => {
@@ -14,13 +15,35 @@ describe('storage', () => {
       unlockedIds: [],
       cooldownUntil: null,
       round: null,
+      gameWins: emptyGameWins(),
     })
   })
 
   it('round-trips a save through localStorage', () => {
     writeSave(sample)
-    expect(localStorage.getItem(STORAGE_KEY)).toBe(JSON.stringify(sample))
+    expect(JSON.parse(localStorage.getItem(STORAGE_KEY)!)).toEqual(sample)
     expect(loadSave()).toEqual(sample)
+  })
+
+  it('defaults missing gameWins to six false flags', () => {
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({ unlockedIds: ['1'], cooldownUntil: null, round: null }),
+    )
+    expect(loadSave().gameWins).toEqual(emptyGameWins())
+  })
+
+  it('only accepts true flags for known levels', () => {
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        unlockedIds: [],
+        cooldownUntil: null,
+        round: null,
+        gameWins: { '1': true, '2': 'yes', '9': true },
+      }),
+    )
+    expect(loadSave().gameWins).toEqual({ ...emptyGameWins(), '1': true })
   })
 
   it('falls back to empty data for invalid JSON', () => {
@@ -29,6 +52,7 @@ describe('storage', () => {
       unlockedIds: [],
       cooldownUntil: null,
       round: null,
+      gameWins: emptyGameWins(),
     })
   })
 
@@ -41,6 +65,7 @@ describe('storage', () => {
       unlockedIds: [],
       cooldownUntil: 12,
       round: null,
+      gameWins: emptyGameWins(),
     })
   })
 

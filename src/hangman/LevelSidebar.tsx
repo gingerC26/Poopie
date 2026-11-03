@@ -20,22 +20,26 @@ type Props = {
   levels: Level[]
   selectedId: string
   unlocked: Set<string>
+  won?: Set<string>
   activeRoundId?: string
   open: boolean
   remainingMs: number
   onSelect: (id: string) => void
   onToggle: () => void
+  onClearWins?: () => void
 }
 
 export default function LevelSidebar({
   levels,
   selectedId,
   unlocked,
+  won,
   activeRoundId,
   open,
   remainingMs,
   onSelect,
   onToggle,
+  onClearWins,
 }: Props) {
   return (
     <aside className={`levels ${open ? 'levels--open' : ''}`} aria-label="Levels">
@@ -55,22 +59,35 @@ export default function LevelSidebar({
       <ol className="levels-list">
         {levels.map((level, index) => {
           const isOpen = unlocked.has(level.id)
+          const isWon = won?.has(level.id) ?? false
           const name = isOpen ? titleCaseWord(level.word) : maskWord(level.word)
           return (
             <li key={level.id}>
               <button
                 type="button"
-                className={`level-btn ${selectedId === level.id ? 'level-btn--active' : ''} ${isOpen ? 'level-btn--unlocked' : ''} ${activeRoundId === level.id ? 'level-btn--playing' : ''}`}
+                className={`level-btn ${selectedId === level.id ? 'level-btn--active' : ''} ${isOpen ? 'level-btn--unlocked' : ''} ${isWon ? 'level-btn--won' : ''} ${activeRoundId === level.id ? 'level-btn--playing' : ''}`}
                 onClick={() => onSelect(level.id)}
               >
                 <span className="level-name">
                   {index + 1}. {name}
                 </span>
-                <span
-                  className={`level-go ${isOpen ? '' : 'level-go--hidden'}`}
-                  aria-hidden="true"
-                >
-                  →
+                <span className="level-trail">
+                  {isWon && (
+                    <span className="level-trophy" title="Mini-game cleared">
+                      <img
+                        className="level-trophy-icon"
+                        src="/icons/trophy.svg"
+                        alt=""
+                        draggable={false}
+                      />
+                    </span>
+                  )}
+                  <span
+                    className={`level-go ${isOpen ? '' : 'level-go--hidden'}`}
+                    aria-hidden="true"
+                  >
+                    →
+                  </span>
                 </span>
               </button>
             </li>
@@ -78,6 +95,11 @@ export default function LevelSidebar({
         })}
       </ol>
       <div className="levels-hourglass">
+        {onClearWins && (
+          <button type="button" className="clear-wins" onClick={onClearWins}>
+            Clear win records
+          </button>
+        )}
         <Hourglass remainingMs={remainingMs} />
       </div>
     </aside>

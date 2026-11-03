@@ -8,6 +8,9 @@ export type Level = {
   note?: { title: string; body: string }
 }
 
+export const LEVEL_IDS = ['1', '2', '3', '4', '5', '6'] as const
+export type LevelId = (typeof LEVEL_IDS)[number]
+
 export const LEVELS: Level[] = [
   {
     id: '1',

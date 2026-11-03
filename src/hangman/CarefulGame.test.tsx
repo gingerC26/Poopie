@@ -83,8 +83,14 @@ describe('CarefulGame', () => {
   })
 
   it('wins on the dish along the path and stays draggable with the original bun', () => {
+    const onWin = vi.fn()
     render(
-      <CarefulGame title="Careful" body="Don't break the xiao-long-bao!" background="/backgrounds/careful.jpg" />,
+      <CarefulGame
+        title="Careful"
+        body="Don't break the xiao-long-bao!"
+        background="/backgrounds/careful.jpg"
+        onWin={onWin}
+      />,
     )
     layoutField()
     const start = clientOf({ x: 18.7, y: 84.2 })
@@ -110,6 +116,7 @@ describe('CarefulGame', () => {
     expect(xlb.querySelector('img')?.getAttribute('src')).toBe('/sprites/xlb.png')
     expect(document.querySelector('.xlb-face')).toHaveAttribute('src', '/sprites/xlb-happy-face.png')
     expect(document.querySelectorAll('.xlb-heart')).toHaveLength(5)
+    expect(onWin).toHaveBeenCalledTimes(1)
 
     fireEvent.pointerUp(xlb, { pointerId: 1 })
     expect(screen.getByText("Yay! I'm yum yum!")).toBeInTheDocument()

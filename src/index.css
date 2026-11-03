@@ -218,7 +218,8 @@ h2 {
 
 .board--collapsed .levels-label,
 .board--collapsed .levels-list,
-.board--collapsed .hourglass-time {
+.board--collapsed .hourglass-time,
+.board--collapsed .clear-wins {
   display: none;
 }
 
@@ -262,6 +263,48 @@ h2 {
 
 .level-btn--unlocked .level-name {
   color: var(--text-h);
+}
+
+.level-trail {
+  display: flex;
+  align-items: center;
+  gap: 0.28rem;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.level-trophy {
+  display: grid;
+  place-items: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  flex-shrink: 0;
+}
+
+.level-trophy-icon {
+  width: 1.55rem;
+  height: 1.55rem;
+  display: block;
+  pointer-events: none;
+}
+
+.clear-wins {
+  width: 100%;
+  margin: 0 0 0.55rem;
+  padding: 0.4rem 0.5rem;
+  border: 1px dashed color-mix(in srgb, var(--border) 80%, #c08b9a);
+  border-radius: 12px;
+  background: color-mix(in srgb, #fff 70%, transparent);
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.clear-wins:hover {
+  color: var(--text-h);
+  border-color: var(--accent);
+  background: #fff;
 }
 
 .level-go {

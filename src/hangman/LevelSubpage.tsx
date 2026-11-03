@@ -6,15 +6,17 @@ import { titleCaseWord, type Level } from './levels'
 
 type Props = {
   level: Level
+  onWin?: () => void
 }
 
-export default function LevelSubpage({ level }: Props) {
+export default function LevelSubpage({ level, onWin }: Props) {
   if (level.id === '1' && level.background) {
     return (
       <CarefulGame
         title={level.note?.title ?? titleCaseWord(level.word)}
         body={level.note?.body ?? ''}
         background={level.background}
+        onWin={onWin}
       />
     )
   }

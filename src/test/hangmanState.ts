@@ -18,6 +18,9 @@ export function mockGame(over: Partial<HangmanState> = {}): HangmanState {
     guess: vi.fn(),
     selectLevel: vi.fn(),
     openUnlocked: vi.fn(),
+    markLevelWon: vi.fn(),
+    clearGameWins: vi.fn(),
+    won: new Set(),
     round: null,
     ...over,
   }

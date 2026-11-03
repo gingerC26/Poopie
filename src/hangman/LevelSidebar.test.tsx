@@ -11,14 +11,38 @@ describe('LevelSidebar', () => {
         levels={LEVELS}
         selectedId="1"
         unlocked={new Set(['1'])}
+        won={new Set(['1'])}
         open
         remainingMs={0}
         onSelect={() => {}}
         onToggle={() => {}}
       />,
     )
-    expect(screen.getByRole('button', { name: /1\. Careful/ })).toHaveClass('level-btn--unlocked')
+    const careful = screen.getByRole('button', { name: /1\. Careful/ })
+    expect(careful).toHaveClass('level-btn--unlocked')
+    expect(careful).toHaveClass('level-btn--won')
+    expect(careful.querySelector('.level-trophy')).toBeTruthy()
     expect(screen.getByRole('button', { name: /2\. \?+/ })).toBeInTheDocument()
+  })
+
+  it('clears win records from the sidebar', async () => {
+    const onClearWins = vi.fn()
+    const user = userEvent.setup()
+    render(
+      <LevelSidebar
+        levels={LEVELS}
+        selectedId="1"
+        unlocked={new Set(['1'])}
+        won={new Set(['1'])}
+        open
+        remainingMs={0}
+        onSelect={() => {}}
+        onToggle={() => {}}
+        onClearWins={onClearWins}
+      />,
+    )
+    await user.click(screen.getByRole('button', { name: 'Clear win records' }))
+    expect(onClearWins).toHaveBeenCalled()
   })
 
   it('selects a level and toggles the drawer', async () => {

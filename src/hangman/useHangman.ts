@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { MAX_WRONG } from './constants'
 import { COOLDOWN_MS } from './settings'
-import { getLevel, lettersIn, LEVELS } from './levels'
-import { loadSave, writeSave, type RoundState, type SaveData } from './storage'
+import { getLevel, lettersIn, LEVEL_IDS, LEVELS, type LevelId } from './levels'
+import { emptyGameWins, loadSave, writeSave, type RoundState, type SaveData } from './storage'
 
 function now() {
   return Date.now()
@@ -27,9 +27,12 @@ export function useHangman() {
     return () => window.clearInterval(id)
   }, [])
 
-  const persist = useCallback((next: SaveData) => {
-    setSave(next)
-    writeSave(next)
+  const persist = useCallback((patch: Partial<SaveData>) => {
+    setSave((prev) => {
+      const next = { ...prev, ...patch }
+      writeSave(next)
+      return next
+    })
   }, [])
 
   const remainingMs = Math.max(0, (save.cooldownUntil ?? 0) - clock)
@@ -118,6 +121,23 @@ export function useHangman() {
     setJustFinished(null)
   }, [])
 
+  const markLevelWon = useCallback((id: string) => {
+    if (!(LEVEL_IDS as readonly string[]).includes(id)) return
+    const levelId = id as LevelId
+    persist({
+      gameWins: { ...save.gameWins, [levelId]: true },
+    })
+  }, [persist, save.gameWins])
+
+  const won = useMemo(() => {
+    const ids = (Object.keys(save.gameWins) as LevelId[]).filter((id) => save.gameWins[id])
+    return new Set(ids)
+  }, [save.gameWins])
+
+  const clearGameWins = useCallback(() => {
+    persist({ gameWins: emptyGameWins() })
+  }, [persist])
+
   return {
     levels: LEVELS,
     selected,
@@ -141,6 +161,9 @@ export function useHangman() {
     guess,
     selectLevel,
     openUnlocked,
+    markLevelWon,
+    clearGameWins,
+    won,
     round,
   }
 }

@@ -13,6 +13,7 @@ type Props = {
   title: string
   body: string
   background: string
+  onWin?: () => void
 }
 
 type Box = { left: number; top: number; width: number; height: number }
@@ -29,7 +30,7 @@ function coverRect(container: DOMRect, natW: number, natH: number): Box {
   }
 }
 
-export default function CarefulGame({ title, body, background }: Props) {
+export default function CarefulGame({ title, body, background, onWin }: Props) {
   const fieldRef = useRef<HTMLElement>(null)
   const bgRef = useRef<HTMLImageElement>(null)
   const [pos, setPos] = useState(START)
@@ -131,6 +132,7 @@ export default function CarefulGame({ title, body, background }: Props) {
     if (!happyRef.current && hitsDish(next, HIT_RADIUS_PX)) {
       happyRef.current = true
       setHappy(true)
+      onWin?.()
     }
     if (!happyRef.current && maze && hitsWalls(next, maze, HIT_RADIUS_PX)) {
       spill(next, event.currentTarget, event.pointerId)
