@@ -1,5 +1,5 @@
 import { useEffect, useId, useState } from 'react'
-import { COOLDOWN_MS } from './constants'
+import { COOLDOWN_MS } from './settings'
 
 function formatRemaining(ms: number) {
   const total = Math.max(0, Math.ceil(ms / 1000))

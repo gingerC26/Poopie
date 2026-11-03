@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { COOLDOWN_MS, MAX_WRONG } from './constants'
+import { MAX_WRONG } from './constants'
+import { COOLDOWN_MS } from './settings'
 import { getLevel, lettersIn, LEVELS } from './levels'
 import { loadSave, writeSave, type RoundState, type SaveData } from './storage'
 

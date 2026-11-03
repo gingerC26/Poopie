@@ -1,3 +1,5 @@
+import { XLB_PATH_HALF_WIDTH } from './settings'
+
 export type Pt = { x: number; y: number }
 
 /** Left-center of the sauce dish, as percent of the background image. */
@@ -5,8 +7,7 @@ export const GOAL = { x: 90.4, y: 91.2 }
 
 const IMG_W = 1280
 const IMG_H = 720
-const HALF_WIDTH = 4.15
-const HALF_PX = (HALF_WIDTH / 100) * IMG_W
+const HALF_PX = (XLB_PATH_HALF_WIDTH / 100) * IMG_W
 const MIN_LOOP_GAP = HALF_PX * 2.15
 
 function add(a: Pt, b: Pt): Pt {
