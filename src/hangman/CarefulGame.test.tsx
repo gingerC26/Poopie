@@ -37,6 +37,7 @@ describe('CarefulGame', () => {
     expect(screen.getByRole('heading', { name: 'Careful' })).toBeInTheDocument()
     expect(screen.getByText("Don't break the xiao-long-bao!")).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Xiao long bao' })).toBeInTheDocument()
+    expect(screen.getByText('Dip me in the sauce!')).toBeInTheDocument()
     expect(document.querySelector('.careful-maze')).toBeNull()
   })
 
@@ -47,6 +48,7 @@ describe('CarefulGame', () => {
     layoutField()
     const xlb = screen.getByRole('button', { name: 'Xiao long bao' })
     fireEvent.pointerDown(xlb, { pointerId: 1, ...clientOf({ x: 18.7, y: 84.2 }) })
+    expect(screen.queryByText('Dip me in the sauce!')).not.toBeInTheDocument()
     expect(document.querySelector('.careful-maze')).toBeTruthy()
     expect(document.querySelectorAll('.careful-maze-wall')).toHaveLength(2)
   })
@@ -65,6 +67,7 @@ describe('CarefulGame', () => {
     if (!bump) throw new Error('wall point missing')
     fireEvent.pointerMove(xlb, { pointerId: 1, clientX: bump[0], clientY: bump[1] })
     expect(screen.getByRole('button', { name: 'Xiao long bao spilled' })).toHaveClass('xlb--spilled')
+    expect(screen.getByText("I'm heartbroken!")).toBeInTheDocument()
     expect(document.querySelector('.xlb-stream')).toBeTruthy()
     expect(document.querySelector('.xlb-face')).toHaveAttribute('src', '/sprites/xlb-face.png')
 
@@ -75,6 +78,7 @@ describe('CarefulGame', () => {
       vi.advanceTimersByTime(XLB_SPILL_MS)
     })
     expect(screen.getByRole('button', { name: 'Xiao long bao' })).not.toHaveClass('xlb--spilled')
+    expect(screen.getByText('Dip me in the sauce!')).toBeInTheDocument()
     expect(document.querySelector('.careful-maze')).toBeNull()
   })
 
@@ -108,7 +112,9 @@ describe('CarefulGame', () => {
     expect(document.querySelectorAll('.xlb-heart')).toHaveLength(5)
 
     fireEvent.pointerUp(xlb, { pointerId: 1 })
+    expect(screen.getByText("Yay! I'm yum yum!")).toBeInTheDocument()
     fireEvent.pointerDown(xlb, { pointerId: 1, ...clientOf(DISH) })
+    expect(screen.getByText("Yay! I'm yum yum!")).toBeInTheDocument()
     fireEvent.pointerMove(xlb, { pointerId: 1, ...clientOf({ x: 70, y: 70 }) })
     expect(screen.getByRole('button', { name: 'Xiao long bao in the sauce' })).toBeInTheDocument()
     expect(document.querySelector('.xlb--spilled')).toBeNull()

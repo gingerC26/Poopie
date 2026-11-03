@@ -486,6 +486,7 @@ h2 {
   transform: translate(-50%, -50%);
   cursor: grab;
   touch-action: none;
+  overflow: visible;
 }
 
 .xlb:active {
@@ -631,6 +632,44 @@ h2 {
     transform: translateY(-110%) scale(1.15);
     opacity: 0;
   }
+}
+
+.xlb-bubble {
+  position: absolute;
+  left: 50%;
+  bottom: 118%;
+  z-index: 5;
+  width: max-content;
+  max-width: 9.4rem;
+  padding: 0.42em 0.7em 0.48em;
+  border: 2.5px solid #e8a0b8;
+  border-radius: 1.15em;
+  background: #fffdf8;
+  box-shadow: 0.12em 0.18em 0 #f4cdd8;
+  color: #5c3a46;
+  font-family: Gaegu, "Segoe UI", cursive;
+  font-size: 1.32rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.12;
+  text-align: center;
+  transform: translateX(-50%) rotate(-8deg);
+  transform-origin: 50% 100%;
+  pointer-events: none;
+  white-space: normal;
+}
+
+.xlb-bubble::after {
+  content: "";
+  position: absolute;
+  left: 1.6em;
+  bottom: -0.38em;
+  width: 0.62em;
+  height: 0.62em;
+  background: #fffdf8;
+  border-right: 2.5px solid #e8a0b8;
+  border-bottom: 2.5px solid #e8a0b8;
+  transform: rotate(45deg);
 }
 
 .card-grid {

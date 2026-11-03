@@ -37,6 +37,7 @@ export default function CarefulGame({ title, body, background }: Props) {
   const [corridor, setCorridor] = useState<Corridor | null>(null)
   const [spilled, setSpilled] = useState(false)
   const [happy, setHappy] = useState(false)
+  const [dragging, setDragging] = useState(false)
   const drag = useRef<{ dx: number; dy: number } | null>(null)
   const spilledRef = useRef(false)
   const happyRef = useRef(false)
@@ -74,6 +75,7 @@ export default function CarefulGame({ title, body, background }: Props) {
     const id = window.setTimeout(() => {
       spilledRef.current = false
       setSpilled(false)
+      setDragging(false)
       corridorRef.current = null
       setCorridor(null)
       setPos(START)
@@ -95,6 +97,7 @@ export default function CarefulGame({ title, body, background }: Props) {
   function spill(at: { x: number; y: number }, target: HTMLButtonElement, pointerId: number) {
     drag.current = null
     spilledRef.current = true
+    setDragging(false)
     setPos(at)
     setSpilled(true)
     if (target.hasPointerCapture(pointerId)) target.releasePointerCapture(pointerId)
@@ -108,6 +111,7 @@ export default function CarefulGame({ title, body, background }: Props) {
     } catch {
       /* untrusted/synthetic pointers may not capture */
     }
+    setDragging(true)
     const p = toPct(event.clientX, event.clientY)
     drag.current = { dx: p.x - pos.x, dy: p.y - pos.y }
     if (!corridorRef.current) {
@@ -137,10 +141,19 @@ export default function CarefulGame({ title, body, background }: Props) {
 
   function onPointerUp(event: React.PointerEvent<HTMLButtonElement>) {
     drag.current = null
+    setDragging(false)
     if (event.currentTarget.hasPointerCapture(event.pointerId)) {
       event.currentTarget.releasePointerCapture(event.pointerId)
     }
   }
+
+  const bubbleLine = spilled
+    ? "I'm heartbroken!"
+    : happy
+      ? "Yay! I'm yum yum!"
+      : dragging
+        ? null
+        : 'Dip me in the sauce!'
 
   return (
     <article className="subpage subpage--scene careful-game" ref={fieldRef}>
@@ -205,6 +218,14 @@ export default function CarefulGame({ title, body, background }: Props) {
             <img className="xlb-face" src="/sprites/xlb-face.png" alt="" draggable={false} />
             <i className="xlb-hole" />
             <i className="xlb-stream" />
+          </span>
+        )}
+        {bubbleLine && (
+          <span
+            className="xlb-bubble"
+            aria-hidden
+          >
+            {bubbleLine}
           </span>
         )}
         {happy && (
