@@ -28,7 +28,9 @@ const RECIPE = [
   { id: 'cup', message: 'Tea is ready!' },
 ] as const
 
-const WRONG_MESSAGE = 'Wrong item, try again!'
+const WRONG_MESSAGE = 'Wrong item, start again!'
+const BREW_START_STEP = 5
+const BREW_END_STEP = 7
 
 type TeaNotice = {
   id: number
@@ -44,13 +46,23 @@ export default function TeaGame() {
   const noticeId = useRef(0)
   const timers = useRef(new Map<number, number>())
   const stepRef = useRef(0)
+  const brewStartedAt = useRef<number | null>(null)
+  const brewMs = useRef(0)
   const [ready, setReady] = useState(false)
+  const [result, setResult] = useState<string | null>(null)
+  const [stage, setStage] = useState<HTMLElement | null>(null)
 
   useEffect(() => {
     const pending = timers.current
     return () => {
       for (const timer of pending.values()) window.clearTimeout(timer)
     }
+  }, [])
+
+  useEffect(() => {
+    const root = rootRef.current
+    if (!root) return
+    setStage(root.closest('.subpage--tea') ?? root)
   }, [])
 
   useEffect(() => {
@@ -124,18 +136,39 @@ export default function TeaGame() {
     )
   }
 
+  const resetBrew = () => {
+    stepRef.current = 0
+    brewStartedAt.current = null
+    brewMs.current = 0
+    setReady(false)
+    setResult(null)
+  }
+
   const handleProp = (propId: TeaPropId) => {
-    if (ready) return
+    if (ready) {
+      if (propId === 'cup-filled') resetBrew()
+      return
+    }
     const expected = RECIPE[stepRef.current]
     if (propId === expected.id) {
-      showNotice(expected.message, true)
       const nextStep = stepRef.current + 1
       stepRef.current = nextStep
-      if (nextStep >= RECIPE.length) setReady(true)
+      if (nextStep === BREW_START_STEP) brewStartedAt.current = Date.now()
+      if (nextStep === BREW_END_STEP && brewStartedAt.current !== null) {
+        brewMs.current = Date.now() - brewStartedAt.current
+      }
+      if (nextStep >= RECIPE.length) {
+        setReady(true)
+        setResult((Math.max(0, brewMs.current) / 1000).toFixed(1))
+        return
+      }
+      showNotice(expected.message, true)
       return
     }
     showNotice(WRONG_MESSAGE, false)
     stepRef.current = 0
+    brewStartedAt.current = null
+    brewMs.current = 0
   }
 
   return (
@@ -174,6 +207,23 @@ export default function TeaGame() {
         </div>,
         document.body,
       )}
+      {result &&
+        stage &&
+        createPortal(
+          <div className="tea-result" role="dialog" aria-label="Brew time">
+            <button
+              type="button"
+              className="tea-result-close"
+              aria-label="Close"
+              onClick={() => setResult(null)}
+            >
+              ×
+            </button>
+            <p>Tea brewed for {result} seconds.</p>
+            <p>Drink the tea to play again.</p>
+          </div>,
+          stage,
+        )}
     </div>
   )
 }

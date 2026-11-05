@@ -622,6 +622,61 @@ h2 {
   }
 }
 
+.tea-result {
+  position: absolute;
+  left: 50%;
+  top: 34%;
+  transform: translate(-50%, -50%);
+  z-index: 30;
+  min-width: 16.5rem;
+  max-width: calc(100% - 2.5rem);
+  padding: 1.2rem 2.75rem 1.15rem 1.3rem;
+  border-radius: 18px;
+  background: color-mix(in srgb, #fff 90%, var(--bg-elev));
+  border: 1px solid color-mix(in srgb, var(--accent) 65%, white);
+  box-shadow: 0 12px 28px rgba(244, 166, 193, 0.4);
+  color: var(--text-h);
+  font-weight: 600;
+  text-align: left;
+  pointer-events: auto;
+  animation: tea-result-in 180ms ease;
+}
+
+.tea-result p + p {
+  margin-top: 0.35rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+@keyframes tea-result-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.tea-result-close {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.45rem;
+  width: 1.7rem;
+  height: 1.7rem;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.tea-result-close:hover {
+  background: var(--accent-dim);
+  color: var(--text-h);
+}
+
 .subpage-copy {
   display: grid;
   gap: 0.4rem;

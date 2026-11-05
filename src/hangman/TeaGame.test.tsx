@@ -82,37 +82,49 @@ describe('TeaGame', () => {
 
   it('follows the brew order and swaps in the filled cup when tea is ready', () => {
     render(<TeaGame />)
-    const clicks = [
-      ['Tea spoon', 'Picked up the spoon!'],
-      ['Tea leaves', 'Scooped up some tea leaves!'],
-      ['Big teapot', 'Put leaves in the tea pot!'],
-      ['Water pot', 'Picked up the water pot!'],
-      ['Big teapot', 'Poured hot water in the tea pot!'],
-      ['Big teapot', 'Picked up the big tea pot!'],
-      ['Small teapot', 'Poured tea in the small tea pot!'],
-      ['Small teapot', 'Picked up the small tea pot!'],
-      ['Tea cup', 'Tea is ready!'],
-    ] as const
-
-    for (const [label, message] of clicks) {
-      fireEvent.click(screen.getByRole('button', { name: label }))
-      expect(screen.getByText(message).closest('.tea-notice')).toHaveClass('tea-notice--ok')
-    }
-
+    brewTea()
     expect(screen.queryByRole('button', { name: 'Tea cup' })).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Filled tea cup' })).toBeVisible()
+  })
+
+  it('shows brew time from pouring water to pouring the small pot', () => {
+    vi.useFakeTimers()
+    const { container } = render(
+      <div className="subpage--tea">
+        <TeaGame />
+      </div>,
+    )
+    brewTea({ steepMs: 23_400 })
+    const dialog = screen.getByRole('dialog', { name: 'Brew time' })
+    expect(dialog).toHaveTextContent('Tea brewed for 23.4 seconds.')
+    expect(dialog).toHaveTextContent('Drink the tea to play again.')
+    expect(container.querySelector('.subpage--tea .tea-result')).toBeTruthy()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Close' }))
+    expect(screen.queryByRole('dialog', { name: 'Brew time' })).not.toBeInTheDocument()
+  })
+
+  it('resets the brew after drinking the filled cup', () => {
+    render(<TeaGame />)
+    brewTea()
+    fireEvent.click(screen.getByRole('button', { name: 'Filled tea cup' }))
+    expect(screen.queryByRole('dialog', { name: 'Brew time' })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Tea cup' })).toBeVisible()
+    expect(screen.queryByRole('button', { name: 'Filled tea cup' })).not.toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Tea spoon' }))
+    expect(screen.getByText('Picked up the spoon!')).toBeInTheDocument()
   })
 
   it('resets to the first step after a wrong item', () => {
     render(<TeaGame />)
     fireEvent.click(screen.getByRole('button', { name: 'Tea spoon' }))
     fireEvent.click(screen.getByRole('button', { name: 'Water pot' }))
-    expect(screen.getByText('Wrong item, try again!').closest('.tea-notice')).toHaveClass(
+    expect(screen.getByText('Wrong item, start again!').closest('.tea-notice')).toHaveClass(
       'tea-notice--no',
     )
 
     fireEvent.click(screen.getByRole('button', { name: 'Tea leaves' }))
-    expect(screen.getAllByText('Wrong item, try again!')).toHaveLength(2)
+    expect(screen.getAllByText('Wrong item, start again!')).toHaveLength(2)
 
     fireEvent.click(screen.getByRole('button', { name: 'Tea spoon' }))
     expect(screen.getByText('Picked up the spoon!')).toBeInTheDocument()
@@ -126,19 +138,47 @@ describe('TeaGame', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Big teapot' }))
     fireEvent.click(screen.getByRole('button', { name: 'Small teapot' }))
 
-    expect(screen.getAllByText('Wrong item, try again!')).toHaveLength(3)
+    expect(screen.getAllByText('Wrong item, start again!')).toHaveLength(3)
 
     act(() => {
       vi.advanceTimersByTime(TEA_NOTICE_MS - 1)
     })
-    expect(screen.getAllByText('Wrong item, try again!')).toHaveLength(3)
+    expect(screen.getAllByText('Wrong item, start again!')).toHaveLength(3)
 
     act(() => {
       vi.advanceTimersByTime(1)
     })
-    expect(screen.queryByText('Wrong item, try again!')).not.toBeInTheDocument()
+    expect(screen.queryByText('Wrong item, start again!')).not.toBeInTheDocument()
   })
 })
+
+const BREW_CLICKS = [
+  ['Tea spoon', 'Picked up the spoon!'],
+  ['Tea leaves', 'Scooped up some tea leaves!'],
+  ['Big teapot', 'Put leaves in the tea pot!'],
+  ['Water pot', 'Picked up the water pot!'],
+  ['Big teapot', 'Poured hot water in the tea pot!'],
+  ['Big teapot', 'Picked up the big tea pot!'],
+  ['Small teapot', 'Poured tea in the small tea pot!'],
+  ['Small teapot', 'Picked up the small tea pot!'],
+  ['Tea cup', 'Tea is ready!'],
+] as const
+
+function brewTea({ steepMs = 0 } = {}) {
+  BREW_CLICKS.forEach(([label, message], index) => {
+    if (index === 5 && steepMs) {
+      act(() => {
+        vi.advanceTimersByTime(steepMs)
+      })
+    }
+    fireEvent.click(screen.getByRole('button', { name: label }))
+    if (index === BREW_CLICKS.length - 1) {
+      expect(screen.queryByText(message)).not.toBeInTheDocument()
+      return
+    }
+    expect(screen.getByText(message).closest('.tea-notice')).toHaveClass('tea-notice--ok')
+  })
+}
 
 function place(button: HTMLElement, root: HTMLElement) {
   Object.defineProperty(button, 'offsetParent', { configurable: true, get: () => root })
