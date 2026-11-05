@@ -27,8 +27,9 @@ describe('LevelSubpage', () => {
     expect(screen.getByRole('button', { name: 'Tea leaves' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Big teapot' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Small teapot' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Lid holder' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Tea spoon' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Tea cup' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Filled tea cup' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Instruction postcard' })).toBeInTheDocument()
 
     rerender(<LevelSubpage level={LEVELS[4]} />)

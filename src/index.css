@@ -520,39 +520,46 @@ h2 {
 }
 
 .tea-prop--leaves {
-  left: 22%;
-  top: 70%;
+  left: 23%;
+  top: 71%;
   width: 7.5%;
 }
 
 .tea-prop--pot-big {
   left: 32%;
-  top: 69%;
+  top: 65%;
   width: 9.5%;
 }
 
 .tea-prop--pot-small {
-  left: 61%;
-  top: 70%;
+  left: 62%;
+  top: 68%;
   width: 8.8%;
 }
 
-.tea-prop--lid-holder {
-  left: 35%;
-  top: 83%;
-  width: 5%;
+.tea-prop--spoon {
+  left: 28%;
+  top: 82%;
+  width: 8%;
 }
 
-.tea-prop--spoon {
-  left: 23%;
-  top: 81%;
-  width: 8%;
+.tea-prop--cup {
+  left: 62%;
+  top: 82%;
+  width: 6.5%;
+}
+
+.tea-prop--cup-filled {
+  left: 62%;
+  top: 82%;
+  width: 6.5%;
 }
 
 .tea-prop--postcard {
   left: 72%;
-  top: 67%;
-  width: 14%;
+  top: 72%;
+  width: 12%;
+  transform: rotate(34deg); 
 }
 
 .subpage-copy {
