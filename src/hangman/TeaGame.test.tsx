@@ -12,6 +12,7 @@ const elementFromPoint = document.elementFromPoint
 
 afterEach(() => {
   vi.restoreAllMocks()
+  vi.useRealTimers()
   document.elementFromPoint = elementFromPoint
 })
 
@@ -76,19 +77,45 @@ describe('TeaGame', () => {
     expect(filled).not.toBeVisible()
     expect(filled).toBeDisabled()
     fireEvent.click(filled)
-    expect(screen.queryByText('Tea Cup is clicked!')).not.toBeInTheDocument()
+    expect(screen.queryByText('Tea is ready!')).not.toBeInTheDocument()
   })
 
-  it('marks the spoon with a check and every other prop with a cross', () => {
+  it('follows the brew order and swaps in the filled cup when tea is ready', () => {
+    render(<TeaGame />)
+    const clicks = [
+      ['Tea spoon', 'Picked up the spoon!'],
+      ['Tea leaves', 'Scooped up some tea leaves!'],
+      ['Big teapot', 'Put leaves in the tea pot!'],
+      ['Water pot', 'Picked up the water pot!'],
+      ['Big teapot', 'Poured hot water in the tea pot!'],
+      ['Big teapot', 'Picked up the big tea pot!'],
+      ['Small teapot', 'Poured tea in the small tea pot!'],
+      ['Small teapot', 'Picked up the small tea pot!'],
+      ['Tea cup', 'Tea is ready!'],
+    ] as const
+
+    for (const [label, message] of clicks) {
+      fireEvent.click(screen.getByRole('button', { name: label }))
+      expect(screen.getByText(message).closest('.tea-notice')).toHaveClass('tea-notice--ok')
+    }
+
+    expect(screen.queryByRole('button', { name: 'Tea cup' })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Filled tea cup' })).toBeVisible()
+  })
+
+  it('resets to the first step after a wrong item', () => {
     render(<TeaGame />)
     fireEvent.click(screen.getByRole('button', { name: 'Tea spoon' }))
-    expect(screen.getByText('Spoon is clicked!').closest('.tea-notice')).toHaveClass('tea-notice--ok')
-
     fireEvent.click(screen.getByRole('button', { name: 'Water pot' }))
-    expect(screen.getByText('Water Pot is clicked!').closest('.tea-notice')).toHaveClass('tea-notice--no')
+    expect(screen.getByText('Wrong item, try again!').closest('.tea-notice')).toHaveClass(
+      'tea-notice--no',
+    )
 
-    fireEvent.click(screen.getByRole('button', { name: 'Tea cup' }))
-    expect(screen.getByText('Tea Cup is clicked!').closest('.tea-notice')).toHaveClass('tea-notice--no')
+    fireEvent.click(screen.getByRole('button', { name: 'Tea leaves' }))
+    expect(screen.getAllByText('Wrong item, try again!')).toHaveLength(2)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Tea spoon' }))
+    expect(screen.getByText('Picked up the spoon!')).toBeInTheDocument()
   })
 
   it('keeps at most three notices and clears them after three seconds', () => {
@@ -99,20 +126,17 @@ describe('TeaGame', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Big teapot' }))
     fireEvent.click(screen.getByRole('button', { name: 'Small teapot' }))
 
-    expect(screen.queryByText('Water Pot is clicked!')).not.toBeInTheDocument()
-    expect(screen.getByText('Tea Leaves is clicked!')).toBeInTheDocument()
-    expect(screen.getByText('Tea Pot (Big) is clicked!')).toBeInTheDocument()
-    expect(screen.getByText('Tea Pot (Small) is clicked!')).toBeInTheDocument()
+    expect(screen.getAllByText('Wrong item, try again!')).toHaveLength(3)
 
     act(() => {
       vi.advanceTimersByTime(TEA_NOTICE_MS - 1)
     })
-    expect(screen.getByText('Tea Pot (Small) is clicked!')).toBeInTheDocument()
+    expect(screen.getAllByText('Wrong item, try again!')).toHaveLength(3)
 
     act(() => {
       vi.advanceTimersByTime(1)
     })
-    expect(screen.queryByText(/is clicked!/)).not.toBeInTheDocument()
+    expect(screen.queryByText('Wrong item, try again!')).not.toBeInTheDocument()
   })
 })
 

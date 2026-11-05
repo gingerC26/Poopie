@@ -16,20 +16,23 @@ const PROPS = [
 
 type TeaPropId = (typeof PROPS)[number]['id']
 
-const TEA_PROP_NAMES: Record<TeaPropId, string> = {
-  'water-pot': 'Water Pot',
-  leaves: 'Tea Leaves',
-  'pot-big': 'Tea Pot (Big)',
-  'pot-small': 'Tea Pot (Small)',
-  spoon: 'Spoon',
-  cup: 'Tea Cup',
-  'cup-filled': 'Tea Cup',
-  postcard: 'Postcard',
-}
+const RECIPE = [
+  { id: 'spoon', message: 'Picked up the spoon!' },
+  { id: 'leaves', message: 'Scooped up some tea leaves!' },
+  { id: 'pot-big', message: 'Put leaves in the tea pot!' },
+  { id: 'water-pot', message: 'Picked up the water pot!' },
+  { id: 'pot-big', message: 'Poured hot water in the tea pot!' },
+  { id: 'pot-big', message: 'Picked up the big tea pot!' },
+  { id: 'pot-small', message: 'Poured tea in the small tea pot!' },
+  { id: 'pot-small', message: 'Picked up the small tea pot!' },
+  { id: 'cup', message: 'Tea is ready!' },
+] as const
+
+const WRONG_MESSAGE = 'Wrong item, try again!'
 
 type TeaNotice = {
   id: number
-  name: string
+  message: string
   ok: boolean
 }
 
@@ -40,6 +43,8 @@ export default function TeaGame() {
   const noticesRef = useRef<TeaNotice[]>([])
   const noticeId = useRef(0)
   const timers = useRef(new Map<number, number>())
+  const stepRef = useRef(0)
+  const [ready, setReady] = useState(false)
 
   useEffect(() => {
     const pending = timers.current
@@ -96,11 +101,11 @@ export default function TeaGame() {
     setNotices(noticesRef.current)
   }
 
-  const showNotice = (propId: TeaPropId) => {
+  const showNotice = (message: string, ok: boolean) => {
     const notice: TeaNotice = {
       id: ++noticeId.current,
-      name: TEA_PROP_NAMES[propId],
-      ok: propId === 'spoon',
+      message,
+      ok,
     }
     const next = [...noticesRef.current, notice].slice(-TEA_NOTICE_LIMIT)
     const kept = new Set(next.map((item) => item.id))
@@ -119,10 +124,24 @@ export default function TeaGame() {
     )
   }
 
+  const handleProp = (propId: TeaPropId) => {
+    if (ready) return
+    const expected = RECIPE[stepRef.current]
+    if (propId === expected.id) {
+      showNotice(expected.message, true)
+      const nextStep = stepRef.current + 1
+      stepRef.current = nextStep
+      if (nextStep >= RECIPE.length) setReady(true)
+      return
+    }
+    showNotice(WRONG_MESSAGE, false)
+    stepRef.current = 0
+  }
+
   return (
     <div ref={rootRef} className="tea-props" aria-label="Tea tools">
       {PROPS.map((item) => {
-        const dormant = item.id === 'cup-filled'
+        const dormant = item.id === 'cup-filled' ? !ready : item.id === 'cup' && ready
         return (
           <button
             key={item.id}
@@ -134,7 +153,7 @@ export default function TeaGame() {
             className={`tea-prop tea-prop--${item.id}${hotId === item.id ? ' is-hot' : ''}`}
             onClick={(event) => {
               if (event.currentTarget.disabled) return
-              showNotice(item.id)
+              handleProp(item.id)
             }}
           >
             <img src={item.src} alt={item.alt} draggable={false} />
@@ -149,9 +168,7 @@ export default function TeaGame() {
               className={`tea-notice ${notice.ok ? 'tea-notice--ok' : 'tea-notice--no'}`}
             >
               {notice.ok ? <CheckIcon /> : <CrossIcon />}
-              <span>
-                {notice.name} is clicked!
-              </span>
+              <span>{notice.message}</span>
             </p>
           ))}
         </div>,
