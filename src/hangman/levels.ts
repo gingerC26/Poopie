@@ -25,7 +25,12 @@ export const LEVELS: Level[] = [
   {
     id: '2',
     word: 'PASSWORD',
-    page: 'gallery',
+    page: 'note',
+    background: '/backgrounds/password.jpg',
+    note: {
+      title: 'Password',
+      body: 'Open the right locker.',
+    },
   },
   {
     id: '3',

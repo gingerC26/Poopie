@@ -12,7 +12,11 @@ describe('LevelSubpage', () => {
 
   it('routes the other unlocked pages', () => {
     const { rerender } = render(<LevelSubpage level={LEVELS[1]} />)
-    expect(screen.getByRole('heading', { name: 'Gallery' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Password' })).toBeInTheDocument()
+    expect(screen.getByText('Open the right locker.')).toBeInTheDocument()
+    expect(document.querySelector('.subpage--scene')).toHaveStyle({
+      backgroundImage: 'url(/backgrounds/password.jpg)',
+    })
 
     rerender(<LevelSubpage level={LEVELS[2]} />)
     expect(screen.getByRole('heading', { name: '3D' })).toBeInTheDocument()
