@@ -31,6 +31,8 @@ const RECIPE = [
 const WRONG_MESSAGE = 'Wrong item, start again!'
 const BREW_START_STEP = 5
 const BREW_END_STEP = 7
+const POSTCARD_NOTE =
+  "I miss the peaceful and slow-paced Jiufen teahouse. We spent the entire afternoon there, tasting real authentic Taiwanese tea while playing Guess Who. This kind of afternoon is what I've always dreamed of. But there is a challenge to that... can you make the perfect tea for your girlfriend?"
 
 type TeaNotice = {
   id: number
@@ -50,6 +52,7 @@ export default function TeaGame() {
   const brewMs = useRef(0)
   const [ready, setReady] = useState(false)
   const [result, setResult] = useState<string | null>(null)
+  const [postcardOpen, setPostcardOpen] = useState(false)
   const [stage, setStage] = useState<HTMLElement | null>(null)
 
   useEffect(() => {
@@ -145,6 +148,10 @@ export default function TeaGame() {
   }
 
   const handleProp = (propId: TeaPropId) => {
+    if (propId === 'postcard') {
+      setPostcardOpen(true)
+      return
+    }
     if (ready) {
       if (propId === 'cup-filled') resetBrew()
       return
@@ -221,6 +228,31 @@ export default function TeaGame() {
             </button>
             <p>Tea brewed for {result} seconds.</p>
             <p>Drink the tea to play again.</p>
+          </div>,
+          stage,
+        )}
+      {postcardOpen &&
+        stage &&
+        createPortal(
+          <div className="tea-postcard" role="dialog" aria-label="Postcard">
+            <button
+              type="button"
+              className="tea-postcard-close"
+              aria-label="Close postcard"
+              onClick={() => setPostcardOpen(false)}
+            >
+              ×
+            </button>
+            <div className="tea-postcard-note">
+              <p>{POSTCARD_NOTE}</p>
+              <p className="tea-postcard-sign">- Your Poopie</p>
+            </div>
+            <img
+              className="tea-postcard-stamp"
+              src="/sprites/tea/postcard-stamp.png"
+              alt=""
+              draggable={false}
+            />
           </div>,
           stage,
         )}

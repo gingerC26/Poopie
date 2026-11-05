@@ -115,6 +115,29 @@ describe('TeaGame', () => {
     expect(screen.getByText('Picked up the spoon!')).toBeInTheDocument()
   })
 
+  it('opens the postcard note without counting as a wrong brew click', () => {
+    const { container } = render(
+      <div className="subpage--tea">
+        <TeaGame />
+      </div>,
+    )
+    fireEvent.click(screen.getByRole('button', { name: 'Tea spoon' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Instruction postcard' }))
+
+    expect(screen.queryByText('Wrong item, start again!')).not.toBeInTheDocument()
+    expect(container.querySelector('.subpage--tea .tea-postcard')).toBeTruthy()
+    expect(screen.getByRole('dialog', { name: 'Postcard' })).toHaveTextContent(
+      'I miss the peaceful and slow-paced Jiufen teahouse.',
+    )
+    expect(screen.getByRole('dialog', { name: 'Postcard' })).toHaveTextContent('- Your Poopie')
+
+    fireEvent.click(screen.getByRole('button', { name: 'Close postcard' }))
+    expect(screen.queryByRole('dialog', { name: 'Postcard' })).not.toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Tea leaves' }))
+    expect(screen.getByText('Scooped up some tea leaves!')).toBeInTheDocument()
+  })
+
   it('resets to the first step after a wrong item', () => {
     render(<TeaGame />)
     fireEvent.click(screen.getByRole('button', { name: 'Tea spoon' }))
