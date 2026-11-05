@@ -1,6 +1,8 @@
 import { act, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import Hourglass from './Hourglass'
 import { TEA_NOTICE_MS } from './settings'
+import { TeaSteepProvider } from './TeaSteep'
 import TeaGame from './TeaGame'
 
 const alphas = new Map<string, number[]>([
@@ -87,21 +89,90 @@ describe('TeaGame', () => {
     expect(screen.getByRole('button', { name: 'Filled tea cup' })).toBeVisible()
   })
 
-  it('shows brew time from pouring water to pouring the small pot', () => {
+  it('shows a perfect brew when the steep is within twenty seconds', () => {
     vi.useFakeTimers()
+    const onWin = vi.fn()
     const { container } = render(
       <div className="subpage--tea">
-        <TeaGame />
+        <TeaGame onWin={onWin} />
       </div>,
     )
-    brewTea({ steepMs: 23_400 })
+    brewTea({ steepMs: 20_300 })
     const dialog = screen.getByRole('dialog', { name: 'Brew time' })
-    expect(dialog).toHaveTextContent('Tea brewed for 23.4 seconds.')
+    expect(dialog).toHaveTextContent('Tea brewed for 20.3 seconds.')
+    expect(dialog).toHaveTextContent("You've made the perfect tea!")
     expect(dialog).toHaveTextContent('Drink the tea to play again.')
     expect(container.querySelector('.subpage--tea .tea-result')).toBeTruthy()
+    expect(onWin).toHaveBeenCalledTimes(1)
 
     fireEvent.click(screen.getByRole('button', { name: 'Close' }))
     expect(screen.queryByRole('dialog', { name: 'Brew time' })).not.toBeInTheDocument()
+  })
+
+  it('says the tea is too bitter when the steep is too long', () => {
+    vi.useFakeTimers()
+    const onWin = vi.fn()
+    render(<TeaGame onWin={onWin} />)
+    brewTea({ steepMs: 40_300 })
+    const dialog = screen.getByRole('dialog', { name: 'Brew time' })
+    expect(dialog).toHaveTextContent('Tea brewed for 40.3 seconds.')
+    expect(dialog).toHaveTextContent('Really!? The tea is too bitter...')
+    expect(onWin).not.toHaveBeenCalled()
+  })
+
+  it('says the tea is too weak when the steep is too short', () => {
+    vi.useFakeTimers()
+    const onWin = vi.fn()
+    render(<TeaGame onWin={onWin} />)
+    brewTea({ steepMs: 2_300 })
+    const dialog = screen.getByRole('dialog', { name: 'Brew time' })
+    expect(dialog).toHaveTextContent('Tea brewed for 2.3 seconds.')
+    expect(dialog).toHaveTextContent('Um... I can barely taste the tea...')
+    expect(onWin).not.toHaveBeenCalled()
+  })
+
+  it('blurs the hourglass timer while tea is steeping', () => {
+    render(
+      <TeaSteepProvider>
+        <Hourglass remainingMs={45_000} />
+        <TeaGame />
+      </TeaSteepProvider>,
+    )
+    expect(document.querySelector('.hourglass-time--blur')).toBeNull()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Tea spoon' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Tea leaves' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Big teapot' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Water pot' }))
+    expect(document.querySelector('.hourglass-time--blur')).toBeNull()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Big teapot' }))
+    expect(document.querySelector('.hourglass-time--blur')).toBeTruthy()
+    expect(document.querySelector('.hourglass--mosaic')).toBeNull()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Big teapot' }))
+    expect(document.querySelector('.hourglass-time--blur')).toBeTruthy()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Small teapot' }))
+    expect(document.querySelector('.hourglass-time--blur')).toBeNull()
+  })
+
+  it('clears the hourglass timer blur after a wrong brew click', () => {
+    render(
+      <TeaSteepProvider>
+        <Hourglass remainingMs={45_000} />
+        <TeaGame />
+      </TeaSteepProvider>,
+    )
+    fireEvent.click(screen.getByRole('button', { name: 'Tea spoon' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Tea leaves' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Big teapot' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Water pot' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Big teapot' }))
+    expect(document.querySelector('.hourglass-time--blur')).toBeTruthy()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Tea spoon' }))
+    expect(document.querySelector('.hourglass-time--blur')).toBeNull()
   })
 
   it('resets the brew after drinking the filled cup', () => {

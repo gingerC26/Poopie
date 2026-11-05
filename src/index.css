@@ -137,6 +137,12 @@ h2 {
   text-align: center;
 }
 
+.hourglass-time--blur {
+  filter: blur(6px);
+  user-select: none;
+  pointer-events: none;
+}
+
 .hourglass-icon {
   width: 44px;
   height: 66px;

@@ -1,6 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { TEA_NOTICE_LIMIT, TEA_NOTICE_MS } from './settings'
+import {
+  TEA_NOTICE_LIMIT,
+  TEA_NOTICE_MS,
+  TWENTY_SECONDS_OFFSET_MS,
+  TWENTY_SECONDS_TARGET_MS,
+} from './settings'
+import { useTeaSteep } from './TeaSteep'
 import { teaPropAtPoint } from './teaHit'
 
 const PROPS = [
@@ -40,7 +46,17 @@ type TeaNotice = {
   ok: boolean
 }
 
-export default function TeaGame() {
+type BrewResult = {
+  seconds: string
+  line: string
+}
+
+type Props = {
+  onWin?: () => void
+}
+
+export default function TeaGame({ onWin }: Props) {
+  const { setSteeping } = useTeaSteep()
   const rootRef = useRef<HTMLDivElement>(null)
   const [hotId, setHotId] = useState<string | null>(null)
   const [notices, setNotices] = useState<TeaNotice[]>([])
@@ -51,7 +67,7 @@ export default function TeaGame() {
   const brewStartedAt = useRef<number | null>(null)
   const brewMs = useRef(0)
   const [ready, setReady] = useState(false)
-  const [result, setResult] = useState<string | null>(null)
+  const [result, setResult] = useState<BrewResult | null>(null)
   const [postcardOpen, setPostcardOpen] = useState(false)
   const [stage, setStage] = useState<HTMLElement | null>(null)
 
@@ -59,8 +75,9 @@ export default function TeaGame() {
     const pending = timers.current
     return () => {
       for (const timer of pending.values()) window.clearTimeout(timer)
+      setSteeping(false)
     }
-  }, [])
+  }, [setSteeping])
 
   useEffect(() => {
     const root = rootRef.current
@@ -143,6 +160,7 @@ export default function TeaGame() {
     stepRef.current = 0
     brewStartedAt.current = null
     brewMs.current = 0
+    setSteeping(false)
     setReady(false)
     setResult(null)
   }
@@ -160,13 +178,19 @@ export default function TeaGame() {
     if (propId === expected.id) {
       const nextStep = stepRef.current + 1
       stepRef.current = nextStep
-      if (nextStep === BREW_START_STEP) brewStartedAt.current = Date.now()
+      if (nextStep === BREW_START_STEP) {
+        brewStartedAt.current = Date.now()
+        setSteeping(true)
+      }
       if (nextStep === BREW_END_STEP && brewStartedAt.current !== null) {
         brewMs.current = Date.now() - brewStartedAt.current
+        setSteeping(false)
       }
       if (nextStep >= RECIPE.length) {
+        const next = scoreBrew(brewMs.current)
         setReady(true)
-        setResult((Math.max(0, brewMs.current) / 1000).toFixed(1))
+        setResult(next)
+        if (next.win) onWin?.()
         return
       }
       showNotice(expected.message, true)
@@ -176,6 +200,7 @@ export default function TeaGame() {
     stepRef.current = 0
     brewStartedAt.current = null
     brewMs.current = 0
+    setSteeping(false)
   }
 
   return (
@@ -226,7 +251,8 @@ export default function TeaGame() {
             >
               ×
             </button>
-            <p>Tea brewed for {result} seconds.</p>
+            <p>Tea brewed for {result.seconds} seconds.</p>
+            <p>{result.line}</p>
             <p>Drink the tea to play again.</p>
           </div>,
           stage,
@@ -258,6 +284,20 @@ export default function TeaGame() {
         )}
     </div>
   )
+}
+
+function scoreBrew(ms: number): BrewResult & { win: boolean } {
+  const steep = Math.max(0, ms)
+  const seconds = (steep / 1000).toFixed(1)
+  const low = TWENTY_SECONDS_TARGET_MS - TWENTY_SECONDS_OFFSET_MS
+  const high = TWENTY_SECONDS_TARGET_MS + TWENTY_SECONDS_OFFSET_MS
+  if (steep < low) {
+    return { seconds, line: 'Um... I can barely taste the tea...', win: false }
+  }
+  if (steep > high) {
+    return { seconds, line: 'Really!? The tea is too bitter...', win: false }
+  }
+  return { seconds, line: "You've made the perfect tea!", win: true }
 }
 
 function CheckIcon() {

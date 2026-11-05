@@ -22,9 +22,13 @@ export const XLB_SPILL_MS = 5 * 1000
 // TWENTY SECONDS SETTINGS
 //******************** */
 
+/** Perfect steep time for the twenty seconds game. */
+export const TWENTY_SECONDS_TARGET_MS = 20 * 1000
+// default: 20 * 1000
+
 /** Offset of time difference allowed in twenty seconds game. */
-export const TWENTY_SECONDS_OFFSET_MS = 10 * 1000
-// default: 0 * 1000
+export const TWENTY_SECONDS_OFFSET_MS = 10000
+// default: 200
 
 /** How long a tea-table message stays on screen. */
 export const TEA_NOTICE_MS = 3 * 1000

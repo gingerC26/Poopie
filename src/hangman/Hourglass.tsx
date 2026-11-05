@@ -1,5 +1,6 @@
 import { useEffect, useId, useState } from 'react'
 import { COOLDOWN_MS } from './settings'
+import { useTeaSteep } from './TeaSteep'
 
 function formatRemaining(ms: number) {
   const total = Math.max(0, Math.ceil(ms / 1000))
@@ -14,6 +15,7 @@ type Props = {
 
 export default function Hourglass({ remainingMs }: Props) {
   const uid = useId().replace(/:/g, '')
+  const { steeping } = useTeaSteep()
   const [displayMs, setDisplayMs] = useState(remainingMs)
 
   useEffect(() => {
@@ -97,7 +99,7 @@ export default function Hourglass({ remainingMs }: Props) {
           </g>
         )}
       </svg>
-      <span className="hourglass-time">
+      <span className={`hourglass-time${steeping ? ' hourglass-time--blur' : ''}`}>
         {ready ? 'Ready' : formatRemaining(displayMs)}
       </span>
     </div>
