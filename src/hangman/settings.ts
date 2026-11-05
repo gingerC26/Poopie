@@ -45,3 +45,7 @@ export const TEA_NOTICE_LIMIT = 3
 /** How many digits the locker PIN holds. */
 export const LOCKER_PIN_LENGTH = 6
 // default: 6
+
+/** Correct locker combination. */
+export const LOCKER_PIN = '030226'
+// default: 030226

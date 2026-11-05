@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { LOCKER_PIN_LENGTH } from './settings'
+import { LOCKER_PIN, LOCKER_PIN_LENGTH } from './settings'
 
 const KEYS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'x', '0', 'v'] as const
 
@@ -9,6 +9,7 @@ export default function PasswordGame() {
   const [host, setHost] = useState<HTMLElement | null>(null)
   const [open, setOpen] = useState(false)
   const [pin, setPin] = useState('')
+  const [shake, setShake] = useState(0)
 
   useEffect(() => {
     const root = rootRef.current
@@ -26,7 +27,14 @@ export default function PasswordGame() {
       setPin('')
       return
     }
-    if (key === 'v') return
+    if (key === 'v') {
+      if (pin.length < LOCKER_PIN_LENGTH) return
+      if (pin !== LOCKER_PIN) {
+        setPin('')
+        setShake((n) => n + 1)
+      }
+      return
+    }
     setPin((current) => (current.length >= LOCKER_PIN_LENGTH ? current : current + key))
   }
 
@@ -45,7 +53,12 @@ export default function PasswordGame() {
         createPortal(
           <>
             <div className="password-dim" onClick={close} />
-            <div className="password-pad" role="dialog" aria-label="Enter password">
+            <div
+              key={shake}
+              className={`password-pad${shake ? ' password-pad--shake' : ''}`}
+              role="dialog"
+              aria-label="Enter password"
+            >
               <p className="password-screen" aria-live="polite" aria-label="Entered password">
                 {Array.from({ length: LOCKER_PIN_LENGTH }, (_, index) => (
                   <span key={index} className="password-digit">

@@ -576,6 +576,29 @@ h2 {
   pointer-events: auto;
 }
 
+.password-pad--shake {
+  animation: password-shake 360ms ease;
+}
+
+@keyframes password-shake {
+  0%,
+  100% {
+    transform: translate(-50%, -50%);
+  }
+  20% {
+    transform: translate(calc(-50% - 9px), -50%);
+  }
+  40% {
+    transform: translate(calc(-50% + 9px), -50%);
+  }
+  60% {
+    transform: translate(calc(-50% - 5px), -50%);
+  }
+  80% {
+    transform: translate(calc(-50% + 5px), -50%);
+  }
+}
+
 .password-screen {
   display: grid;
   grid-template-columns: repeat(6, 1fr);

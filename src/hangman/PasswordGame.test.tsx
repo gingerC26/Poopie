@@ -40,4 +40,25 @@ describe('PasswordGame', () => {
     fireEvent.click(document.querySelector('.password-dim') as HTMLElement)
     expect(screen.queryByRole('dialog', { name: 'Enter password' })).not.toBeInTheDocument()
   })
+
+  it('ignores confirm until six digits, then shakes and clears a wrong PIN', () => {
+    render(
+      <div className="subpage--password">
+        <PasswordGame />
+      </div>,
+    )
+    fireEvent.click(screen.getByRole('button', { name: 'Open locker 11' }))
+    fireEvent.click(screen.getByRole('button', { name: '1' }))
+    fireEvent.click(screen.getByRole('button', { name: '2' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Confirm' }))
+    expect(screen.getByLabelText('Entered password')).toHaveTextContent('12')
+    expect(document.querySelector('.password-pad--shake')).toBeNull()
+
+    for (const digit of '3456') {
+      fireEvent.click(screen.getByRole('button', { name: digit }))
+    }
+    fireEvent.click(screen.getByRole('button', { name: 'Confirm' }))
+    expect(screen.getByLabelText('Entered password')).toHaveTextContent('')
+    expect(document.querySelector('.password-pad--shake')).toBeTruthy()
+  })
 })
