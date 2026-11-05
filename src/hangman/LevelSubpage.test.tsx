@@ -29,7 +29,8 @@ describe('LevelSubpage', () => {
     expect(screen.getByRole('button', { name: 'Small teapot' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Tea spoon' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Tea cup' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Filled tea cup' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Filled tea cup' })).not.toBeInTheDocument()
+    expect(document.querySelector('.tea-prop--cup-filled')).toHaveAttribute('hidden')
     expect(screen.getByRole('button', { name: 'Instruction postcard' })).toBeInTheDocument()
 
     rerender(<LevelSubpage level={LEVELS[4]} />)

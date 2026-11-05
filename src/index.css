@@ -568,6 +568,60 @@ h2 {
   transform: rotate(34deg); 
 }
 
+.tea-notices {
+  position: fixed;
+  top: 1.15rem;
+  right: 1.15rem;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.55rem;
+  pointer-events: none;
+}
+
+.tea-notice {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: max-content;
+  max-width: calc(100vw - 2.3rem);
+  margin: 0;
+  padding: 0.65rem 0.95rem 0.65rem 0.7rem;
+  border-radius: 16px;
+  background: color-mix(in srgb, #fff 84%, var(--bg-elev));
+  border: 1px solid color-mix(in srgb, var(--accent) 65%, white);
+  box-shadow: 0 10px 24px rgba(244, 166, 193, 0.38);
+  color: var(--text-h);
+  font-weight: 600;
+  animation: tea-notice-in 180ms ease;
+}
+
+.tea-notice svg {
+  width: 1.35rem;
+  height: 1.35rem;
+  flex: none;
+}
+
+.tea-notice--ok svg {
+  color: #2f9d62;
+}
+
+.tea-notice--no svg {
+  color: #e0566b;
+}
+
+@keyframes tea-notice-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 .subpage-copy {
   display: grid;
   gap: 0.4rem;

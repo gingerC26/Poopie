@@ -1,5 +1,6 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import { TEA_NOTICE_MS } from './settings'
 import TeaGame from './TeaGame'
 
 const alphas = new Map<string, number[]>([
@@ -47,15 +48,17 @@ describe('TeaGame', () => {
     Object.defineProperty(root, 'offsetHeight', { configurable: true, value: 500 })
     document.elementFromPoint = () => null
 
-    const filled = screen.getByRole('button', { name: 'Filled tea cup' })
+    const filled = document.querySelector('.tea-prop--cup-filled') as HTMLButtonElement
     const cup = screen.getByRole('button', { name: 'Tea cup' })
+    expect(filled).not.toBeVisible()
+    expect(filled).toBeDisabled()
     place(filled, root)
     place(cup, root)
     prime(filled.querySelector('img') as HTMLImageElement)
     prime(cup.querySelector('img') as HTMLImageElement)
 
     move(105, 105)
-    expect(filled).toHaveClass('is-hot')
+    expect(filled).not.toHaveClass('is-hot')
     expect(cup).not.toHaveClass('is-hot')
 
     move(115, 105)
@@ -65,6 +68,51 @@ describe('TeaGame', () => {
     move(40, 40)
     expect(filled).not.toHaveClass('is-hot')
     expect(cup).not.toHaveClass('is-hot')
+  })
+
+  it('starts with the filled tea cup inactive', () => {
+    render(<TeaGame />)
+    const filled = document.querySelector('.tea-prop--cup-filled') as HTMLButtonElement
+    expect(filled).not.toBeVisible()
+    expect(filled).toBeDisabled()
+    fireEvent.click(filled)
+    expect(screen.queryByText('Tea Cup is clicked!')).not.toBeInTheDocument()
+  })
+
+  it('marks the spoon with a check and every other prop with a cross', () => {
+    render(<TeaGame />)
+    fireEvent.click(screen.getByRole('button', { name: 'Tea spoon' }))
+    expect(screen.getByText('Spoon is clicked!').closest('.tea-notice')).toHaveClass('tea-notice--ok')
+
+    fireEvent.click(screen.getByRole('button', { name: 'Water pot' }))
+    expect(screen.getByText('Water Pot is clicked!').closest('.tea-notice')).toHaveClass('tea-notice--no')
+
+    fireEvent.click(screen.getByRole('button', { name: 'Tea cup' }))
+    expect(screen.getByText('Tea Cup is clicked!').closest('.tea-notice')).toHaveClass('tea-notice--no')
+  })
+
+  it('keeps at most three notices and clears them after three seconds', () => {
+    vi.useFakeTimers()
+    render(<TeaGame />)
+    fireEvent.click(screen.getByRole('button', { name: 'Water pot' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Tea leaves' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Big teapot' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Small teapot' }))
+
+    expect(screen.queryByText('Water Pot is clicked!')).not.toBeInTheDocument()
+    expect(screen.getByText('Tea Leaves is clicked!')).toBeInTheDocument()
+    expect(screen.getByText('Tea Pot (Big) is clicked!')).toBeInTheDocument()
+    expect(screen.getByText('Tea Pot (Small) is clicked!')).toBeInTheDocument()
+
+    act(() => {
+      vi.advanceTimersByTime(TEA_NOTICE_MS - 1)
+    })
+    expect(screen.getByText('Tea Pot (Small) is clicked!')).toBeInTheDocument()
+
+    act(() => {
+      vi.advanceTimersByTime(1)
+    })
+    expect(screen.queryByText(/is clicked!/)).not.toBeInTheDocument()
   })
 })
 

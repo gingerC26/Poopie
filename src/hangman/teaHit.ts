@@ -103,6 +103,7 @@ function measureTeaProps(root: HTMLElement): TeaHitTarget[] {
   const measured: TeaHitTarget[] = []
 
   for (const button of buttons) {
+    if (button.hidden) continue
     const img = button.querySelector('img')
     const parent = button.offsetParent
     if (!(img instanceof HTMLImageElement) || !(parent instanceof HTMLElement)) continue
