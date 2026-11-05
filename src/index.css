@@ -501,6 +501,12 @@ h2 {
   padding: 0;
   border: 0;
   background: none;
+  pointer-events: none;
+  transition: opacity 120ms ease;
+}
+
+.tea-prop.is-hot {
+  opacity: 0.6;
   pointer-events: auto;
 }
 
