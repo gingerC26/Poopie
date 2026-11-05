@@ -37,3 +37,11 @@ export const TEA_NOTICE_MS = 3 * 1000
 /** How many tea-table messages can show at once. */
 export const TEA_NOTICE_LIMIT = 3
 // default: 3
+
+//******************** */
+// PASSWORD SETTINGS
+//******************** */
+
+/** How many digits the locker PIN holds. */
+export const LOCKER_PIN_LENGTH = 6
+// default: 6
