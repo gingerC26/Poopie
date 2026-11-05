@@ -14,9 +14,11 @@ describe('LevelSubpage', () => {
     const { rerender } = render(<LevelSubpage level={LEVELS[1]} />)
     expect(screen.getByRole('heading', { name: 'Password' })).toBeInTheDocument()
     expect(screen.getByText('Open the right locker.')).toBeInTheDocument()
-    expect(document.querySelector('.subpage--scene')).toHaveStyle({
+    expect(document.querySelector('.password-scene')).toHaveStyle({
       backgroundImage: 'url(/backgrounds/password.jpg)',
     })
+    expect(screen.getByRole('button', { name: 'Open locker 11' })).toBeInTheDocument()
+    expect(screen.getByText('open')).toBeInTheDocument()
 
     rerender(<LevelSubpage level={LEVELS[2]} />)
     expect(screen.getByRole('heading', { name: '3D' })).toBeInTheDocument()

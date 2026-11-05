@@ -448,7 +448,8 @@ h2 {
   padding: 0;
 }
 
-.stage:has(.subpage--tea) {
+.stage:has(.subpage--tea),
+.stage:has(.subpage--password) {
   display: grid;
   overflow: hidden;
 }
@@ -464,7 +465,8 @@ h2 {
   padding: 1.25rem;
 }
 
-.subpage--tea {
+.subpage--tea,
+.subpage--password {
   position: relative;
   width: 100%;
   height: 100%;
@@ -476,7 +478,8 @@ h2 {
   background-image: none;
 }
 
-.tea-scene {
+.tea-scene,
+.password-scene {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -489,10 +492,64 @@ h2 {
   background-repeat: no-repeat;
 }
 
-.subpage--tea .subpage-copy {
+.subpage--tea .subpage-copy,
+.subpage--password .subpage-copy {
   position: relative;
   z-index: 2;
   margin: 1.25rem;
+}
+
+.locker-hotspots {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.locker-hot {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.locker-hot::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #000;
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+
+.locker-hot:hover::before,
+.locker-hot:focus-visible::before {
+  opacity: 0.3;
+}
+
+.locker-hot-hint {
+  position: relative;
+  z-index: 1;
+  opacity: 0;
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.55);
+  transition: opacity 120ms ease;
+}
+
+.locker-hot:hover .locker-hot-hint,
+.locker-hot:focus-visible .locker-hot-hint {
+  opacity: 1;
+}
+
+.locker-hot--11 {
+  left: 43.44%;
+  top: 43.61%;
+  width: 8.74%;
+  height: 14.44%;
 }
 
 .tea-props {

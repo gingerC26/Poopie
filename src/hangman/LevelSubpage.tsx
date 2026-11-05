@@ -2,6 +2,7 @@ import Gallery from '../pages/Gallery'
 import Games from '../pages/Games'
 import Scene from '../pages/Scene'
 import CarefulGame from './CarefulGame'
+import PasswordGame from './PasswordGame'
 import TeaGame from './TeaGame'
 import { titleCaseWord, type Level } from './levels'
 
@@ -26,12 +27,14 @@ export default function LevelSubpage({ level, onWin }: Props) {
   if (level.page === 'games') return <Games />
 
   const isTea = level.id === '4'
+  const isPassword = level.id === '2'
+  const coverScene = isTea || isPassword
 
   return (
     <article
-      className={`subpage ${level.background ? 'subpage--scene' : ''} ${isTea ? 'subpage--tea' : ''}`}
+      className={`subpage ${level.background ? 'subpage--scene' : ''} ${isTea ? 'subpage--tea' : ''} ${isPassword ? 'subpage--password' : ''}`}
       style={
-        level.background && !isTea
+        level.background && !coverScene
           ? { backgroundImage: `url(${level.background})` }
           : undefined
       }
@@ -46,6 +49,18 @@ export default function LevelSubpage({ level, onWin }: Props) {
           }
         >
           <TeaGame onWin={onWin} />
+        </div>
+      )}
+      {isPassword && (
+        <div
+          className="password-scene"
+          style={
+            level.background
+              ? { backgroundImage: `url(${level.background})` }
+              : undefined
+          }
+        >
+          <PasswordGame />
         </div>
       )}
       <div className="subpage-copy">
