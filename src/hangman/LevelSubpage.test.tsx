@@ -20,9 +20,16 @@ describe('LevelSubpage', () => {
     rerender(<LevelSubpage level={LEVELS[3]} />)
     expect(screen.getByRole('heading', { name: 'Twenty Seconds' })).toBeInTheDocument()
     expect(screen.getByText('Make a pot of authentic Chinese tea.')).toBeInTheDocument()
-    expect(document.querySelector('.subpage--tea')).toHaveStyle({
+    expect(document.querySelector('.tea-scene')).toHaveStyle({
       backgroundImage: 'url(/backgrounds/twenty-seconds.jpg)',
     })
+    expect(screen.getByRole('button', { name: 'Water pot' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Tea leaves' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Big teapot' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Small teapot' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Lid holder' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Tea spoon' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Instruction postcard' })).toBeInTheDocument()
 
     rerender(<LevelSubpage level={LEVELS[4]} />)
     expect(screen.getByRole('heading', { name: 'Memory' })).toBeInTheDocument()

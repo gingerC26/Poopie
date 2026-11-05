@@ -442,6 +442,11 @@ h2 {
   padding: 0;
 }
 
+.stage:has(.subpage--tea) {
+  display: grid;
+  overflow: hidden;
+}
+
 .subpage--scene {
   width: 100%;
   min-height: 100%;
@@ -454,8 +459,100 @@ h2 {
 }
 
 .subpage--tea {
+  position: relative;
+  width: 100%;
   height: 100%;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  container-type: size;
+  background-image: none;
+}
+
+.tea-scene {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  aspect-ratio: 1280 / 720;
+  width: max(100%, calc(100cqh * 1280 / 720));
+  height: max(100%, calc(100cqw * 720 / 1280));
   background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.subpage--tea .subpage-copy {
+  position: relative;
+  z-index: 2;
+  margin: 1.25rem;
+}
+
+.tea-props {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.tea-prop {
+  position: absolute;
+  padding: 0;
+  border: 0;
+  background: none;
+  pointer-events: auto;
+}
+
+.tea-prop img {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 6px 10px rgba(40, 20, 10, 0.35));
+  pointer-events: none;
+}
+
+.tea-prop--water-pot {
+  left: 50.28%;
+  top: 62.67%;
+  width: 13.31%;
+  transform: translateX(-50%);
+}
+
+.tea-prop--leaves {
+  left: 22%;
+  top: 70%;
+  width: 7.5%;
+}
+
+.tea-prop--pot-big {
+  left: 32%;
+  top: 69%;
+  width: 9.5%;
+}
+
+.tea-prop--pot-small {
+  left: 61%;
+  top: 70%;
+  width: 8.8%;
+}
+
+.tea-prop--lid-holder {
+  left: 35%;
+  top: 83%;
+  width: 5%;
+}
+
+.tea-prop--spoon {
+  left: 23%;
+  top: 81%;
+  width: 8%;
+}
+
+.tea-prop--postcard {
+  left: 72%;
+  top: 67%;
+  width: 14%;
 }
 
 .subpage-copy {
