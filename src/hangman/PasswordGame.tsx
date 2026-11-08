@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import { LOCKER_PIN, LOCKER_PIN_LENGTH } from './settings'
 
 const KEYS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'x', '0', 'v'] as const
+const OPEN_BG = 'url(/backgrounds/password-open.jpg)'
 
 export default function PasswordGame() {
   const rootRef = useRef<HTMLDivElement>(null)
@@ -10,6 +11,7 @@ export default function PasswordGame() {
   const [open, setOpen] = useState(false)
   const [pin, setPin] = useState('')
   const [shake, setShake] = useState(0)
+  const [unlocked, setUnlocked] = useState(false)
 
   useEffect(() => {
     const root = rootRef.current
@@ -32,7 +34,12 @@ export default function PasswordGame() {
       if (pin !== LOCKER_PIN) {
         setPin('')
         setShake((n) => n + 1)
+        return
       }
+      const scene = rootRef.current?.closest('.password-scene')
+      if (scene instanceof HTMLElement) scene.style.backgroundImage = OPEN_BG
+      setUnlocked(true)
+      close()
       return
     }
     setPin((current) => (current.length >= LOCKER_PIN_LENGTH ? current : current + key))
@@ -40,14 +47,16 @@ export default function PasswordGame() {
 
   return (
     <div ref={rootRef} className="locker-hotspots" aria-label="Lockers">
-      <button
-        type="button"
-        className="locker-hot locker-hot--11"
-        aria-label="Open locker 11"
-        onClick={() => setOpen(true)}
-      >
-        <span className="locker-hot-hint">open</span>
-      </button>
+      {!unlocked && (
+        <button
+          type="button"
+          className="locker-hot locker-hot--11"
+          aria-label="Open locker 11"
+          onClick={() => setOpen(true)}
+        >
+          <span className="locker-hot-hint">open</span>
+        </button>
+      )}
       {open &&
         host &&
         createPortal(

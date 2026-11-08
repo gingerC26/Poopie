@@ -61,4 +61,27 @@ describe('PasswordGame', () => {
     expect(screen.getByLabelText('Entered password')).toHaveTextContent('')
     expect(document.querySelector('.password-pad--shake')).toBeTruthy()
   })
+
+  it('opens locker 11 when the correct PIN is confirmed', () => {
+    render(
+      <div className="subpage--password">
+        <div
+          className="password-scene"
+          style={{ backgroundImage: 'url(/backgrounds/password.jpg)' }}
+        >
+          <PasswordGame />
+        </div>
+      </div>,
+    )
+    fireEvent.click(screen.getByRole('button', { name: 'Open locker 11' }))
+    for (const digit of '030226') {
+      fireEvent.click(screen.getByRole('button', { name: digit }))
+    }
+    fireEvent.click(screen.getByRole('button', { name: 'Confirm' }))
+    expect(screen.queryByRole('dialog', { name: 'Enter password' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Open locker 11' })).not.toBeInTheDocument()
+    expect(document.querySelector('.password-scene')).toHaveStyle({
+      backgroundImage: 'url(/backgrounds/password-open.jpg)',
+    })
+  })
 })
