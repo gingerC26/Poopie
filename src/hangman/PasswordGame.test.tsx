@@ -225,17 +225,24 @@ describe('PasswordGame', () => {
     const second = photos[1]
     expect(Number(second.style.zIndex)).toBeGreaterThan(Number(first.style.zIndex))
 
-    fireEvent.pointerDown(first, { pointerId: 2, clientX: 100, clientY: 100 })
-    fireEvent.pointerMove(first, { pointerId: 2, clientX: 140, clientY: 125 })
+    const firstHandle = first.querySelector('.locker-thrown-photo-turn') as HTMLElement
+    fireEvent.pointerDown(firstHandle, { pointerId: 2, clientX: 100, clientY: 100 })
+    fireEvent.pointerMove(firstHandle, { pointerId: 2, clientX: 140, clientY: 125 })
     expect(first.querySelector('.locker-thrown-photo-shift')).toHaveStyle({
       transform: 'translate(40px, 25px)',
     })
     expect(Number(first.style.zIndex)).toBeGreaterThan(Number(second.style.zIndex))
-    fireEvent.pointerUp(first, { pointerId: 2 })
+    fireEvent.pointerUp(firstHandle, { pointerId: 2 })
 
     const zoomed = document.querySelector('.locker-camera-zoom') as HTMLElement
     fireEvent.pointerDown(zoomed, { pointerId: 3, clientX: 200, clientY: 180 })
     expect(Number(zoomed.style.zIndex)).toBeGreaterThan(Number(first.style.zIndex))
+
+    fireEvent.pointerDown(first, { pointerId: 5, clientX: 10, clientY: 10 })
+    fireEvent.pointerMove(first, { pointerId: 5, clientX: 80, clientY: 90 })
+    expect(first.querySelector('.locker-thrown-photo-shift')).toHaveStyle({
+      transform: 'translate(40px, 25px)',
+    })
   })
 
   it('opens the trash while the pointer is over it and deletes on drop', () => {
@@ -261,7 +268,7 @@ describe('PasswordGame', () => {
     expect(screen.getByLabelText('Trash')).toBeInTheDocument()
     expect(screen.getByLabelText('Trash')).not.toHaveClass('locker-photo-trash--open')
 
-    const photo = document.querySelector('.locker-thrown-photo') as HTMLElement
+    const photo = document.querySelector('.locker-thrown-photo-turn') as HTMLElement
     const trash = screen.getByLabelText('Trash')
     const box = (left: number, top: number, right: number, bottom: number) =>
       ({

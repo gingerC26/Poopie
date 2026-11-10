@@ -723,26 +723,28 @@ h2 {
   z-index: 33;
   width: 22.1%;
   aspect-ratio: 4 / 3;
-  cursor: grab;
-  touch-action: none;
-  user-select: none;
-  pointer-events: auto;
+  pointer-events: none;
   animation: locker-photo-throw 1.2s cubic-bezier(0.18, 0.82, 0.22, 1.04) forwards;
-}
-
-.locker-thrown-photo:active {
-  cursor: grabbing;
 }
 
 .locker-thrown-photo-shift {
   width: 100%;
   height: 100%;
+  pointer-events: none;
 }
 
 .locker-thrown-photo-turn {
   width: 100%;
   height: 100%;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  pointer-events: auto;
   transform: rotate(var(--spin));
+}
+
+.locker-thrown-photo-turn:active {
+  cursor: grabbing;
 }
 
 .locker-thrown-photo img {
@@ -750,7 +752,7 @@ h2 {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  pointer-events: none;
+  pointer-events: auto;
   border: 0.45vw solid #f4efe6;
   box-shadow: 0 1.2vw 2.4vw rgba(0, 0, 0, 0.42);
 }

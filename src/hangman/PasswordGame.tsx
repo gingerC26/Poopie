@@ -270,65 +270,67 @@ export default function PasswordGame() {
                   '--spin': photo.rotate,
                 } as CSSProperties
               }
-              onPointerDown={(event) => {
-                event.preventDefault()
-                event.stopPropagation()
-                try {
-                  event.currentTarget.setPointerCapture(event.pointerId)
-                } catch {
-                  /* untrusted/synthetic pointers may not capture */
-                }
-                const layer = bringFront()
-                photoDrag.current = {
-                  id: photo.id,
-                  startX: event.clientX,
-                  startY: event.clientY,
-                  origX: photo.dx,
-                  origY: photo.dy,
-                }
-                setThrown((list) =>
-                  list.map((item) => (item.id === photo.id ? { ...item, layer } : item)),
-                )
-                setOverTrash(pointerHitsTrash(event.clientX, event.clientY, trashRef.current))
-              }}
-              onPointerMove={(event) => {
-                const dragState = photoDrag.current
-                if (!dragState || dragState.id !== photo.id) return
-                const dx = dragState.origX + event.clientX - dragState.startX
-                const dy = dragState.origY + event.clientY - dragState.startY
-                setThrown((list) =>
-                  list.map((item) => (item.id === photo.id ? { ...item, dx, dy } : item)),
-                )
-                setOverTrash(pointerHitsTrash(event.clientX, event.clientY, trashRef.current))
-              }}
-              onPointerUp={(event) => {
-                photoDrag.current = null
-                if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-                  event.currentTarget.releasePointerCapture(event.pointerId)
-                }
-                const dropInTrash = pointerHitsTrash(
-                  event.clientX,
-                  event.clientY,
-                  trashRef.current,
-                )
-                setOverTrash(false)
-                if (dropInTrash) {
-                  setThrown((list) => list.filter((item) => item.id !== photo.id))
-                }
-              }}
-              onPointerCancel={(event) => {
-                if (photoDrag.current?.id === photo.id) photoDrag.current = null
-                if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-                  event.currentTarget.releasePointerCapture(event.pointerId)
-                }
-                setOverTrash(false)
-              }}
             >
               <div
                 className="locker-thrown-photo-shift"
                 style={{ transform: `translate(${photo.dx}px, ${photo.dy}px)` }}
               >
-                <div className="locker-thrown-photo-turn">
+                <div
+                  className="locker-thrown-photo-turn"
+                  onPointerDown={(event) => {
+                    event.preventDefault()
+                    event.stopPropagation()
+                    try {
+                      event.currentTarget.setPointerCapture(event.pointerId)
+                    } catch {
+                      /* untrusted/synthetic pointers may not capture */
+                    }
+                    const layer = bringFront()
+                    photoDrag.current = {
+                      id: photo.id,
+                      startX: event.clientX,
+                      startY: event.clientY,
+                      origX: photo.dx,
+                      origY: photo.dy,
+                    }
+                    setThrown((list) =>
+                      list.map((item) => (item.id === photo.id ? { ...item, layer } : item)),
+                    )
+                    setOverTrash(pointerHitsTrash(event.clientX, event.clientY, trashRef.current))
+                  }}
+                  onPointerMove={(event) => {
+                    const dragState = photoDrag.current
+                    if (!dragState || dragState.id !== photo.id) return
+                    const dx = dragState.origX + event.clientX - dragState.startX
+                    const dy = dragState.origY + event.clientY - dragState.startY
+                    setThrown((list) =>
+                      list.map((item) => (item.id === photo.id ? { ...item, dx, dy } : item)),
+                    )
+                    setOverTrash(pointerHitsTrash(event.clientX, event.clientY, trashRef.current))
+                  }}
+                  onPointerUp={(event) => {
+                    photoDrag.current = null
+                    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+                      event.currentTarget.releasePointerCapture(event.pointerId)
+                    }
+                    const dropInTrash = pointerHitsTrash(
+                      event.clientX,
+                      event.clientY,
+                      trashRef.current,
+                    )
+                    setOverTrash(false)
+                    if (dropInTrash) {
+                      setThrown((list) => list.filter((item) => item.id !== photo.id))
+                    }
+                  }}
+                  onPointerCancel={(event) => {
+                    if (photoDrag.current?.id === photo.id) photoDrag.current = null
+                    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+                      event.currentTarget.releasePointerCapture(event.pointerId)
+                    }
+                    setOverTrash(false)
+                  }}
+                >
                   <img src={photo.src} alt="" draggable={false} />
                 </div>
               </div>
