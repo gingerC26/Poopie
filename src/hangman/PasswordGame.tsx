@@ -43,6 +43,12 @@ function randomThrow(): Omit<ThrownPhoto, 'id' | 'src'> {
   }
 }
 
+function pointerHitsTrash(clientX: number, clientY: number, trashEl: HTMLElement | null) {
+  if (!trashEl) return false
+  const box = trashEl.getBoundingClientRect()
+  return clientX >= box.left && clientX <= box.right && clientY >= box.top && clientY <= box.bottom
+}
+
 export default function PasswordGame() {
   const rootRef = useRef<HTMLDivElement>(null)
   const [host, setHost] = useState<HTMLElement | null>(null)
@@ -55,9 +61,12 @@ export default function PasswordGame() {
   const [pan, setPan] = useState({ x: 0, y: 0 })
   const [thrown, setThrown] = useState<ThrownPhoto[]>([])
   const [cameraLayer, setCameraLayer] = useState(31)
+  const [trashOpen, setTrashOpen] = useState(false)
   const photoCursor = useRef(0)
   const photoId = useRef(0)
   const stack = useRef(40)
+  const trashRef = useRef<HTMLDivElement>(null)
+  const trashOpenRef = useRef(false)
   const drag = useRef<{ startX: number; startY: number; origX: number; origY: number } | null>(
     null,
   )
@@ -72,6 +81,11 @@ export default function PasswordGame() {
   const bringFront = () => {
     stack.current += 1
     return stack.current
+  }
+
+  const setOverTrash = (over: boolean) => {
+    trashOpenRef.current = over
+    setTrashOpen(over)
   }
 
   const fireShutter = () => {
@@ -95,6 +109,10 @@ export default function PasswordGame() {
 
   const closeCamera = () => {
     drag.current = null
+    photoDrag.current = null
+    trashOpenRef.current = false
+    setTrashOpen(false)
+    setThrown([])
     setPan({ x: 0, y: 0 })
     setFlash(0)
     setCameraOpen(false)
@@ -236,7 +254,8 @@ export default function PasswordGame() {
       {thrown.length > 0 &&
         host &&
         createPortal(
-          thrown.map((photo) => (
+          <>
+          {thrown.map((photo) => (
             <div
               key={photo.id}
               className="locker-thrown-photo"
@@ -270,6 +289,7 @@ export default function PasswordGame() {
                 setThrown((list) =>
                   list.map((item) => (item.id === photo.id ? { ...item, layer } : item)),
                 )
+                setOverTrash(pointerHitsTrash(event.clientX, event.clientY, trashRef.current))
               }}
               onPointerMove={(event) => {
                 const dragState = photoDrag.current
@@ -279,11 +299,21 @@ export default function PasswordGame() {
                 setThrown((list) =>
                   list.map((item) => (item.id === photo.id ? { ...item, dx, dy } : item)),
                 )
+                setOverTrash(pointerHitsTrash(event.clientX, event.clientY, trashRef.current))
               }}
               onPointerUp={(event) => {
-                if (photoDrag.current?.id === photo.id) photoDrag.current = null
+                photoDrag.current = null
                 if (event.currentTarget.hasPointerCapture(event.pointerId)) {
                   event.currentTarget.releasePointerCapture(event.pointerId)
+                }
+                const dropInTrash = pointerHitsTrash(
+                  event.clientX,
+                  event.clientY,
+                  trashRef.current,
+                )
+                setOverTrash(false)
+                if (dropInTrash) {
+                  setThrown((list) => list.filter((item) => item.id !== photo.id))
                 }
               }}
               onPointerCancel={(event) => {
@@ -291,6 +321,7 @@ export default function PasswordGame() {
                 if (event.currentTarget.hasPointerCapture(event.pointerId)) {
                   event.currentTarget.releasePointerCapture(event.pointerId)
                 }
+                setOverTrash(false)
               }}
             >
               <div
@@ -302,7 +333,16 @@ export default function PasswordGame() {
                 </div>
               </div>
             </div>
-          )),
+          ))}
+          <div
+            ref={trashRef}
+            className={`locker-photo-trash${trashOpen ? ' locker-photo-trash--open' : ''}`}
+            aria-label="Trash"
+            style={{ zIndex: 1_000_000 }}
+          >
+            <TrashCanIcon />
+          </div>
+          </>,
           host,
         )}
       {open &&
@@ -341,6 +381,26 @@ export default function PasswordGame() {
           host,
         )}
     </div>
+  )
+}
+
+function TrashCanIcon() {
+  return (
+    <svg viewBox="0 0 64 72" aria-hidden="true">
+      <g className="locker-photo-trash-lid">
+        <rect x="22" y="4" width="20" height="7" rx="2.2" />
+        <rect x="8" y="12" width="48" height="7" rx="2.4" />
+      </g>
+      <path d="M12 22h40l-3.6 42.5a6 6 0 0 1-6 5.5H21.6a6 6 0 0 1-6-5.5Z" />
+      <path
+        d="M24 30v28M32 30v28M40 30v28"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="3.2"
+        strokeLinecap="round"
+        opacity="0.35"
+      />
+    </svg>
   )
 }
 

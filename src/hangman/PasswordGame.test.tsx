@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import PasswordGame from './PasswordGame'
 
 describe('PasswordGame', () => {
@@ -194,7 +194,8 @@ describe('PasswordGame', () => {
     expect(card.style.getPropertyValue('--spin')).toMatch(/-?\d+deg/)
 
     fireEvent.click(screen.getByRole('button', { name: 'Close camera' }))
-    expect(document.querySelectorAll('.locker-thrown-photo')).toHaveLength(4)
+    expect(document.querySelectorAll('.locker-thrown-photo')).toHaveLength(0)
+    expect(screen.queryByLabelText('Trash')).not.toBeInTheDocument()
   })
 
   it('drags thrown photos and raises the dragged camera or photo', () => {
@@ -235,5 +236,57 @@ describe('PasswordGame', () => {
     const zoomed = document.querySelector('.locker-camera-zoom') as HTMLElement
     fireEvent.pointerDown(zoomed, { pointerId: 3, clientX: 200, clientY: 180 })
     expect(Number(zoomed.style.zIndex)).toBeGreaterThan(Number(first.style.zIndex))
+  })
+
+  it('opens the trash while the pointer is over it and deletes on drop', () => {
+    render(
+      <div className="subpage--password">
+        <div
+          className="password-scene"
+          style={{ backgroundImage: 'url(/backgrounds/password.jpg)' }}
+        >
+          <PasswordGame />
+        </div>
+      </div>,
+    )
+    fireEvent.click(screen.getByRole('button', { name: 'Open locker 11' }))
+    for (const digit of '030226') {
+      fireEvent.click(screen.getByRole('button', { name: digit }))
+    }
+    fireEvent.click(screen.getByRole('button', { name: 'Confirm' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Kodak camera' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Shutter' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Shutter' }))
+
+    expect(screen.getByLabelText('Trash')).toBeInTheDocument()
+    expect(screen.getByLabelText('Trash')).not.toHaveClass('locker-photo-trash--open')
+
+    const photo = document.querySelector('.locker-thrown-photo') as HTMLElement
+    const trash = screen.getByLabelText('Trash')
+    const box = (left: number, top: number, right: number, bottom: number) =>
+      ({
+        left,
+        top,
+        right,
+        bottom,
+        width: right - left,
+        height: bottom - top,
+        x: left,
+        y: top,
+        toJSON() {},
+      }) as DOMRect
+
+    vi.spyOn(trash, 'getBoundingClientRect').mockReturnValue(box(200, 200, 260, 260))
+
+    fireEvent.pointerDown(photo, { pointerId: 4, clientX: 10, clientY: 10 })
+    fireEvent.pointerMove(photo, { pointerId: 4, clientX: 20, clientY: 20 })
+    expect(trash).not.toHaveClass('locker-photo-trash--open')
+
+    fireEvent.pointerMove(photo, { pointerId: 4, clientX: 220, clientY: 220 })
+    expect(trash).toHaveClass('locker-photo-trash--open')
+
+    fireEvent.pointerUp(photo, { pointerId: 4, clientX: 220, clientY: 220 })
+    expect(document.querySelectorAll('.locker-thrown-photo')).toHaveLength(1)
+    expect(screen.getByLabelText('Trash')).not.toHaveClass('locker-photo-trash--open')
   })
 })

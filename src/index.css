@@ -770,6 +770,35 @@ h2 {
   }
 }
 
+.locker-photo-trash {
+  position: absolute;
+  right: 1.15rem;
+  bottom: 1.1rem;
+  z-index: 10000;
+  width: 3.55rem;
+  height: 4rem;
+  color: #f4f1ea;
+  pointer-events: none;
+  filter: drop-shadow(0 0.35rem 0.55rem rgba(0, 0, 0, 0.55));
+}
+
+.locker-photo-trash svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+  overflow: visible;
+}
+
+.locker-photo-trash-lid {
+  transform-origin: 12px 18px;
+  transition: transform 0.18s ease;
+}
+
+.locker-photo-trash--open .locker-photo-trash-lid {
+  transform: rotate(-48deg) translate(-2px, -3px);
+}
+
 .password-dim {
   position: absolute;
   inset: 0;
