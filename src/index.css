@@ -552,6 +552,25 @@ h2 {
   height: 14.44%;
 }
 
+.locker-camera {
+  position: absolute;
+  left: 43.44%;
+  top: 43.61%;
+  width: 8.74%;
+  height: 14.44%;
+  pointer-events: none;
+}
+
+.locker-camera img {
+  position: absolute;
+  left: 11%;
+  bottom: 16%;
+  display: block;
+  width: 78%;
+  height: auto;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+
 .password-dim {
   position: absolute;
   inset: 0;

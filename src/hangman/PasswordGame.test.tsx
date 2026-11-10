@@ -80,8 +80,14 @@ describe('PasswordGame', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Confirm' }))
     expect(screen.queryByRole('dialog', { name: 'Enter password' })).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Open locker 11' })).not.toBeInTheDocument()
+    expect(screen.getByRole('img', { name: 'Kodak camera' })).toBeInTheDocument()
     expect(document.querySelector('.password-scene')).toHaveStyle({
       backgroundImage: 'url(/backgrounds/password-open.jpg)',
     })
+  })
+
+  it('keeps the camera out of the closed locker', () => {
+    render(<PasswordGame />)
+    expect(screen.queryByRole('img', { name: 'Kodak camera' })).not.toBeInTheDocument()
   })
 })

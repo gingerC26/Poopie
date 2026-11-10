@@ -57,6 +57,11 @@ export default function PasswordGame() {
           <span className="locker-hot-hint">open</span>
         </button>
       )}
+      {unlocked && (
+        <div className="locker-camera">
+          <img src="/sprites/password/kodak-camera.png" alt="Kodak camera" draggable={false} />
+        </div>
+      )}
       {open &&
         host &&
         createPortal(
