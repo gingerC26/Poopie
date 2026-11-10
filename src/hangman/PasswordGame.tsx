@@ -12,12 +12,34 @@ export default function PasswordGame() {
   const [pin, setPin] = useState('')
   const [shake, setShake] = useState(0)
   const [unlocked, setUnlocked] = useState(false)
+  const [cameraOpen, setCameraOpen] = useState(false)
+  const [flash, setFlash] = useState(0)
+  const [pan, setPan] = useState({ x: 0, y: 0 })
+  const drag = useRef<{ startX: number; startY: number; origX: number; origY: number } | null>(
+    null,
+  )
 
   useEffect(() => {
     const root = rootRef.current
     if (!root) return
     setHost(root.closest('.subpage--password') ?? root)
   }, [])
+
+  const closeCamera = () => {
+    drag.current = null
+    setPan({ x: 0, y: 0 })
+    setFlash(0)
+    setCameraOpen(false)
+  }
+
+  useEffect(() => {
+    if (!cameraOpen) return
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') closeCamera()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [cameraOpen])
 
   const close = () => {
     setOpen(false)
@@ -58,10 +80,89 @@ export default function PasswordGame() {
         </button>
       )}
       {unlocked && (
-        <div className="locker-camera">
-          <img src="/sprites/password/kodak-camera.png" alt="Kodak camera" draggable={false} />
-        </div>
+        <button
+          type="button"
+          className="locker-camera"
+          aria-label="Kodak camera"
+          onClick={() => {
+            setPan({ x: 0, y: 0 })
+            setCameraOpen(true)
+          }}
+        >
+          <img src="/sprites/password/kodak-camera.png?v=shutter" alt="" draggable={false} />
+        </button>
       )}
+      {cameraOpen &&
+        host &&
+        createPortal(
+          <>
+            <div className="locker-camera-dim" />
+            <button
+              type="button"
+              className="locker-camera-close"
+              aria-label="Close camera"
+              onClick={closeCamera}
+            >
+              ×
+            </button>
+            <p className="locker-camera-hint">Click the shutter button!</p>
+            <div
+              className="locker-camera-zoom"
+              aria-label="Drag camera"
+              style={{
+                transform: `translate(calc(-50% + ${pan.x}px), calc(-50% + ${pan.y}px))`,
+              }}
+              onPointerDown={(event) => {
+                if (event.target !== event.currentTarget && !(event.target instanceof HTMLImageElement)) {
+                  return
+                }
+                event.preventDefault()
+                event.stopPropagation()
+                try {
+                  event.currentTarget.setPointerCapture(event.pointerId)
+                } catch {
+                  /* untrusted/synthetic pointers may not capture */
+                }
+                drag.current = {
+                  startX: event.clientX,
+                  startY: event.clientY,
+                  origX: pan.x,
+                  origY: pan.y,
+                }
+              }}
+              onPointerMove={(event) => {
+                if (!drag.current) return
+                setPan({
+                  x: drag.current.origX + event.clientX - drag.current.startX,
+                  y: drag.current.origY + event.clientY - drag.current.startY,
+                })
+              }}
+              onPointerUp={(event) => {
+                drag.current = null
+                if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+                  event.currentTarget.releasePointerCapture(event.pointerId)
+                }
+              }}
+              onPointerCancel={(event) => {
+                drag.current = null
+                if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+                  event.currentTarget.releasePointerCapture(event.pointerId)
+                }
+              }}
+            >
+              <img src="/sprites/password/kodak-camera.png?v=shutter" alt="Kodak camera" draggable={false} />
+              <button
+                type="button"
+                className="locker-camera-shutter"
+                aria-label="Shutter"
+                onPointerDown={(event) => event.stopPropagation()}
+                onClick={() => setFlash((n) => n + 1)}
+              />
+              {flash > 0 && <div key={flash} className="locker-camera-flash" aria-hidden="true" />}
+            </div>
+          </>,
+          host,
+        )}
       {open &&
         host &&
         createPortal(

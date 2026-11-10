@@ -80,7 +80,7 @@ describe('PasswordGame', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Confirm' }))
     expect(screen.queryByRole('dialog', { name: 'Enter password' })).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Open locker 11' })).not.toBeInTheDocument()
-    expect(screen.getByRole('img', { name: 'Kodak camera' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Kodak camera' })).toBeInTheDocument()
     expect(document.querySelector('.password-scene')).toHaveStyle({
       backgroundImage: 'url(/backgrounds/password-open.jpg)',
     })
@@ -88,6 +88,73 @@ describe('PasswordGame', () => {
 
   it('keeps the camera out of the closed locker', () => {
     render(<PasswordGame />)
-    expect(screen.queryByRole('img', { name: 'Kodak camera' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Kodak camera' })).not.toBeInTheDocument()
+  })
+
+  it('zooms the camera over a dark overlay', () => {
+    const { container } = render(
+      <div className="subpage--password">
+        <div
+          className="password-scene"
+          style={{ backgroundImage: 'url(/backgrounds/password.jpg)' }}
+        >
+          <PasswordGame />
+        </div>
+      </div>,
+    )
+    fireEvent.click(screen.getByRole('button', { name: 'Open locker 11' }))
+    for (const digit of '030226') {
+      fireEvent.click(screen.getByRole('button', { name: digit }))
+    }
+    fireEvent.click(screen.getByRole('button', { name: 'Confirm' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Kodak camera' }))
+
+    const zoomed = container.querySelector('.locker-camera-zoom')
+    expect(zoomed).toBeTruthy()
+    expect(container.querySelector('.subpage--password .locker-camera-dim')).toBeTruthy()
+    expect(screen.getByRole('button', { name: 'Shutter' })).toBeInTheDocument()
+    expect(screen.getByText('Click the shutter button!')).toBeInTheDocument()
+
+    fireEvent.click(document.querySelector('.locker-camera-dim') as HTMLElement)
+    expect(container.querySelector('.locker-camera-zoom')).toBeTruthy()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Close camera' }))
+    expect(container.querySelector('.locker-camera-zoom')).toBeNull()
+    expect(screen.queryByText('Click the shutter button!')).not.toBeInTheDocument()
+  })
+
+  it('drags the zoomed camera and keeps it until the close button is clicked', () => {
+    render(
+      <div className="subpage--password">
+        <div
+          className="password-scene"
+          style={{ backgroundImage: 'url(/backgrounds/password.jpg)' }}
+        >
+          <PasswordGame />
+        </div>
+      </div>,
+    )
+    fireEvent.click(screen.getByRole('button', { name: 'Open locker 11' }))
+    for (const digit of '030226') {
+      fireEvent.click(screen.getByRole('button', { name: digit }))
+    }
+    fireEvent.click(screen.getByRole('button', { name: 'Confirm' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Kodak camera' }))
+
+    const zoomed = document.querySelector('.locker-camera-zoom') as HTMLElement
+    fireEvent.pointerDown(zoomed, { pointerId: 1, clientX: 200, clientY: 180 })
+    fireEvent.pointerMove(zoomed, { pointerId: 1, clientX: 248, clientY: 151 })
+    expect(zoomed).toHaveStyle({
+      transform: 'translate(calc(-50% + 48px), calc(-50% + -29px))',
+    })
+    fireEvent.pointerUp(zoomed, { pointerId: 1 })
+    expect(document.querySelector('.locker-camera-zoom')).toBeTruthy()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Shutter' }))
+    expect(document.querySelector('.locker-camera-zoom')).toBeTruthy()
+    expect(document.querySelector('.locker-camera-flash')).toBeTruthy()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Close camera' }))
+    expect(document.querySelector('.locker-camera-zoom')).toBeNull()
   })
 })

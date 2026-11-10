@@ -558,7 +558,11 @@ h2 {
   top: 43.61%;
   width: 8.74%;
   height: 14.44%;
-  pointer-events: none;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
 }
 
 .locker-camera img {
@@ -569,6 +573,149 @@ h2 {
   width: 78%;
   height: auto;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+  pointer-events: none;
+}
+
+.locker-camera-dim {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  background: #000;
+  opacity: 0.8;
+  pointer-events: auto;
+}
+
+.locker-camera-close {
+  position: absolute;
+  top: 0.85rem;
+  right: 1rem;
+  z-index: 32;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.locker-camera-hint {
+  position: absolute;
+  left: 50%;
+  top: 62%;
+  z-index: 32;
+  margin: 0;
+  transform: translateX(-50%);
+  color: #fff;
+  font-family: "Cormorant Garamond", Palatino, "Palatino Linotype", "Times New Roman", serif;
+  font-size: 1.55rem;
+  font-weight: 500;
+  font-style: italic;
+  letter-spacing: 0.04em;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.7);
+  pointer-events: none;
+  animation: locker-camera-hint 2s ease forwards;
+}
+
+@keyframes locker-camera-hint {
+  0%,
+  86% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.locker-camera-zoom {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 31;
+  width: 30%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  pointer-events: auto;
+  overflow: visible;
+}
+
+.locker-camera-zoom:active {
+  cursor: grabbing;
+}
+
+.locker-camera-zoom img {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.45));
+}
+
+.locker-camera-shutter {
+  position: absolute;
+  top: 1.5%;
+  left: 78%;
+  z-index: 2;
+  width: 10%;
+  height: 12%;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.locker-camera-shutter:hover,
+.locker-camera-shutter:focus-visible {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.locker-camera-shutter:active {
+  background: rgba(0, 0, 0, 0.28);
+}
+
+.locker-camera-flash {
+  position: absolute;
+  left: 79%;
+  top: 26%;
+  z-index: 3;
+  width: 72%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(
+    circle,
+    #fff 0%,
+    #fff 7%,
+    rgba(255, 252, 230, 0.95) 14%,
+    rgba(255, 236, 160, 0.55) 28%,
+    rgba(255, 210, 90, 0.18) 42%,
+    transparent 58%
+  );
+  transform: translate(-50%, -50%);
+  animation: locker-camera-flash 480ms ease-out forwards;
+}
+
+@keyframes locker-camera-flash {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.35);
+  }
+  16% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.15);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.65);
+  }
 }
 
 .password-dim {
