@@ -1,9 +1,44 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { createPortal } from 'react-dom'
+import { LOCKER_PHOTOS } from './lockerPhotos'
 import { LOCKER_PIN, LOCKER_PIN_LENGTH } from './settings'
 
 const KEYS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'x', '0', 'v'] as const
 const OPEN_BG = 'url(/backgrounds/password-open.jpg)'
+
+type ThrownPhoto = {
+  id: number
+  src: string
+  fromX: string
+  fromY: string
+  toX: string
+  toY: string
+  rotate: string
+}
+
+function randomThrow(): Omit<ThrownPhoto, 'id' | 'src'> {
+  const rotate = Math.round(Math.random() * 60 - 30)
+  const toX = 16 + Math.random() * 68
+  const toY = 16 + Math.random() * 68
+  const edge = Math.floor(Math.random() * 8)
+  const from = [
+    { fromX: -22, fromY: toY },
+    { fromX: 122, fromY: toY },
+    { fromX: toX, fromY: -22 },
+    { fromX: toX, fromY: 122 },
+    { fromX: -22, fromY: -22 },
+    { fromX: 122, fromY: -22 },
+    { fromX: -22, fromY: 122 },
+    { fromX: 122, fromY: 122 },
+  ][edge]
+  return {
+    fromX: `${from.fromX}%`,
+    fromY: `${from.fromY}%`,
+    toX: `${toX}%`,
+    toY: `${toY}%`,
+    rotate: `${rotate}deg`,
+  }
+}
 
 export default function PasswordGame() {
   const rootRef = useRef<HTMLDivElement>(null)
@@ -15,9 +50,21 @@ export default function PasswordGame() {
   const [cameraOpen, setCameraOpen] = useState(false)
   const [flash, setFlash] = useState(0)
   const [pan, setPan] = useState({ x: 0, y: 0 })
+  const [thrown, setThrown] = useState<ThrownPhoto[]>([])
+  const photoCursor = useRef(0)
+  const photoId = useRef(0)
   const drag = useRef<{ startX: number; startY: number; origX: number; origY: number } | null>(
     null,
   )
+
+  const fireShutter = () => {
+    setFlash((n) => n + 1)
+    if (LOCKER_PHOTOS.length === 0) return
+    const src = LOCKER_PHOTOS[photoCursor.current % LOCKER_PHOTOS.length]
+    photoCursor.current += 1
+    photoId.current += 1
+    setThrown((list) => [...list, { id: photoId.current, src, ...randomThrow() }])
+  }
 
   useEffect(() => {
     const root = rootRef.current
@@ -156,11 +203,33 @@ export default function PasswordGame() {
                 className="locker-camera-shutter"
                 aria-label="Shutter"
                 onPointerDown={(event) => event.stopPropagation()}
-                onClick={() => setFlash((n) => n + 1)}
+                onClick={fireShutter}
               />
               {flash > 0 && <div key={flash} className="locker-camera-flash" aria-hidden="true" />}
             </div>
           </>,
+          host,
+        )}
+      {thrown.length > 0 &&
+        host &&
+        createPortal(
+          thrown.map((photo) => (
+            <div
+              key={photo.id}
+              className="locker-thrown-photo"
+              style={
+                {
+                  '--from-x': photo.fromX,
+                  '--from-y': photo.fromY,
+                  '--to-x': photo.toX,
+                  '--to-y': photo.toY,
+                  '--spin': photo.rotate,
+                } as CSSProperties
+              }
+            >
+              <img src={photo.src} alt="" draggable={false} />
+            </div>
+          )),
           host,
         )}
       {open &&

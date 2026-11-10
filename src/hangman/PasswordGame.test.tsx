@@ -157,4 +157,43 @@ describe('PasswordGame', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Close camera' }))
     expect(document.querySelector('.locker-camera-zoom')).toBeNull()
   })
+
+  it('throws locker photos in order when the shutter fires', () => {
+    render(
+      <div className="subpage--password">
+        <div
+          className="password-scene"
+          style={{ backgroundImage: 'url(/backgrounds/password.jpg)' }}
+        >
+          <PasswordGame />
+        </div>
+      </div>,
+    )
+    fireEvent.click(screen.getByRole('button', { name: 'Open locker 11' }))
+    for (const digit of '030226') {
+      fireEvent.click(screen.getByRole('button', { name: digit }))
+    }
+    fireEvent.click(screen.getByRole('button', { name: 'Confirm' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Kodak camera' }))
+
+    const shutter = screen.getByRole('button', { name: 'Shutter' })
+    fireEvent.click(shutter)
+    fireEvent.click(shutter)
+    fireEvent.click(shutter)
+    fireEvent.click(shutter)
+
+    const photos = [...document.querySelectorAll('.locker-thrown-photo img')] as HTMLImageElement[]
+    expect(photos.map((img) => img.getAttribute('src'))).toEqual([
+      '/sprites/password/photos/1.jpg',
+      '/sprites/password/photos/2.jpg',
+      '/sprites/password/photos/3.jpg',
+      '/sprites/password/photos/1.jpg',
+    ])
+
+    const card = document.querySelector('.locker-thrown-photo') as HTMLElement
+    expect(card.style.getPropertyValue('--spin')).toMatch(/-?\d+deg/)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Close camera' }))
+    expect(document.querySelectorAll('.locker-thrown-photo')).toHaveLength(4)
+  })
 })
