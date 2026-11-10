@@ -14,6 +14,9 @@ type ThrownPhoto = {
   toX: string
   toY: string
   rotate: string
+  dx: number
+  dy: number
+  layer: number
 }
 
 function randomThrow(): Omit<ThrownPhoto, 'id' | 'src'> {
@@ -51,11 +54,25 @@ export default function PasswordGame() {
   const [flash, setFlash] = useState(0)
   const [pan, setPan] = useState({ x: 0, y: 0 })
   const [thrown, setThrown] = useState<ThrownPhoto[]>([])
+  const [cameraLayer, setCameraLayer] = useState(31)
   const photoCursor = useRef(0)
   const photoId = useRef(0)
+  const stack = useRef(40)
   const drag = useRef<{ startX: number; startY: number; origX: number; origY: number } | null>(
     null,
   )
+  const photoDrag = useRef<{
+    id: number
+    startX: number
+    startY: number
+    origX: number
+    origY: number
+  } | null>(null)
+
+  const bringFront = () => {
+    stack.current += 1
+    return stack.current
+  }
 
   const fireShutter = () => {
     setFlash((n) => n + 1)
@@ -63,7 +80,11 @@ export default function PasswordGame() {
     const src = LOCKER_PHOTOS[photoCursor.current % LOCKER_PHOTOS.length]
     photoCursor.current += 1
     photoId.current += 1
-    setThrown((list) => [...list, { id: photoId.current, src, ...randomThrow() }])
+    const layer = bringFront()
+    setThrown((list) => [
+      ...list,
+      { id: photoId.current, src, layer, dx: 0, dy: 0, ...randomThrow() },
+    ])
   }
 
   useEffect(() => {
@@ -157,6 +178,7 @@ export default function PasswordGame() {
               className="locker-camera-zoom"
               aria-label="Drag camera"
               style={{
+                zIndex: cameraLayer,
                 transform: `translate(calc(-50% + ${pan.x}px), calc(-50% + ${pan.y}px))`,
               }}
               onPointerDown={(event) => {
@@ -170,6 +192,7 @@ export default function PasswordGame() {
                 } catch {
                   /* untrusted/synthetic pointers may not capture */
                 }
+                setCameraLayer(bringFront())
                 drag.current = {
                   startX: event.clientX,
                   startY: event.clientY,
@@ -217,8 +240,10 @@ export default function PasswordGame() {
             <div
               key={photo.id}
               className="locker-thrown-photo"
+              aria-label="Thrown photo"
               style={
                 {
+                  zIndex: photo.layer,
                   '--from-x': photo.fromX,
                   '--from-y': photo.fromY,
                   '--to-x': photo.toX,
@@ -226,8 +251,56 @@ export default function PasswordGame() {
                   '--spin': photo.rotate,
                 } as CSSProperties
               }
+              onPointerDown={(event) => {
+                event.preventDefault()
+                event.stopPropagation()
+                try {
+                  event.currentTarget.setPointerCapture(event.pointerId)
+                } catch {
+                  /* untrusted/synthetic pointers may not capture */
+                }
+                const layer = bringFront()
+                photoDrag.current = {
+                  id: photo.id,
+                  startX: event.clientX,
+                  startY: event.clientY,
+                  origX: photo.dx,
+                  origY: photo.dy,
+                }
+                setThrown((list) =>
+                  list.map((item) => (item.id === photo.id ? { ...item, layer } : item)),
+                )
+              }}
+              onPointerMove={(event) => {
+                const dragState = photoDrag.current
+                if (!dragState || dragState.id !== photo.id) return
+                const dx = dragState.origX + event.clientX - dragState.startX
+                const dy = dragState.origY + event.clientY - dragState.startY
+                setThrown((list) =>
+                  list.map((item) => (item.id === photo.id ? { ...item, dx, dy } : item)),
+                )
+              }}
+              onPointerUp={(event) => {
+                if (photoDrag.current?.id === photo.id) photoDrag.current = null
+                if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+                  event.currentTarget.releasePointerCapture(event.pointerId)
+                }
+              }}
+              onPointerCancel={(event) => {
+                if (photoDrag.current?.id === photo.id) photoDrag.current = null
+                if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+                  event.currentTarget.releasePointerCapture(event.pointerId)
+                }
+              }}
             >
-              <img src={photo.src} alt="" draggable={false} />
+              <div
+                className="locker-thrown-photo-shift"
+                style={{ transform: `translate(${photo.dx}px, ${photo.dy}px)` }}
+              >
+                <div className="locker-thrown-photo-turn">
+                  <img src={photo.src} alt="" draggable={false} />
+                </div>
+              </div>
             </div>
           )),
           host,

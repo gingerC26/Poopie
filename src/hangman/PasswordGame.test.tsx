@@ -196,4 +196,44 @@ describe('PasswordGame', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Close camera' }))
     expect(document.querySelectorAll('.locker-thrown-photo')).toHaveLength(4)
   })
+
+  it('drags thrown photos and raises the dragged camera or photo', () => {
+    render(
+      <div className="subpage--password">
+        <div
+          className="password-scene"
+          style={{ backgroundImage: 'url(/backgrounds/password.jpg)' }}
+        >
+          <PasswordGame />
+        </div>
+      </div>,
+    )
+    fireEvent.click(screen.getByRole('button', { name: 'Open locker 11' }))
+    for (const digit of '030226') {
+      fireEvent.click(screen.getByRole('button', { name: digit }))
+    }
+    fireEvent.click(screen.getByRole('button', { name: 'Confirm' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Kodak camera' }))
+
+    const shutter = screen.getByRole('button', { name: 'Shutter' })
+    fireEvent.click(shutter)
+    fireEvent.click(shutter)
+
+    const photos = [...document.querySelectorAll('.locker-thrown-photo')] as HTMLElement[]
+    const first = photos[0]
+    const second = photos[1]
+    expect(Number(second.style.zIndex)).toBeGreaterThan(Number(first.style.zIndex))
+
+    fireEvent.pointerDown(first, { pointerId: 2, clientX: 100, clientY: 100 })
+    fireEvent.pointerMove(first, { pointerId: 2, clientX: 140, clientY: 125 })
+    expect(first.querySelector('.locker-thrown-photo-shift')).toHaveStyle({
+      transform: 'translate(40px, 25px)',
+    })
+    expect(Number(first.style.zIndex)).toBeGreaterThan(Number(second.style.zIndex))
+    fireEvent.pointerUp(first, { pointerId: 2 })
+
+    const zoomed = document.querySelector('.locker-camera-zoom') as HTMLElement
+    fireEvent.pointerDown(zoomed, { pointerId: 3, clientX: 200, clientY: 180 })
+    expect(Number(zoomed.style.zIndex)).toBeGreaterThan(Number(first.style.zIndex))
+  })
 })
