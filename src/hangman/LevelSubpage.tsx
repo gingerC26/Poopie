@@ -2,6 +2,7 @@ import Gallery from '../pages/Gallery'
 import Games from '../pages/Games'
 import Scene from '../pages/Scene'
 import CarefulGame from './CarefulGame'
+import MemoryGame from './MemoryGame'
 import PasswordGame from './PasswordGame'
 import TeaGame from './TeaGame'
 import { titleCaseWord, type Level } from './levels'
@@ -64,6 +65,7 @@ export default function LevelSubpage({ level, onWin }: Props) {
           <PasswordGame onWin={onWin} />
         </div>
       )}
+      {isMemory && <MemoryGame onWin={onWin} />}
       <div className="subpage-copy">
         <h1>{level.note?.title ?? titleCaseWord(level.word)}</h1>
         <p className="lede">{level.note?.body}</p>

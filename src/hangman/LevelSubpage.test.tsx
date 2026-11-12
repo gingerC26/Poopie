@@ -46,5 +46,6 @@ describe('LevelSubpage', () => {
     expect(document.querySelector('.subpage--scene')).toHaveStyle({
       backgroundImage: 'url(/backgrounds/memory.jpg?v=night2)',
     })
+    expect(screen.getByRole('textbox', { name: 'Terminal' })).toBeInTheDocument()
   })
 })

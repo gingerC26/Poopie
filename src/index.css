@@ -1194,6 +1194,71 @@ h2 {
   line-height: 1.2;
 }
 
+.subpage--memory {
+  position: relative;
+}
+
+.memory-terminal-dock {
+  position: absolute;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  width: min(30rem, calc(100% - 2.5rem));
+}
+
+.memory-terminal-reset {
+  flex: none;
+  height: 2.15rem;
+  padding: 0 0.7rem;
+  border: 1px solid #1c1c1c;
+  border-radius: 3px;
+  background: #111;
+  color: #9a9a9a;
+  font-family: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.8rem;
+}
+
+.memory-terminal-reset:hover:not(:disabled),
+.memory-terminal-reset:focus-visible:not(:disabled) {
+  color: #fff;
+  border-color: #3a3a3a;
+}
+
+.memory-terminal-reset:disabled {
+  color: #555;
+  opacity: 0.45;
+  cursor: default;
+}
+
+.memory-terminal {
+  flex: 1;
+  min-width: 0;
+  height: 2.15rem;
+  margin: 0;
+  padding: 0 0.75rem;
+  border: 1px solid #1c1c1c;
+  border-radius: 3px;
+  background: #050505;
+  color: #fff;
+  caret-color: #fff;
+  font-family: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.88rem;
+  line-height: 2.15rem;
+  outline: none;
+}
+
+.memory-terminal:focus {
+  border-color: #3a3a3a;
+}
+
+.memory-terminal::placeholder {
+  color: #7a7a7a;
+  opacity: 1;
+}
+
 .subpage--memory h1 {
   color: #ead6dc;
 }

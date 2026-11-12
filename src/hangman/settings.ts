@@ -49,3 +49,19 @@ export const LOCKER_PIN_LENGTH = 6
 /** Correct locker combination. */
 export const LOCKER_PIN = '030226'
 // default: 030226
+
+/** Folder for locker-camera photos. Drop jpg/png/webp here (1.jpg, 2.jpg, …). */
+export const LOCKER_PHOTOS_DIR = 'public/sprites/password/photos'
+// default: public/sprites/password/photos
+
+//******************** */
+// MEMORY SETTINGS
+//******************** */
+
+/** Memory answers, one guess per line. */
+export const MEMORY_ANSWERS_PATH = 'public/sprites/memory/answers.txt'
+// default: public/sprites/memory/answers.txt
+
+/** Show the Memory Reset button. */
+export const MEMORY_RESET_BUTTON = true
+// default: false
