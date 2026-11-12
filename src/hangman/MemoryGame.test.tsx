@@ -46,11 +46,19 @@ describe('MemoryGame', () => {
 
     await user.type(terminal, 'nope{Enter}')
     expect(terminal).toHaveAttribute('placeholder', 'Who have we guessed... (2/3)')
+    expect(document.querySelector('.memory-terminal--wrong')).toBeTruthy()
     expect(onWin).not.toHaveBeenCalled()
 
     await user.type(terminal, 'three{Enter}')
     expect(terminal).toHaveAttribute('placeholder', 'Who have we guessed... (3/3)')
     expect(onWin).toHaveBeenCalledTimes(1)
+    expect(screen.getByRole('dialog', { name: 'Memory note' })).toBeInTheDocument()
+    expect(
+      screen.getByText(/You remembered 3 names! \*Applause\*/),
+    ).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Close' }))
+    expect(screen.queryByRole('dialog', { name: 'Memory note' })).not.toBeInTheDocument()
+    expect(terminal).toHaveAttribute('placeholder', 'Who have we guessed... (3/3)')
 
     expect(hint).toBeDisabled()
 

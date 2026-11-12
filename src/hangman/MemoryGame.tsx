@@ -6,6 +6,10 @@ type Props = {
   onWin?: () => void
 }
 
+function memoryWinNote(count: number) {
+  return `Playing Guess Who with you, at a scenic spot (although too dark to see anything), eating popcorn chicken, seeing you and holding your hand is my favorite moment in this trip. Thank you for creating such beautiful memories with me! (And your memory is great too... You remembered ${count} names! *Applause*)`
+}
+
 export default function MemoryGame({ onWin }: Props) {
   const [value, setValue] = useState('')
   const [answers, setAnswers] = useState<MemoryAnswer[]>([])
@@ -13,6 +17,8 @@ export default function MemoryGame({ onWin }: Props) {
   const [hintKey, setHintKey] = useState<string | null>(null)
   const [hintLen, setHintLen] = useState(0)
   const [hintOwned, setHintOwned] = useState(true)
+  const [wrong, setWrong] = useState(0)
+  const [noteOpen, setNoteOpen] = useState(false)
 
   useEffect(() => {
     let alive = true
@@ -28,16 +34,25 @@ export default function MemoryGame({ onWin }: Props) {
 
   const submit = () => {
     const key = memoryKey(value)
+    if (!key) return
+    const hit = answers.some((answer) => answer.key === key) && !guessed.includes(key)
     setValue('')
     setHintOwned(true)
-    if (!key || !answers.some((answer) => answer.key === key) || guessed.includes(key)) return
+    if (!hit) {
+      setWrong((n) => n + 1)
+      return
+    }
+    setWrong(0)
     const next = [...guessed, key]
     setGuessed(next)
     if (hintKey === key) {
       setHintKey(null)
       setHintLen(0)
     }
-    if (next.length === answers.length) onWin?.()
+    if (next.length === answers.length) {
+      setNoteOpen(true)
+      onWin?.()
+    }
   }
 
   const reset = () => {
@@ -46,6 +61,8 @@ export default function MemoryGame({ onWin }: Props) {
     setHintKey(null)
     setHintLen(0)
     setHintOwned(true)
+    setWrong(0)
+    setNoteOpen(false)
   }
 
   const hint = () => {
@@ -58,8 +75,25 @@ export default function MemoryGame({ onWin }: Props) {
     setValue(current.display.slice(0, nextLen))
   }
 
+  const cleared = answers.length > 0 && guessed.length === answers.length
+
   return (
-    <div className="memory-terminal-dock">
+    <>
+      {cleared && noteOpen && (
+        <div className="memory-win" role="dialog" aria-label="Memory note">
+          <button
+            type="button"
+            className="memory-win-close"
+            aria-label="Close"
+            onClick={() => setNoteOpen(false)}
+          >
+            ×
+          </button>
+          <img src="/sprites/memory/win.jpg" alt="" />
+          <p>{memoryWinNote(answers.length)}</p>
+        </div>
+      )}
+      <div className="memory-terminal-dock">
       {MEMORY_RESET_BUTTON && (
         <button type="button" className="memory-terminal-reset" onClick={reset}>
           Reset
@@ -74,7 +108,7 @@ export default function MemoryGame({ onWin }: Props) {
         Hint
       </button>
       <input
-        className="memory-terminal"
+        className={`memory-terminal${wrong ? ' memory-terminal--wrong' : ''}`}
         aria-label="Terminal"
         type="text"
         placeholder={`Who have we guessed... (${guessed.length}/${answers.length})`}
@@ -96,5 +130,6 @@ export default function MemoryGame({ onWin }: Props) {
         }}
       />
     </div>
+    </>
   )
 }
