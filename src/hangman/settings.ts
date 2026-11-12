@@ -73,3 +73,7 @@ export const MEMORY_HINT_SOUNDS_DIR = 'public/sprites/memory/hints'
 /** How long Hint stays disabled after a click. */
 export const MEMORY_HINT_COOLDOWN_MS = 5 * 1000
 // default: 5 * 1000
+
+/** How long the first-Hint audio nudge stays on screen. */
+export const MEMORY_HINT_NUDGE_MS = 5 * 1000
+// default: 5 * 1000

@@ -1,7 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { loadMemoryAnswers, memoryKey, type MemoryAnswer } from './memoryAnswers'
 import { playMemoryHintSound } from './memoryHintSounds'
-import { MEMORY_HINT_COOLDOWN_MS, MEMORY_RESET_BUTTON } from './settings'
+import {
+  MEMORY_HINT_COOLDOWN_MS,
+  MEMORY_HINT_NUDGE_MS,
+  MEMORY_RESET_BUTTON,
+} from './settings'
 
 type Props = {
   onWin?: () => void
@@ -21,7 +25,11 @@ export default function MemoryGame({ onWin }: Props) {
   const [wrong, setWrong] = useState(0)
   const [noteOpen, setNoteOpen] = useState(false)
   const [hintCooling, setHintCooling] = useState(false)
+  const [hintNudge, setHintNudge] = useState(false)
+  const [resetConfirm, setResetConfirm] = useState(false)
   const hintCoolTimer = useRef(0)
+  const hintNudgeTimer = useRef(0)
+  const hintNudged = useRef(false)
 
   useEffect(() => {
     let alive = true
@@ -31,6 +39,7 @@ export default function MemoryGame({ onWin }: Props) {
     return () => {
       alive = false
       window.clearTimeout(hintCoolTimer.current)
+      window.clearTimeout(hintNudgeTimer.current)
     }
   }, [])
 
@@ -69,11 +78,20 @@ export default function MemoryGame({ onWin }: Props) {
     setNoteOpen(false)
     window.clearTimeout(hintCoolTimer.current)
     setHintCooling(false)
+    setResetConfirm(false)
   }
 
   const hint = () => {
     if (remaining.length === 0 || !hintOwned || hintCooling) return
     playMemoryHintSound()
+    if (!hintNudged.current) {
+      hintNudged.current = true
+      setHintNudge(true)
+      window.clearTimeout(hintNudgeTimer.current)
+      hintNudgeTimer.current = window.setTimeout(() => {
+        setHintNudge(false)
+      }, MEMORY_HINT_NUDGE_MS)
+    }
     const current = remaining.find((answer) => answer.key === hintKey) ?? remaining[0]
     const nextLen = current.key === hintKey ? Math.min(current.display.length, hintLen + 1) : 1
     setHintKey(current.key)
@@ -107,18 +125,46 @@ export default function MemoryGame({ onWin }: Props) {
       )}
       <div className="memory-terminal-dock">
       {MEMORY_RESET_BUTTON && (
-        <button type="button" className="memory-terminal-reset" onClick={reset}>
-          Reset
-        </button>
+        <div className="memory-reset-wrap">
+          {resetConfirm && (
+            <div className="memory-reset-confirm" role="dialog" aria-label="Reset progress">
+              <p>Reset progress?</p>
+              <button type="button" className="memory-terminal-reset" onClick={reset}>
+                Y
+              </button>
+              <button
+                type="button"
+                className="memory-terminal-reset"
+                onClick={() => setResetConfirm(false)}
+              >
+                N
+              </button>
+            </div>
+          )}
+          <button
+            type="button"
+            className="memory-terminal-reset"
+            onClick={() => setResetConfirm(true)}
+          >
+            Reset
+          </button>
+        </div>
       )}
-      <button
-        type="button"
-        className="memory-terminal-reset"
-        onClick={hint}
-        disabled={remaining.length === 0 || !hintOwned || hintCooling}
-      >
-        Hint
-      </button>
+      <div className="memory-hint-wrap">
+        {hintNudge && (
+          <p className="memory-hint-nudge" role="status">
+            Better experience with audio on!
+          </p>
+        )}
+        <button
+          type="button"
+          className="memory-terminal-reset"
+          onClick={hint}
+          disabled={remaining.length === 0 || !hintOwned || hintCooling}
+        >
+          Hint
+        </button>
+      </div>
       <input
         className={`memory-terminal${wrong ? ' memory-terminal--wrong' : ''}`}
         aria-label="Terminal"
