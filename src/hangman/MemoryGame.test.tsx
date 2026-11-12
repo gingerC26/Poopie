@@ -1,7 +1,15 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import MemoryGame from './MemoryGame'
+import { MEMORY_HINT_COOLDOWN_MS } from './settings'
+
+function waitHintReady(hint: HTMLElement) {
+  act(() => {
+    vi.advanceTimersByTime(MEMORY_HINT_COOLDOWN_MS)
+  })
+  expect(hint).toBeEnabled()
+}
 
 describe('MemoryGame', () => {
   beforeEach(() => {
@@ -12,10 +20,18 @@ describe('MemoryGame', () => {
         text: async () => 'one\ntwo\nthree\n',
       })),
     )
+    vi.stubGlobal(
+      'Audio',
+      vi.fn(() => ({
+        play: vi.fn().mockResolvedValue(undefined),
+        pause: vi.fn(),
+      })),
+    )
   })
 
   afterEach(() => {
     vi.unstubAllGlobals()
+    vi.useRealTimers()
   })
 
   it('shows guessed progress in the hint and wins after every answer', async () => {
@@ -67,10 +83,18 @@ describe('MemoryGame', () => {
     expect(terminal).toHaveAttribute('placeholder', 'Who have we guessed... (0/3)')
     expect(hint).toBeEnabled()
 
-    await user.click(hint)
+    vi.useFakeTimers()
+    fireEvent.click(hint)
     expect(terminal).toHaveValue('o')
-    await user.click(hint)
+    expect(hint).toBeDisabled()
+    expect(Audio).toHaveBeenCalledTimes(1)
+    fireEvent.click(hint)
+    expect(terminal).toHaveValue('o')
+    expect(Audio).toHaveBeenCalledTimes(1)
+    waitHintReady(hint)
+    fireEvent.click(hint)
     expect(terminal).toHaveValue('on')
+    expect(Audio).toHaveBeenCalledTimes(2)
   })
 
   it('reveals punctuation as ordinary characters on an unguessed answer', async () => {
@@ -90,13 +114,17 @@ describe('MemoryGame', () => {
       expect(terminal).toHaveAttribute('placeholder', 'Who have we guessed... (0/2)')
     })
 
-    await user.click(hint)
+    vi.useFakeTimers()
+    fireEvent.click(hint)
     expect(terminal).toHaveValue('O')
-    await user.click(hint)
+    waitHintReady(hint)
+    fireEvent.click(hint)
     expect(terminal).toHaveValue('O.')
-    await user.click(hint)
+    waitHintReady(hint)
+    fireEvent.click(hint)
     expect(terminal).toHaveValue('O.N')
-    expect(hint).toBeEnabled()
+    waitHintReady(hint)
+    vi.useRealTimers()
 
     await user.type(terminal, 'x')
     expect(hint).toBeDisabled()

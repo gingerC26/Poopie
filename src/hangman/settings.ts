@@ -65,3 +65,11 @@ export const MEMORY_ANSWERS_PATH = 'public/sprites/memory/answers.txt'
 /** Show the Memory Reset button. */
 export const MEMORY_RESET_BUTTON = true
 // default: false
+
+/** Folder for Memory Hint clips. Drop m4a/mp3/wav here (1.m4a, 2.m4a, …). */
+export const MEMORY_HINT_SOUNDS_DIR = 'public/sprites/memory/hints'
+// default: public/sprites/memory/hints
+
+/** How long Hint stays disabled after a click. */
+export const MEMORY_HINT_COOLDOWN_MS = 5 * 1000
+// default: 5 * 1000

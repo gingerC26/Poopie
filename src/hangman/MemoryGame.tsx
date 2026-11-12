@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { loadMemoryAnswers, memoryKey, type MemoryAnswer } from './memoryAnswers'
-import { MEMORY_RESET_BUTTON } from './settings'
+import { playMemoryHintSound } from './memoryHintSounds'
+import { MEMORY_HINT_COOLDOWN_MS, MEMORY_RESET_BUTTON } from './settings'
 
 type Props = {
   onWin?: () => void
@@ -19,6 +20,8 @@ export default function MemoryGame({ onWin }: Props) {
   const [hintOwned, setHintOwned] = useState(true)
   const [wrong, setWrong] = useState(0)
   const [noteOpen, setNoteOpen] = useState(false)
+  const [hintCooling, setHintCooling] = useState(false)
+  const hintCoolTimer = useRef(0)
 
   useEffect(() => {
     let alive = true
@@ -27,6 +30,7 @@ export default function MemoryGame({ onWin }: Props) {
     })
     return () => {
       alive = false
+      window.clearTimeout(hintCoolTimer.current)
     }
   }, [])
 
@@ -63,16 +67,24 @@ export default function MemoryGame({ onWin }: Props) {
     setHintOwned(true)
     setWrong(0)
     setNoteOpen(false)
+    window.clearTimeout(hintCoolTimer.current)
+    setHintCooling(false)
   }
 
   const hint = () => {
-    if (remaining.length === 0 || !hintOwned) return
+    if (remaining.length === 0 || !hintOwned || hintCooling) return
+    playMemoryHintSound()
     const current = remaining.find((answer) => answer.key === hintKey) ?? remaining[0]
     const nextLen = current.key === hintKey ? Math.min(current.display.length, hintLen + 1) : 1
     setHintKey(current.key)
     setHintLen(nextLen)
     setHintOwned(true)
     setValue(current.display.slice(0, nextLen))
+    setHintCooling(true)
+    window.clearTimeout(hintCoolTimer.current)
+    hintCoolTimer.current = window.setTimeout(() => {
+      setHintCooling(false)
+    }, MEMORY_HINT_COOLDOWN_MS)
   }
 
   const cleared = answers.length > 0 && guessed.length === answers.length
@@ -103,7 +115,7 @@ export default function MemoryGame({ onWin }: Props) {
         type="button"
         className="memory-terminal-reset"
         onClick={hint}
-        disabled={remaining.length === 0 || !hintOwned}
+        disabled={remaining.length === 0 || !hintOwned || hintCooling}
       >
         Hint
       </button>
