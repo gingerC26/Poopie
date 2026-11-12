@@ -28,11 +28,12 @@ export default function LevelSubpage({ level, onWin }: Props) {
 
   const isTea = level.id === '4'
   const isPassword = level.id === '2'
+  const isMemory = level.id === '5'
   const coverScene = isTea || isPassword
 
   return (
     <article
-      className={`subpage ${level.background ? 'subpage--scene' : ''} ${isTea ? 'subpage--tea' : ''} ${isPassword ? 'subpage--password' : ''}`}
+      className={`subpage ${level.background ? 'subpage--scene' : ''} ${isTea ? 'subpage--tea' : ''} ${isPassword ? 'subpage--password' : ''} ${isMemory ? 'subpage--memory' : ''}`}
       style={
         level.background && !coverScene
           ? { backgroundImage: `url(${level.background})` }

@@ -51,9 +51,10 @@ export const LEVELS: Level[] = [
     id: '5',
     word: 'MEMORY',
     page: 'note',
+    background: '/backgrounds/memory.jpg?v=night2',
     note: {
       title: 'Memory',
-      body: 'Fifth gift unlocked. Add the real note here.',
+      body: 'Enjoy the Sun Moon Lake view with popcorn chicken.',
     },
   },
   {

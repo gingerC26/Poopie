@@ -41,6 +41,10 @@ describe('LevelSubpage', () => {
 
     rerender(<LevelSubpage level={LEVELS[4]} />)
     expect(screen.getByRole('heading', { name: 'Memory' })).toBeInTheDocument()
-    expect(screen.getByText('Fifth gift unlocked. Add the real note here.')).toBeInTheDocument()
+    expect(screen.getByText('Enjoy the Sun Moon Lake view with popcorn chicken.')).toBeInTheDocument()
+    expect(document.querySelector('.subpage--memory')).toBeTruthy()
+    expect(document.querySelector('.subpage--scene')).toHaveStyle({
+      backgroundImage: 'url(/backgrounds/memory.jpg?v=night2)',
+    })
   })
 })

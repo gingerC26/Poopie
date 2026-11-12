@@ -1180,18 +1180,31 @@ h2 {
 
 .subpage-copy {
   display: grid;
-  gap: 0.4rem;
+  gap: 0.12rem;
   width: fit-content;
   max-width: 100%;
-  padding: 0.85rem 1rem;
+  padding: 0.55rem 1rem 0.6rem;
   border-radius: 16px;
-  background: color-mix(in srgb, #fff 90%, transparent);
+  background: color-mix(in srgb, #fff 40%, transparent);
   border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
 }
 
-.subpage--scene .lede {
-  color: #5c3a46;
-  font-weight: 600;
+.subpage-copy h1,
+.subpage-copy .lede {
+  line-height: 1.2;
+}
+
+.subpage--memory h1 {
+  color: #ead6dc;
+}
+
+.subpage--memory .lede,
+.subpage--password .lede {
+  color: #fff;
+}
+
+.careful-game .lede {
+  color: var(--text);
 }
 
 .careful-game {
