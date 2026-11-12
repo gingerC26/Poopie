@@ -60,7 +60,7 @@ export default function LevelSubpage({ level, onWin }: Props) {
               : undefined
           }
         >
-          <PasswordGame />
+          <PasswordGame onWin={onWin} />
         </div>
       )}
       <div className="subpage-copy">

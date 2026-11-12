@@ -49,7 +49,11 @@ function pointerHitsTrash(clientX: number, clientY: number, trashEl: HTMLElement
   return clientX >= box.left && clientX <= box.right && clientY >= box.top && clientY <= box.bottom
 }
 
-export default function PasswordGame() {
+type Props = {
+  onWin?: () => void
+}
+
+export default function PasswordGame({ onWin }: Props) {
   const rootRef = useRef<HTMLDivElement>(null)
   const [host, setHost] = useState<HTMLElement | null>(null)
   const [open, setOpen] = useState(false)
@@ -64,6 +68,7 @@ export default function PasswordGame() {
   const [trashOpen, setTrashOpen] = useState(false)
   const photoCursor = useRef(0)
   const photoId = useRef(0)
+  const won = useRef(false)
   const stack = useRef(40)
   const trashRef = useRef<HTMLDivElement>(null)
   const trashOpenRef = useRef(false)
@@ -89,6 +94,10 @@ export default function PasswordGame() {
   }
 
   const fireShutter = () => {
+    if (!won.current) {
+      won.current = true
+      onWin?.()
+    }
     setFlash((n) => n + 1)
     if (LOCKER_PHOTOS.length === 0) return
     const src = LOCKER_PHOTOS[photoCursor.current % LOCKER_PHOTOS.length]

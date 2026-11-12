@@ -158,6 +158,32 @@ describe('PasswordGame', () => {
     expect(document.querySelector('.locker-camera-zoom')).toBeNull()
   })
 
+  it('counts the first shutter click as a win', () => {
+    const onWin = vi.fn()
+    render(
+      <div className="subpage--password">
+        <div
+          className="password-scene"
+          style={{ backgroundImage: 'url(/backgrounds/password.jpg)' }}
+        >
+          <PasswordGame onWin={onWin} />
+        </div>
+      </div>,
+    )
+    fireEvent.click(screen.getByRole('button', { name: 'Open locker 11' }))
+    for (const digit of '030226') {
+      fireEvent.click(screen.getByRole('button', { name: digit }))
+    }
+    fireEvent.click(screen.getByRole('button', { name: 'Confirm' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Kodak camera' }))
+
+    expect(onWin).not.toHaveBeenCalled()
+    fireEvent.click(screen.getByRole('button', { name: 'Shutter' }))
+    expect(onWin).toHaveBeenCalledTimes(1)
+    fireEvent.click(screen.getByRole('button', { name: 'Shutter' }))
+    expect(onWin).toHaveBeenCalledTimes(1)
+  })
+
   it('throws locker photos in order when the shutter fires', () => {
     render(
       <div className="subpage--password">
