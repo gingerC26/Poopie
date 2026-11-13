@@ -70,6 +70,7 @@ h2 {
 }
 
 .board {
+  position: relative;
   height: 100svh;
   min-height: 100svh;
   display: grid;
@@ -77,7 +78,11 @@ h2 {
 }
 
 .board--collapsed {
-  grid-template-columns: 2.75rem minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.board--collapsed .main {
+  grid-column: 1;
 }
 
 .main {
@@ -226,7 +231,8 @@ h2 {
 .board--collapsed .levels-label,
 .board--collapsed .levels-list,
 .board--collapsed .hourglass-time,
-.board--collapsed .clear-wins {
+.board--collapsed .clear-wins,
+.board--collapsed .levels-hourglass {
   display: none;
 }
 
@@ -235,8 +241,43 @@ h2 {
   padding: 0.15rem 0 0.4rem;
 }
 
-.board--collapsed .levels-hourglass {
-  margin-top: auto;
+.board--collapsed #level-drawer {
+  position: absolute;
+  z-index: 15;
+  top: 0;
+  left: 0;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.board--collapsed .levels {
+  background: transparent;
+  border-right: 0;
+  height: auto;
+  min-height: 0;
+}
+
+.board--collapsed .menu-btn {
+  pointer-events: auto;
+}
+
+.board--collapsed .stage {
+  padding-left: 3.35rem;
+}
+
+.board--collapsed .stage:has(.subpage--scene) {
+  padding-left: 0;
+}
+
+.board--collapsed .subpage--scene {
+  padding-left: 3.35rem;
+}
+
+.board--collapsed .subpage--tea .subpage-copy,
+.board--collapsed .subpage--password .subpage-copy {
+  margin-left: 3.35rem;
 }
 
 .level-btn {
@@ -2084,6 +2125,12 @@ code {
 
   .board:not(.board--collapsed) #level-drawer {
     width: min(220px, 86vw);
+  }
+
+  .board--collapsed #level-drawer {
+    width: auto;
+    height: auto;
+    pointer-events: none;
   }
 
   .levels {
