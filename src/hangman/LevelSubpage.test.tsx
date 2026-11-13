@@ -54,5 +54,7 @@ describe('LevelSubpage', () => {
     expect(document.querySelector('.subpage--scene')).toHaveStyle({
       backgroundImage: 'url(/backgrounds/hunting.jpg?v=notext)',
     })
+    expect(screen.getByRole('button', { name: 'Start' })).toBeInTheDocument()
+    expect(screen.queryByRole('img', { name: 'Maze' })).not.toBeInTheDocument()
   })
 })

@@ -77,3 +77,15 @@ export const MEMORY_HINT_COOLDOWN_MS = 5 * 1000
 /** How long the first-Hint audio nudge stays on screen. */
 export const MEMORY_HINT_NUDGE_MS = 5 * 1000
 // default: 5 * 1000
+
+//******************** */
+// HUNTING SETTINGS
+//******************** */
+
+/** Hunting maze width and height in cells. */
+export const HUNTING_GRID = 16
+// default: 16
+
+/** Hunting round length. */
+export const HUNTING_TIME_MS = 30 * 1000
+// default: 30 * 1000

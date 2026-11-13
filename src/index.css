@@ -1436,6 +1436,79 @@ h2 {
   color: #f3e6c8;
 }
 
+.subpage--hunting {
+  position: relative;
+}
+
+.hunting-play {
+  position: absolute;
+  left: 50%;
+  top: 54%;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  width: min(34rem, calc(100% - 2.6rem));
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+}
+
+.hunting-start {
+  align-self: center;
+  height: 2.4rem;
+  padding: 0 1.5rem;
+  border: 1px solid #1c1c1c;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #f3e6c8;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.hunting-start:hover,
+.hunting-start:focus-visible {
+  color: #fff;
+  border-color: #3a3a3a;
+}
+
+.hunting-timer {
+  height: 0.72rem;
+  overflow: hidden;
+  border: 1px solid #1c1c1c;
+  border-radius: 3px;
+  background: #050505;
+}
+
+.hunting-timer-fill {
+  height: 100%;
+  width: 100%;
+  transform-origin: left center;
+  background: #f3e6c8;
+}
+
+.hunting-map {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.8);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+}
+
+.hunting-wall {
+  position: absolute;
+  background: #9a9a9a;
+  border-radius: 0;
+}
+
+.hunting-wall--h {
+  height: 5px;
+}
+
+.hunting-wall--v {
+  width: 5px;
+}
+
 .careful-game .lede {
   color: var(--text);
 }
