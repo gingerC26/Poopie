@@ -1490,7 +1490,7 @@ h2 {
 .hunting-map {
   position: relative;
   aspect-ratio: 1;
-  overflow: hidden;
+  overflow: visible;
   background: rgba(0, 0, 0, 0.8);
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
 }
@@ -1507,6 +1507,13 @@ h2 {
 
 .hunting-wall--v {
   width: 5px;
+}
+
+.hunting-pac {
+  position: absolute;
+  z-index: 1;
+  object-fit: contain;
+  pointer-events: none;
 }
 
 .careful-game .lede {

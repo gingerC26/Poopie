@@ -17,7 +17,7 @@ describe('HuntingGame', () => {
     render(<HuntingGame />)
     expect(screen.getByRole('button', { name: 'Start' })).toBeInTheDocument()
     expect(screen.queryByRole('progressbar', { name: 'Time' })).not.toBeInTheDocument()
-    expect(screen.queryByRole('img', { name: 'Maze' })).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('Maze')).not.toBeInTheDocument()
 
     act(() => {
       vi.advanceTimersByTime(HUNTING_TIME_MS / 2)
@@ -31,6 +31,12 @@ describe('HuntingGame', () => {
         document.querySelectorAll('.hunting-wall--v').length,
     )
     expect(document.querySelectorAll('.hunting-wall').length).toBeGreaterThanOrEqual(HUNTING_GRID * 4)
+    expect(screen.getByAltText('Koala')).toBeInTheDocument()
+    expect(screen.getByAltText('Gua bao')).toBeInTheDocument()
+    expect(screen.getByAltText('Bubble tea')).toBeInTheDocument()
+    expect(screen.getByAltText('Xiao long bao')).toBeInTheDocument()
+    expect(screen.getByAltText('Popcorn chicken')).toBeInTheDocument()
+    expect(screen.getByAltText('Skewers')).toBeInTheDocument()
 
     act(() => {
       vi.advanceTimersByTime(HUNTING_TIME_MS / 2)

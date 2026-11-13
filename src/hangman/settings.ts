@@ -83,9 +83,13 @@ export const MEMORY_HINT_NUDGE_MS = 5 * 1000
 //******************** */
 
 /** Hunting maze width and height in cells. */
-export const HUNTING_GRID = 16
+export const HUNTING_GRID = 14
 // default: 16
 
 /** Hunting round length. */
 export const HUNTING_TIME_MS = 30 * 1000
 // default: 30 * 1000
+
+/** Folder for Hunting pacman sprites. */
+export const HUNTING_SPRITES_DIR = 'public/sprites/hunting'
+// default: public/sprites/hunting

@@ -1,9 +1,11 @@
 import { useEffect, useState, type CSSProperties } from 'react'
 import { generateHuntingMaze } from './huntingMaze'
+import { HUNTING_PACS, placeHuntingPacs } from './huntingSprites'
 import { HUNTING_TIME_MS } from './settings'
 
 export default function HuntingGame() {
   const [maze] = useState(() => generateHuntingMaze())
+  const [pacCells] = useState(() => placeHuntingPacs(maze.size))
   const [playing, setPlaying] = useState(false)
   const [remaining, setRemaining] = useState(HUNTING_TIME_MS)
 
@@ -77,8 +79,26 @@ export default function HuntingGame() {
       >
         <div className="hunting-timer-fill" style={{ transform: `scaleX(${ratio})` }} />
       </div>
-      <div className="hunting-map" role="img" aria-label="Maze">
+      <div className="hunting-map" aria-label="Maze">
         {walls}
+        {HUNTING_PACS.map((pac, index) => {
+          const cell = pacCells[index]
+          if (!cell) return null
+          return (
+            <img
+              key={pac.id}
+              className="hunting-pac"
+              src={pac.src}
+              alt={pac.alt}
+              style={{
+                left: `${(cell.col - 0.16) * unit}%`,
+                top: `${(cell.row - 0.16) * unit}%`,
+                width: `${unit * 1.32}%`,
+                height: `${unit * 1.32}%`,
+              }}
+            />
+          )
+        })}
       </div>
     </div>
   )

@@ -55,6 +55,6 @@ describe('LevelSubpage', () => {
       backgroundImage: 'url(/backgrounds/hunting.jpg?v=notext)',
     })
     expect(screen.getByRole('button', { name: 'Start' })).toBeInTheDocument()
-    expect(screen.queryByRole('img', { name: 'Maze' })).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('Maze')).not.toBeInTheDocument()
   })
 })
