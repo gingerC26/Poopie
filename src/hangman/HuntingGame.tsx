@@ -69,6 +69,7 @@ export default function HuntingGame({ onWin }: Props) {
   const [foodCell, setFoodCell] = useState({ row: 0, col: 1 })
   const [playing, setPlaying] = useState(false)
   const [won, setWon] = useState(false)
+  const [timedOut, setTimedOut] = useState(false)
   const [noteOpen, setNoteOpen] = useState(true)
   const [remaining, setRemaining] = useState(HUNTING_TIME_MS)
   const koalaRef = useRef(koalaCell)
@@ -91,6 +92,7 @@ export default function HuntingGame({ onWin }: Props) {
     foodCellRef.current = food
     setRemaining(HUNTING_TIME_MS)
     setWon(false)
+    setTimedOut(false)
     setNoteOpen(true)
     setPlaying(true)
   }
@@ -101,7 +103,11 @@ export default function HuntingGame({ onWin }: Props) {
     const id = window.setInterval(() => {
       const left = Math.max(0, HUNTING_TIME_MS - (Date.now() - started))
       setRemaining(left)
-      if (left <= 0) window.clearInterval(id)
+      if (left <= 0) {
+        window.clearInterval(id)
+        setTimedOut(true)
+        setPlaying(false)
+      }
     }, 50)
     return () => window.clearInterval(id)
   }, [playing, won])
@@ -167,18 +173,28 @@ export default function HuntingGame({ onWin }: Props) {
   }
 
   if (!playing || won) {
+    const retry = timedOut && !won
     return (
       <div className="hunting-play hunting-play--lobby">
         <p className="hunting-welcome">
-          Welcome to Wusheng Night Market in Tainan! The shops are closing soon, get your food in
-          time!
-          <span className="hunting-welcome-controls">
-            Use <HuntingKeypad keys={WASD_KEYS} label="WASD" /> or{' '}
-            <HuntingKeypad keys={ARROW_KEYS} label="arrow keys" /> to control the koalabbage.
-          </span>
+          {retry ? (
+            <>
+              Oh no! All the stores are closed now, and we don&apos;t have enough food to survive
+              the night. Try again, Ich habe Hunger!
+            </>
+          ) : (
+            <>
+              Welcome to Wusheng Night Market in Tainan! The shops are closing soon, get your food
+              in time!
+              <span className="hunting-welcome-controls">
+                Use <HuntingKeypad keys={WASD_KEYS} label="WASD" /> or{' '}
+                <HuntingKeypad keys={ARROW_KEYS} label="arrow keys" /> to control the koalabbage.
+              </span>
+            </>
+          )}
         </p>
         <button type="button" className="hunting-start" onClick={begin}>
-          Start
+          {retry ? 'Restart' : 'Start'}
         </button>
       </div>
     )

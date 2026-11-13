@@ -53,7 +53,17 @@ describe('HuntingGame', () => {
     act(() => {
       vi.advanceTimersByTime(HUNTING_TIME_MS)
     })
-    expect(timer).toHaveAttribute('aria-valuenow', '0')
+    expect(screen.queryByRole('progressbar', { name: 'Time' })).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('Maze')).not.toBeInTheDocument()
+    expect(screen.getByText(/stores are closed now/i)).toBeInTheDocument()
+    expect(screen.getByText(/Ich habe Hunger/i)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Restart' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Start' })).not.toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Restart' }))
+    expect(screen.getByLabelText('Maze')).toBeInTheDocument()
+    expect(screen.getByRole('progressbar', { name: 'Time' })).toBeInTheDocument()
+    expect(screen.queryByText(/stores are closed now/i)).not.toBeInTheDocument()
   })
 
   it('moves the koala with arrows and WASD', () => {
