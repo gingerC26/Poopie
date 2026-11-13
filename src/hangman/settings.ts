@@ -86,6 +86,10 @@ export const MEMORY_HINT_NUDGE_MS = 5 * 1000
 export const HUNTING_GRID = 14
 // default: 16
 
+/** Manhattan gap (|dx| + |dy|) between the koala and each food. */
+export const HUNTING_FOOD_MIN_DISTANCE = 8
+// default: 8
+
 /** Hunting round length. */
 export const HUNTING_TIME_MS = 30 * 1000
 // default: 30 * 1000

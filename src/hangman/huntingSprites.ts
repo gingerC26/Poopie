@@ -1,3 +1,5 @@
+import { HUNTING_FOOD_MIN_DISTANCE } from './settings'
+
 export const HUNTING_PACS = [
   { id: 'koala', src: '/sprites/hunting/koala.png?v=alpha', alt: 'Koala' },
   { id: 'gua-bao', src: '/sprites/hunting/gua-bao.png?v=alpha', alt: 'Gua bao' },
@@ -15,21 +17,36 @@ export function sameHuntingCell(a: HuntingCell, b: HuntingCell) {
   return a.row === b.row && a.col === b.col
 }
 
+export function huntingManhattan(a: HuntingCell, b: HuntingCell) {
+  return Math.abs(a.row - b.row) + Math.abs(a.col - b.col)
+}
+
 export function randomHuntingCell(
   size: number,
   avoid?: HuntingCell | null,
   rng: () => number = Math.random,
+  minDistance = HUNTING_FOOD_MIN_DISTANCE,
 ): HuntingCell {
   const total = size * size
   if (total <= 1) return { row: 0, col: 0 }
-  let row = 0
-  let col = 0
-  do {
-    const n = Math.floor(rng() * total)
-    row = Math.floor(n / size)
-    col = n % size
-  } while (avoid && row === avoid.row && col === avoid.col)
-  return { row, col }
+
+  const far: HuntingCell[] = []
+  let best: HuntingCell | null = null
+  let bestDistance = -1
+  for (let row = 0; row < size; row++) {
+    for (let col = 0; col < size; col++) {
+      if (avoid && row === avoid.row && col === avoid.col) continue
+      const cell = { row, col }
+      const distance = avoid ? huntingManhattan(cell, avoid) : minDistance
+      if (distance > bestDistance) {
+        best = cell
+        bestDistance = distance
+      }
+      if (!avoid || distance >= minDistance) far.push(cell)
+    }
+  }
+  const pool = far.length > 0 ? far : best ? [best] : [{ row: 0, col: 0 }]
+  return pool[Math.floor(rng() * pool.length)] ?? pool[0]
 }
 
 export function placeHuntingPacs(
@@ -37,15 +54,10 @@ export function placeHuntingPacs(
   count = HUNTING_PACS.length,
   rng: () => number = Math.random,
 ) {
-  const spots: Array<{ row: number; col: number }> = []
-  for (let row = 0; row < size; row++) {
-    for (let col = 0; col < size; col++) spots.push({ row, col })
+  const koala = randomHuntingCell(size, null, rng)
+  const spots = [koala]
+  while (spots.length < Math.min(count, size * size)) {
+    spots.push(randomHuntingCell(size, koala, rng))
   }
-  for (let i = spots.length - 1; i > 0; i--) {
-    const j = Math.floor(rng() * (i + 1))
-    const swap = spots[i]
-    spots[i] = spots[j]
-    spots[j] = swap
-  }
-  return spots.slice(0, Math.min(count, spots.length))
+  return spots
 }
