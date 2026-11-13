@@ -1,11 +1,28 @@
 import { useEffect, useState, type CSSProperties } from 'react'
-import { generateHuntingMaze } from './huntingMaze'
+import { generateHuntingMaze, huntingStep, type HuntingDir } from './huntingMaze'
 import { HUNTING_PACS, placeHuntingPacs } from './huntingSprites'
 import { HUNTING_TIME_MS } from './settings'
+
+const KEY_DIR: Record<string, HuntingDir> = {
+  ArrowUp: 'n',
+  w: 'n',
+  W: 'n',
+  ArrowRight: 'e',
+  d: 'e',
+  D: 'e',
+  ArrowDown: 's',
+  s: 's',
+  S: 's',
+  ArrowLeft: 'w',
+  a: 'w',
+  A: 'w',
+}
 
 export default function HuntingGame() {
   const [maze] = useState(() => generateHuntingMaze())
   const [pacCells] = useState(() => placeHuntingPacs(maze.size))
+  const koalaIndex = HUNTING_PACS.findIndex((pac) => pac.id === 'koala')
+  const [koalaCell, setKoalaCell] = useState(pacCells[koalaIndex] ?? pacCells[0])
   const [playing, setPlaying] = useState(false)
   const [remaining, setRemaining] = useState(HUNTING_TIME_MS)
 
@@ -19,6 +36,18 @@ export default function HuntingGame() {
     }, 50)
     return () => window.clearInterval(id)
   }, [playing])
+
+  useEffect(() => {
+    if (!playing) return
+    const onKey = (event: KeyboardEvent) => {
+      const dir = KEY_DIR[event.key]
+      if (!dir) return
+      event.preventDefault()
+      setKoalaCell((cell) => huntingStep(maze, cell.row, cell.col, dir) ?? cell)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [playing, maze])
 
   if (!playing) {
     return (
@@ -82,21 +111,23 @@ export default function HuntingGame() {
       <div className="hunting-map" aria-label="Maze">
         {walls}
         {HUNTING_PACS.map((pac, index) => {
-          const cell = pacCells[index]
+          const cell = pac.id === 'koala' ? koalaCell : pacCells[index]
           if (!cell) return null
+          const player = pac.id === 'koala'
           return (
-            <img
+            <div
               key={pac.id}
-              className="hunting-pac"
-              src={pac.src}
-              alt={pac.alt}
+              className={`hunting-pac${player ? ' hunting-pac--player' : ''}`}
               style={{
                 left: `${(cell.col - 0.16) * unit}%`,
                 top: `${(cell.row - 0.16) * unit}%`,
                 width: `${unit * 1.32}%`,
                 height: `${unit * 1.32}%`,
               }}
-            />
+            >
+              {player && <span className="hunting-pac-pointer" aria-hidden="true" />}
+              <img src={pac.src} alt={pac.alt} />
+            </div>
           )
         })}
       </div>

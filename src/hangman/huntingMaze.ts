@@ -154,3 +154,18 @@ export function generateHuntingMaze(
   }
   return maze
 }
+
+export type HuntingDir = 'n' | 'e' | 's' | 'w'
+
+export function huntingStep(
+  maze: HuntingMaze,
+  row: number,
+  col: number,
+  dir: HuntingDir,
+) {
+  if (dir === 'n' && row > 0 && !maze.horiz[row][col]) return { row: row - 1, col }
+  if (dir === 's' && row < maze.size - 1 && !maze.horiz[row + 1][col]) return { row: row + 1, col }
+  if (dir === 'w' && col > 0 && !maze.vert[row][col]) return { row, col: col - 1 }
+  if (dir === 'e' && col < maze.size - 1 && !maze.vert[row][col + 1]) return { row, col: col + 1 }
+  return null
+}

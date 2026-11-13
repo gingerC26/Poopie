@@ -48,4 +48,17 @@ describe('HuntingGame', () => {
     })
     expect(timer).toHaveAttribute('aria-valuenow', '0')
   })
+
+  it('moves the koala with arrows and WASD', () => {
+    render(<HuntingGame />)
+    fireEvent.click(screen.getByRole('button', { name: 'Start' }))
+    const koala = screen.getByAltText('Koala').closest('.hunting-pac--player')
+    expect(koala?.querySelector('.hunting-pac-pointer')).toBeTruthy()
+    const start = koala?.getAttribute('style') ?? ''
+    for (const key of ['ArrowRight', 'd', 'ArrowDown', 's', 'ArrowLeft', 'a', 'ArrowUp', 'w']) {
+      fireEvent.keyDown(window, { key })
+      if (koala?.getAttribute('style') !== start) break
+    }
+    expect(koala?.getAttribute('style')).not.toBe(start)
+  })
 })

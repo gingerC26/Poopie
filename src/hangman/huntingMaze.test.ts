@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { cellWallCount, generateHuntingMaze, mazeConnected } from './huntingMaze'
+import { cellWallCount, generateHuntingMaze, huntingStep, mazeConnected } from './huntingMaze'
 
 function rngFrom(seed: number) {
   return () => {
@@ -62,5 +62,18 @@ describe('generateHuntingMaze', () => {
       expect(maze.vert[row][0]).toBe(true)
       expect(maze.vert[row][maze.size]).toBe(true)
     }
+  })
+})
+
+describe('huntingStep', () => {
+  it('moves through open sides and stops at outer walls', () => {
+    const maze = generateHuntingMaze(4, rngFrom(1), 0)
+    expect(huntingStep(maze, 1, 1, 'n')).toEqual({ row: 0, col: 1 })
+    expect(huntingStep(maze, 1, 1, 's')).toEqual({ row: 2, col: 1 })
+    expect(huntingStep(maze, 1, 1, 'w')).toEqual({ row: 1, col: 0 })
+    expect(huntingStep(maze, 1, 1, 'e')).toEqual({ row: 1, col: 2 })
+    expect(huntingStep(maze, 0, 0, 'n')).toBeNull()
+    expect(huntingStep(maze, 0, 0, 'w')).toBeNull()
+    expect(huntingStep(maze, 0, 0, 'e')).toEqual({ row: 0, col: 1 })
   })
 })
