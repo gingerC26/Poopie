@@ -68,7 +68,7 @@ export default function LevelSubpage({ level, onWin }: Props) {
         </div>
       )}
       {isMemory && <MemoryGame onWin={onWin} />}
-      {isHunting && <HuntingGame />}
+      {isHunting && <HuntingGame onWin={onWin} />}
       <div className="subpage-copy">
         <h1>{level.note?.title ?? titleCaseWord(level.word)}</h1>
         <p className="lede">{level.note?.body}</p>

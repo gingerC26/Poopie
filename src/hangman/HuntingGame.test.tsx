@@ -1,6 +1,8 @@
 import { act, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import HuntingGame from './HuntingGame'
+import * as huntingMaze from './huntingMaze'
+import * as huntingSprites from './huntingSprites'
 import { HUNTING_GRID, HUNTING_TIME_MS } from './settings'
 
 describe('HuntingGame', () => {
@@ -10,6 +12,7 @@ describe('HuntingGame', () => {
   })
 
   afterEach(() => {
+    vi.restoreAllMocks()
     vi.useRealTimers()
   })
 
@@ -33,10 +36,10 @@ describe('HuntingGame', () => {
     expect(document.querySelectorAll('.hunting-wall').length).toBeGreaterThanOrEqual(HUNTING_GRID * 4)
     expect(screen.getByAltText('Koala')).toBeInTheDocument()
     expect(screen.getByAltText('Gua bao')).toBeInTheDocument()
-    expect(screen.getByAltText('Bubble tea')).toBeInTheDocument()
-    expect(screen.getByAltText('Xiao long bao')).toBeInTheDocument()
-    expect(screen.getByAltText('Popcorn chicken')).toBeInTheDocument()
-    expect(screen.getByAltText('Skewers')).toBeInTheDocument()
+    expect(screen.queryByAltText('Bubble tea')).not.toBeInTheDocument()
+    expect(screen.queryByAltText('Xiao long bao')).not.toBeInTheDocument()
+    expect(screen.queryByAltText('Popcorn chicken')).not.toBeInTheDocument()
+    expect(screen.queryByAltText('Skewers')).not.toBeInTheDocument()
 
     act(() => {
       vi.advanceTimersByTime(HUNTING_TIME_MS / 2)
@@ -60,5 +63,56 @@ describe('HuntingGame', () => {
       if (koala?.getAttribute('style') !== start) break
     }
     expect(koala?.getAttribute('style')).not.toBe(start)
+  })
+
+  it('reveals the next food after the koala touches the current one', () => {
+    const open = huntingMaze.generateHuntingMaze(4, () => 0, 0)
+    vi.spyOn(huntingMaze, 'generateHuntingMaze').mockReturnValue(open)
+    vi.spyOn(huntingSprites, 'placeHuntingPacs').mockReturnValue([
+      { row: 1, col: 1 },
+      { row: 1, col: 2 },
+    ])
+    vi.spyOn(huntingSprites, 'randomHuntingCell').mockReturnValue({ row: 2, col: 2 })
+
+    const onWin = vi.fn()
+    render(<HuntingGame onWin={onWin} />)
+    fireEvent.click(screen.getByRole('button', { name: 'Start' }))
+    expect(screen.getByAltText('Gua bao')).toBeInTheDocument()
+    expect(screen.queryByAltText('Bubble tea')).not.toBeInTheDocument()
+
+    fireEvent.keyDown(window, { key: 'ArrowRight' })
+    expect(screen.queryByAltText('Gua bao')).not.toBeInTheDocument()
+    expect(screen.getByAltText('Bubble tea')).toBeInTheDocument()
+    expect(onWin).not.toHaveBeenCalled()
+  })
+
+  it('awards the trophy after the last food is eaten', () => {
+    const open = huntingMaze.generateHuntingMaze(8, () => 0, 0)
+    vi.spyOn(huntingMaze, 'generateHuntingMaze').mockReturnValue(open)
+    vi.spyOn(huntingSprites, 'placeHuntingPacs').mockReturnValue([
+      { row: 1, col: 1 },
+      { row: 1, col: 2 },
+    ])
+    vi.spyOn(huntingSprites, 'randomHuntingCell').mockImplementation((_size, avoid) => ({
+      row: avoid?.row ?? 1,
+      col: (avoid?.col ?? 1) + 1,
+    }))
+    const onWin = vi.fn()
+    render(<HuntingGame onWin={onWin} />)
+    fireEvent.click(screen.getByRole('button', { name: 'Start' }))
+    for (let i = 0; i < 5; i++) fireEvent.keyDown(window, { key: 'ArrowRight' })
+    expect(screen.queryByAltText('Skewers')).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('Maze')).not.toBeInTheDocument()
+    expect(screen.queryByRole('progressbar', { name: 'Time' })).not.toBeInTheDocument()
+    expect(screen.getByRole('dialog', { name: 'Congratulations' })).toHaveTextContent(
+      /yum yum food for the cabbage and the koala/i,
+    )
+    expect(onWin).toHaveBeenCalledTimes(1)
+    fireEvent.click(screen.getByRole('button', { name: 'Close' }))
+    expect(screen.queryByRole('dialog', { name: 'Congratulations' })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Start' })).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Start' }))
+    expect(screen.getByLabelText('Maze')).toBeInTheDocument()
+    expect(screen.getByAltText('Gua bao')).toBeInTheDocument()
   })
 })

@@ -7,6 +7,31 @@ export const HUNTING_PACS = [
   { id: 'skewers', src: '/sprites/hunting/skewers.png?v=alpha', alt: 'Skewers' },
 ] as const
 
+export const HUNTING_FOODS = HUNTING_PACS.filter((pac) => pac.id !== 'koala')
+
+export type HuntingCell = { row: number; col: number }
+
+export function sameHuntingCell(a: HuntingCell, b: HuntingCell) {
+  return a.row === b.row && a.col === b.col
+}
+
+export function randomHuntingCell(
+  size: number,
+  avoid?: HuntingCell | null,
+  rng: () => number = Math.random,
+): HuntingCell {
+  const total = size * size
+  if (total <= 1) return { row: 0, col: 0 }
+  let row = 0
+  let col = 0
+  do {
+    const n = Math.floor(rng() * total)
+    row = Math.floor(n / size)
+    col = n % size
+  } while (avoid && row === avoid.row && col === avoid.col)
+  return { row, col }
+}
+
 export function placeHuntingPacs(
   size: number,
   count = HUNTING_PACS.length,

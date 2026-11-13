@@ -1472,6 +1472,103 @@ h2 {
   border-color: #3a3a3a;
 }
 
+.hunting-play--card {
+  width: min(26rem, calc(100% - 2.4rem));
+}
+
+.hunting-postcard {
+  position: relative;
+  padding: 1.15rem 1.15rem 1.2rem;
+  background: linear-gradient(165deg, #fffdf7 0%, #f6ead3 58%, #f0ddc0 100%);
+  border: 1px solid #e4d3b0;
+  box-shadow:
+    inset 0 1px 0 #fffef8,
+    0 18px 36px rgba(70, 40, 18, 0.28);
+  color: #2c2621;
+  transform: rotate(-1.6deg);
+}
+
+.hunting-postcard-close {
+  position: absolute;
+  top: 0.32rem;
+  right: 0.32rem;
+  z-index: 3;
+  width: 1.7rem;
+  height: 1.7rem;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  color: #5c5752;
+  font-size: 1.2rem;
+  line-height: 1;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.28);
+}
+
+.hunting-postcard-close:hover {
+  background: #fff;
+  color: #1f1b18;
+}
+
+.hunting-postcard-clips {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0;
+  min-height: 9.5rem;
+  margin: 0.35rem 0.4rem 0.55rem;
+}
+
+.hunting-postcard-clip {
+  position: relative;
+  width: 46%;
+  padding: 0.38rem 0.38rem 0.7rem;
+  background: #fff;
+  box-shadow: 0 8px 16px rgba(40, 24, 10, 0.28);
+}
+
+.hunting-postcard-clip::before {
+  content: "";
+  position: absolute;
+  top: -0.55rem;
+  left: 50%;
+  z-index: 1;
+  width: 0.7rem;
+  height: 1.15rem;
+  background: linear-gradient(180deg, #efe6d4 0%, #c9bba3 100%);
+  border: 1px solid #b7a78c;
+  border-radius: 0.12rem 0.12rem 0.28rem 0.28rem;
+  transform: translateX(-50%);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.hunting-postcard-clip--a {
+  z-index: 1;
+  transform: rotate(-8deg);
+}
+
+.hunting-postcard-clip--b {
+  z-index: 2;
+  margin-left: -8%;
+  transform: rotate(7deg);
+}
+
+.hunting-postcard-clip img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+}
+
+.hunting-postcard p {
+  margin: 0;
+  padding: 0.15rem 0.55rem 0.35rem;
+  font-family: Caveat, "Segoe Script", "Bradley Hand", cursive;
+  font-size: 1.22rem;
+  font-weight: 500;
+  line-height: 1.32;
+}
+
 .hunting-timer {
   height: 0.72rem;
   overflow: hidden;
