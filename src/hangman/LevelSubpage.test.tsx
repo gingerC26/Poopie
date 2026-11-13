@@ -47,5 +47,12 @@ describe('LevelSubpage', () => {
       backgroundImage: 'url(/backgrounds/memory.jpg?v=night2)',
     })
     expect(screen.getByRole('textbox', { name: 'Terminal' })).toBeInTheDocument()
+
+    rerender(<LevelSubpage level={LEVELS[5]} />)
+    expect(screen.getByRole('heading', { name: 'Hunting' })).toBeInTheDocument()
+    expect(document.querySelector('.subpage--hunting')).toBeTruthy()
+    expect(document.querySelector('.subpage--scene')).toHaveStyle({
+      backgroundImage: 'url(/backgrounds/hunting.jpg?v=notext)',
+    })
   })
 })

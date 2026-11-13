@@ -61,9 +61,10 @@ export const LEVELS: Level[] = [
     id: '6',
     word: 'HUNTING',
     page: 'note',
+    background: '/backgrounds/hunting.jpg?v=notext',
     note: {
       title: 'Hunting',
-      body: 'Sixth gift unlocked. Add the real note here.',
+      body: 'Buy our dinna before time runs out!',
     },
   },
 ]

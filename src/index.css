@@ -1427,8 +1427,13 @@ h2 {
 }
 
 .subpage--memory .lede,
-.subpage--password .lede {
+.subpage--password .lede,
+.subpage--hunting .lede {
   color: #fff;
+}
+
+.subpage--hunting h1 {
+  color: #f3e6c8;
 }
 
 .careful-game .lede {
