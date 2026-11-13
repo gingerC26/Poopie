@@ -26,6 +26,38 @@ const KEY_DIR: Record<string, HuntingDir> = {
 
 const koalaSprite = HUNTING_PACS.find((pac) => pac.id === 'koala') ?? HUNTING_PACS[0]
 
+const WASD_KEYS = [
+  ['', 'W', ''],
+  ['A', 'S', 'D'],
+] as const
+
+const ARROW_KEYS = [
+  ['', '↑', ''],
+  ['←', '↓', '→'],
+] as const
+
+function HuntingKeypad({
+  keys,
+  label,
+}: {
+  keys: readonly (readonly string[])[]
+  label: string
+}) {
+  return (
+    <span className="hunting-keys" role="img" aria-label={label}>
+      {keys.flat().map((cap, i) =>
+        cap ? (
+          <kbd key={i} aria-hidden="true">
+            {cap}
+          </kbd>
+        ) : (
+          <span className="hunting-key-gap" key={i} aria-hidden="true" />
+        ),
+      )}
+    </span>
+  )
+}
+
 type Props = {
   onWin?: () => void
 }
@@ -136,7 +168,15 @@ export default function HuntingGame({ onWin }: Props) {
 
   if (!playing || won) {
     return (
-      <div className="hunting-play">
+      <div className="hunting-play hunting-play--lobby">
+        <p className="hunting-welcome">
+          Welcome to Wusheng Night Market in Tainan! The shops are closing soon, get your food in
+          time!
+          <span className="hunting-welcome-controls">
+            Use <HuntingKeypad keys={WASD_KEYS} label="WASD" /> or{' '}
+            <HuntingKeypad keys={ARROW_KEYS} label="arrow keys" /> to control the koalabbage.
+          </span>
+        </p>
         <button type="button" className="hunting-start" onClick={begin}>
           Start
         </button>

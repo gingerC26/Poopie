@@ -19,6 +19,9 @@ describe('HuntingGame', () => {
   it('draws a timed maze board', () => {
     render(<HuntingGame />)
     expect(screen.getByRole('button', { name: 'Start' })).toBeInTheDocument()
+    expect(screen.getByText(/Wusheng Night Market in Tainan/i)).toBeInTheDocument()
+    expect(screen.getByLabelText('WASD')).toBeInTheDocument()
+    expect(screen.getByLabelText('arrow keys')).toBeInTheDocument()
     expect(screen.queryByRole('progressbar', { name: 'Time' })).not.toBeInTheDocument()
     expect(screen.queryByLabelText('Maze')).not.toBeInTheDocument()
 
@@ -26,6 +29,7 @@ describe('HuntingGame', () => {
       vi.advanceTimersByTime(HUNTING_TIME_MS / 2)
     })
     fireEvent.click(screen.getByRole('button', { name: 'Start' }))
+    expect(screen.queryByText(/Wusheng Night Market in Tainan/i)).not.toBeInTheDocument()
     const timer = screen.getByRole('progressbar', { name: 'Time' })
     expect(timer).toHaveAttribute('aria-valuemax', String(HUNTING_TIME_MS))
     expect(timer).toHaveAttribute('aria-valuenow', String(HUNTING_TIME_MS))
