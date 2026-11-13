@@ -273,6 +273,9 @@ export default function TeaGame({ onWin }: Props) {
               <p>{POSTCARD_NOTE}</p>
               <p className="tea-postcard-sign">- Your Poopie</p>
             </div>
+            <span className="tea-postcard-clip">
+              <img src="/sprites/tea/postcard-clip.jpg" alt="" />
+            </span>
             <img
               className="tea-postcard-stamp"
               src="/sprites/tea/postcard-stamp.png"

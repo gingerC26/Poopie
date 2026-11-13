@@ -201,6 +201,10 @@ describe('TeaGame', () => {
       'I miss the peaceful and slow-paced Jiufen teahouse.',
     )
     expect(screen.getByRole('dialog', { name: 'Postcard' })).toHaveTextContent('- Your Poopie')
+    expect(container.querySelector('.tea-postcard-clip img')).toHaveAttribute(
+      'src',
+      '/sprites/tea/postcard-clip.jpg',
+    )
 
     fireEvent.click(screen.getByRole('button', { name: 'Close postcard' }))
     expect(screen.queryByRole('dialog', { name: 'Postcard' })).not.toBeInTheDocument()
