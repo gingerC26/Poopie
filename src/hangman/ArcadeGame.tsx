@@ -77,23 +77,22 @@ export default function ArcadeGame({ onWin }: Props) {
       setRemaining(result.remaining)
       setDartsLeft(dartsRef.current)
       setLastHit(hit)
-      if (result.won) {
-        setPhase('win')
-        onWinRef.current?.()
-        return
-      }
-      if (result.bust) {
-        setLoseKind('bust')
-        setPhase('lose')
-        return
-      }
-      if (dartsRef.current <= 0) {
-        setLoseKind('darts')
-        setPhase('lose')
-        return
-      }
       window.setTimeout(() => {
-        if (remainingRef.current <= 0) return
+        if (result.won) {
+          setPhase('win')
+          onWinRef.current?.()
+          return
+        }
+        if (result.bust) {
+          setLoseKind('bust')
+          setPhase('lose')
+          return
+        }
+        if (dartsRef.current <= 0) {
+          setLoseKind('darts')
+          setPhase('lose')
+          return
+        }
         launchDart()
       }, ARCADE_LAND_MS)
     }, 16)
@@ -200,11 +199,6 @@ export default function ArcadeGame({ onWin }: Props) {
           {briefing && <p className="arcade-stat-caption">Pushes the dart left or right.</p>}
         </div>
       </div>
-      {lastHit !== null && !flying && (
-        <p className="arcade-hit" aria-live="polite">
-          Hit {lastHit}
-        </p>
-      )}
       <div className="arcade-field" aria-label="Dartboard">
         <div className={`arcade-board-key${briefing ? ' arcade-board-key--open' : ''}`}>
           {briefing && (
@@ -224,6 +218,11 @@ export default function ArcadeGame({ onWin }: Props) {
         <div className="arcade-air">
           {briefing && (
             <p className="arcade-steer-box">use &lt; &gt; or A D</p>
+          )}
+          {lastHit !== null && !flying && (
+            <p key={`${dartsLeft}-${lastHit}`} className="arcade-hit" aria-live="polite">
+              Hit {lastHit}!
+            </p>
           )}
           <span
             className="arcade-dart"

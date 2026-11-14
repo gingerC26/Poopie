@@ -1658,11 +1658,41 @@ h2 {
 }
 
 .arcade-hit {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  top: 38%;
   margin: 0;
+  padding: 0.55rem 0.75rem 0.5rem;
+  transform: translate(-50%, -50%);
+  background: rgba(8, 6, 12, 0.9);
+  border: 2px solid #ffe56a;
+  border-radius: 6px;
   color: #ffe56a;
   font-family: "Press Start 2P", ui-monospace, monospace;
-  font-size: 0.62rem;
+  font-size: 0.72rem;
+  line-height: 1.4;
   text-align: center;
+  pointer-events: none;
+  animation: arcade-hit-blink 0.5s steps(1, end) 2 both;
+}
+
+@keyframes arcade-hit-blink {
+  0% {
+    opacity: 1;
+  }
+
+  49.9% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 0;
+  }
 }
 
 .arcade-field {

@@ -114,6 +114,6 @@ export const ARCADE_DARTS = 5
 export const ARCADE_FLIGHT_MS = 1800
 // default: 1800
 
-/** Pause on the board before the next dart. */
-export const ARCADE_LAND_MS = 700
-// default: 700
+/** Pause while Hit X! blinks twice. */
+export const ARCADE_LAND_MS = 1000
+// default: 1000
