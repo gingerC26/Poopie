@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { ARCADE_LANES, applyDart, pickArcadeWind, scoreAtX } from './arcadeDarts'
 import { ARCADE_DARTS, ARCADE_FLIGHT_MS, ARCADE_LAND_MS, ARCADE_START_SCORE } from './settings'
 
-type Phase = 'lobby' | 'play' | 'win' | 'lose'
+type Phase = 'lobby' | 'brief' | 'play' | 'win' | 'lose'
 
 const STEER = 0.42
 
@@ -28,14 +28,23 @@ export default function ArcadeGame({ onWin }: Props) {
   const onWinRef = useRef(onWin)
   onWinRef.current = onWin
 
-  const begin = () => {
+  const enterBoard = () => {
     remainingRef.current = ARCADE_START_SCORE
     dartsRef.current = ARCADE_DARTS
+    windRef.current = 0
+    dartRef.current = { x: 0.5, y: 0 }
     setRemaining(ARCADE_START_SCORE)
     setDartsLeft(ARCADE_DARTS)
     setLastHit(null)
     setNoteOpen(true)
     setLoseKind('bust')
+    setWind(0)
+    setDart({ x: 0.5, y: 0 })
+    setFlying(false)
+    setPhase('brief')
+  }
+
+  const ready = () => {
     setPhase('play')
     launchDart()
   }
@@ -131,7 +140,10 @@ export default function ArcadeGame({ onWin }: Props) {
             type="button"
             className="arcade-win-close"
             aria-label="Close"
-            onClick={() => setNoteOpen(false)}
+            onClick={() => {
+              setNoteOpen(false)
+              setPhase('lobby')
+            }}
           >
             ×
           </button>
@@ -144,7 +156,7 @@ export default function ArcadeGame({ onWin }: Props) {
     )
   }
 
-  if (phase !== 'play') {
+  if (phase === 'lobby' || phase === 'lose') {
     const retry = phase === 'lose'
     return (
       <div className="arcade-play arcade-play--lobby">
@@ -155,28 +167,38 @@ export default function ArcadeGame({ onWin }: Props) {
               : "Out of darts, and you're not at zero. Try again."}
           </p>
         )}
-        <button type="button" className="arcade-start" onClick={begin}>
+        <button type="button" className="arcade-start" onClick={enterBoard}>
           {retry ? 'Restart' : 'Start'}
         </button>
       </div>
     )
   }
 
+  const briefing = phase === 'brief'
   const windLeft = wind < 0
   const windPips = Math.max(1, Math.round(Math.abs(wind) / 0.12))
 
   return (
-    <div className="arcade-play arcade-play--board">
+    <div className={`arcade-play arcade-play--board${briefing ? ' arcade-play--brief' : ''}`}>
       <div className="arcade-hud">
-        <p>
-          Score <strong>{Math.max(0, remaining)}</strong>
-        </p>
-        <p aria-label={`${dartsLeft} darts left`}>
-          Darts <span className="arcade-darts">{'*'.repeat(Math.max(0, dartsLeft))}</span>
-        </p>
-        <p className="arcade-wind" aria-label={windLeft ? 'Wind left' : 'Wind right'}>
-          Wind {windLeft ? '<'.repeat(windPips) : '>'.repeat(windPips)}
-        </p>
+        <div className="arcade-stat">
+          <p>
+            Score <strong>{Math.max(0, remaining)}</strong>
+          </p>
+          {briefing && <p className="arcade-stat-caption">Get to exactly 0 to win.</p>}
+        </div>
+        <div className="arcade-stat">
+          <p aria-label={`${dartsLeft} darts left`}>
+            Darts <span className="arcade-darts">{'*'.repeat(Math.max(0, dartsLeft))}</span>
+          </p>
+          {briefing && <p className="arcade-stat-caption">You have 5 darts.</p>}
+        </div>
+        <div className="arcade-stat arcade-stat--wind">
+          <p className="arcade-wind" aria-label={windLeft ? 'Typhoon left' : 'Typhoon right'}>
+            Typhoon {briefing ? '< >' : windLeft ? '<'.repeat(windPips) : '>'.repeat(windPips)}
+          </p>
+          {briefing && <p className="arcade-stat-caption">Pushes the dart left or right.</p>}
+        </div>
       </div>
       {lastHit !== null && !flying && (
         <p className="arcade-hit" aria-live="polite">
@@ -184,17 +206,25 @@ export default function ArcadeGame({ onWin }: Props) {
         </p>
       )}
       <div className="arcade-field" aria-label="Dartboard">
-        <div className="arcade-lanes">
-          {ARCADE_LANES.map((value, index) => (
-            <span
-              key={`${value}-${index}`}
-              className={`arcade-lane${value === 5 ? ' arcade-lane--bull' : ''}`}
-            >
-              {value}
-            </span>
-          ))}
+        <div className={`arcade-board-key${briefing ? ' arcade-board-key--open' : ''}`}>
+          {briefing && (
+            <p className="arcade-board-caption">Land on a square. That number comes off Score.</p>
+          )}
+          <div className="arcade-lanes" aria-label="1 2 3 4 5 4 3 2 1">
+            {ARCADE_LANES.map((value, index) => (
+              <span
+                key={`${value}-${index}`}
+                className={`arcade-lane${value === 5 ? ' arcade-lane--bull' : ''}`}
+              >
+                {value}
+              </span>
+            ))}
+          </div>
         </div>
         <div className="arcade-air">
+          {briefing && (
+            <p className="arcade-steer-box">use &lt; &gt; or A D</p>
+          )}
           <span
             className="arcade-dart"
             style={{
@@ -204,7 +234,13 @@ export default function ArcadeGame({ onWin }: Props) {
           />
         </div>
       </div>
-      <p className="arcade-hint">A D or arrows vs the wind</p>
+      {briefing ? (
+        <button type="button" className="arcade-start arcade-start--ready" onClick={ready}>
+          I&apos;m ready!
+        </button>
+      ) : (
+        <p className="arcade-hint">A D or arrows vs the typhoon</p>
+      )}
     </div>
   )
 }

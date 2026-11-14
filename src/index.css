@@ -1570,7 +1570,9 @@ h2 {
 }
 
 .arcade-play--lobby {
-  gap: 1.1rem;
+  top: 70%;
+  gap: 1.35rem;
+  width: min(22rem, calc(100% - 2.4rem));
 }
 
 .arcade-status {
@@ -1593,19 +1595,36 @@ h2 {
   gap: 0.55rem;
 }
 
+.arcade-play--brief {
+  top: 58%;
+  gap: 0.7rem;
+}
+
 .arcade-hud {
-  display: flex;
-  justify-content: space-between;
-  gap: 0.6rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.45rem;
   width: 100%;
-  padding: 0.55rem 0.65rem 0.45rem;
-  background: rgba(8, 6, 12, 0.82);
-  border: 2px solid #ff4d9a;
-  border-radius: 6px;
   color: #ffe56a;
   font-family: "Press Start 2P", ui-monospace, monospace;
-  font-size: 0.52rem;
-  line-height: 1.5;
+  font-size: 0.48rem;
+  line-height: 1.45;
+}
+
+.arcade-stat {
+  display: grid;
+  gap: 0.4rem;
+  min-height: 2.6rem;
+  padding: 0.5rem 0.4rem 0.45rem;
+  background: rgba(8, 6, 12, 0.88);
+  border: 2px solid #ff4d9a;
+  border-radius: 6px;
+  text-align: center;
+  box-shadow: 0 3px 0 #1a1018;
+}
+
+.arcade-stat--wind {
+  border-color: #7af0ff;
 }
 
 .arcade-hud p {
@@ -1615,6 +1634,19 @@ h2 {
 .arcade-hud strong {
   color: #fff6b8;
   font-weight: 400;
+}
+
+.arcade-stat-caption {
+  color: #f3e6c8;
+  font-size: 0.46rem;
+  line-height: 1.6;
+}
+
+.arcade-start--ready {
+  min-width: 0;
+  padding: 0.82rem 1.15rem 0.76rem;
+  font-size: 0.58rem;
+  letter-spacing: 0.06em;
 }
 
 .arcade-darts {
@@ -1641,6 +1673,22 @@ h2 {
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 0 18px rgba(255, 77, 154, 0.22);
+}
+
+.arcade-board-key--open {
+  border: 2px solid #ffe56a;
+  border-radius: 6px;
+  background: rgba(8, 6, 12, 0.55);
+}
+
+.arcade-board-caption {
+  margin: 0;
+  padding: 0.5rem 0.45rem 0.4rem;
+  color: #ffe56a;
+  font-family: "Press Start 2P", ui-monospace, monospace;
+  font-size: 0.46rem;
+  line-height: 1.6;
+  text-align: center;
 }
 
 .arcade-lanes {
@@ -1682,6 +1730,27 @@ h2 {
       rgba(255, 77, 154, 0.12) calc(100% / 9 - 1px),
       rgba(255, 77, 154, 0.12) calc(100% / 9)
     );
+}
+
+.arcade-steer-box {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 50%;
+  width: max-content;
+  max-width: calc(100% - 1.2rem);
+  margin: 0;
+  padding: 0.55rem 0.7rem 0.5rem;
+  transform: translate(-50%, -50%);
+  background: rgba(8, 6, 12, 0.92);
+  border: 2px solid #7af0ff;
+  border-radius: 6px;
+  color: #7af0ff;
+  font-family: "Press Start 2P", ui-monospace, monospace;
+  font-size: 0.48rem;
+  line-height: 1.5;
+  text-align: center;
+  box-shadow: 0 3px 0 #0a2a30;
 }
 
 .arcade-dart {
