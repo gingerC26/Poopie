@@ -4,7 +4,8 @@ import { defineConfig } from 'vite'
 
 // https://vite.dev/config/
 const repo = process.env.GITHUB_REPOSITORY?.split('/')[1]
-const base = process.env.GITHUB_ACTIONS && repo ? `/${repo}/` : '/'
+const base =
+  process.env.GITHUB_ACTIONS && !process.env.VITEST && repo ? `/${repo}/` : '/'
 
 export default defineConfig({
   base,
