@@ -97,3 +97,23 @@ export const HUNTING_TIME_MS = 30 * 1000
 /** Folder for Hunting pacman sprites. */
 export const HUNTING_SPRITES_DIR = 'public/sprites/hunting'
 // default: public/sprites/hunting
+
+//******************** */
+// ARCADE SETTINGS
+//******************** */
+
+/** Starting checkout total, like a tiny 301. */
+export const ARCADE_START_SCORE = 20
+// default: 20
+
+/** Throws allowed to reach exactly zero. */
+export const ARCADE_DARTS = 5
+// default: 5
+
+/** How long one dart flies to the board. */
+export const ARCADE_FLIGHT_MS = 1800
+// default: 1800
+
+/** Pause on the board before the next dart. */
+export const ARCADE_LAND_MS = 700
+// default: 700
