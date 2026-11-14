@@ -6,6 +6,10 @@
 export const COOLDOWN_MS = 60 * 60 * 1000
 // default: 60 * 60 * 1000 (1 hour)
 
+/** Show the Clear win records button in the levels list. */
+export const CLEAR_WIN_RECORDS_BUTTON = false
+// default: false
+
 //******************** */
 // CAREFUL SETTINGS
 //******************** */

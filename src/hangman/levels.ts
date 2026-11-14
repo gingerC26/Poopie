@@ -59,7 +59,7 @@ export const LEVELS: Level[] = [
     background: '/backgrounds/arcade.jpg?v=notext',
     note: {
       title: 'Arcade',
-      body: 'A cozy date in a cold typhoone day.',
+      body: 'A cozy date in a cold typhoon day.',
     },
   },
   {

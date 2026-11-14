@@ -70,20 +70,17 @@ describe('Home', () => {
     expect(screen.getByRole('button', { name: /1\. Careful/ })).toBeInTheDocument()
   })
 
-  it('keeps a Careful trophy after sauce, remount, then clear wins', async () => {
-    const user = userEvent.setup()
+  it('keeps a Careful trophy after sauce and remount, without a clear-wins button', async () => {
     const { unmount } = render(<Home />)
-    await unlockCareful(user)
+    await unlockCareful(userEvent.setup())
     dipDumplingInSauce()
     expect(screen.getByRole('button', { name: /1\. Careful/ }).querySelector('.level-trophy')).toBeTruthy()
+    expect(screen.queryByRole('button', { name: 'Clear win records' })).not.toBeInTheDocument()
 
     unmount()
     render(<Home />)
     const careful = screen.getByRole('button', { name: /1\. Careful/ })
     expect(careful.querySelector('.level-trophy-icon')).toHaveAttribute('src', '/icons/trophy.svg')
-
-    await user.click(screen.getByRole('button', { name: 'Clear win records' }))
-    expect(screen.getByRole('button', { name: /1\. Careful/ }).querySelector('.level-trophy')).toBeNull()
-    expect(screen.getByRole('heading', { name: 'Careful' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Clear win records' })).not.toBeInTheDocument()
   })
 })

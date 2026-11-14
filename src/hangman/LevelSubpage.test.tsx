@@ -47,7 +47,7 @@ describe('LevelSubpage', () => {
 
     rerender(<LevelSubpage level={LEVELS[4]} />)
     expect(screen.getByRole('heading', { name: 'Arcade' })).toBeInTheDocument()
-    expect(screen.getByText('A cozy date in a cold typhoone day.')).toBeInTheDocument()
+    expect(screen.getByText('A cozy date in a cold typhoon day.')).toBeInTheDocument()
     expect(document.querySelector('.subpage--arcade')).toBeTruthy()
     expect(document.querySelector('.subpage--scene')).toHaveStyle({
       backgroundImage: 'url(/backgrounds/arcade.jpg?v=notext)',

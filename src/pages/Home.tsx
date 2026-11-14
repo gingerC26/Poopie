@@ -3,6 +3,7 @@ import HangmanPlay from '../hangman/HangmanPlay'
 import LevelSidebar from '../hangman/LevelSidebar'
 import LevelSubpage from '../hangman/LevelSubpage'
 import { preloadGiftAssets } from '../hangman/preloadAssets'
+import { CLEAR_WIN_RECORDS_BUTTON } from '../hangman/settings'
 import { TeaSteepProvider } from '../hangman/TeaSteep'
 import { useHangman } from '../hangman/useHangman'
 
@@ -28,7 +29,7 @@ export default function Home() {
             remainingMs={game.remainingMs}
             onSelect={game.selectLevel}
             onToggle={() => game.setSidebarOpen((open) => !open)}
-            onClearWins={game.clearGameWins}
+            onClearWins={CLEAR_WIN_RECORDS_BUTTON ? game.clearGameWins : undefined}
           />
         </div>
 

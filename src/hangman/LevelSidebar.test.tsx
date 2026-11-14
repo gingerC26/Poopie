@@ -26,9 +26,7 @@ describe('LevelSidebar', () => {
     expect(screen.queryByRole('button', { name: 'Clear win records' })).not.toBeInTheDocument()
   })
 
-  it('clears win records from the sidebar', async () => {
-    const onClearWins = vi.fn()
-    const user = userEvent.setup()
+  it('hides Clear win records when the setting is off', () => {
     render(
       <LevelSidebar
         levels={LEVELS}
@@ -39,11 +37,10 @@ describe('LevelSidebar', () => {
         remainingMs={0}
         onSelect={() => {}}
         onToggle={() => {}}
-        onClearWins={onClearWins}
+        onClearWins={() => {}}
       />,
     )
-    await user.click(screen.getByRole('button', { name: 'Clear win records' }))
-    expect(onClearWins).toHaveBeenCalled()
+    expect(screen.queryByRole('button', { name: 'Clear win records' })).not.toBeInTheDocument()
   })
 
   it('selects a level and toggles the drawer', async () => {

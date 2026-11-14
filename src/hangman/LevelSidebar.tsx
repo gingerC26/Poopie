@@ -1,6 +1,7 @@
 import { assetUrl } from './assetUrl'
 import Hourglass from './Hourglass'
 import { maskWord, titleCaseWord, type Level } from './levels'
+import { CLEAR_WIN_RECORDS_BUTTON } from './settings'
 
 function SidebarIcon({ open }: { open: boolean }) {
   return open ? (
@@ -96,7 +97,7 @@ export default function LevelSidebar({
         })}
       </ol>
       <div className="levels-hourglass">
-        {onClearWins && (
+        {CLEAR_WIN_RECORDS_BUTTON && onClearWins && (
           <button type="button" className="clear-wins" onClick={onClearWins}>
             Clear win records
           </button>

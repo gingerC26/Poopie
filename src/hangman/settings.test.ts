@@ -1,9 +1,19 @@
 import { describe, expect, it } from 'vitest'
-import { COOLDOWN_MS, HUNTING_TIME_MS, XLB_PATH_HALF_WIDTH, XLB_SPILL_MS } from './settings'
+import {
+  CLEAR_WIN_RECORDS_BUTTON,
+  COOLDOWN_MS,
+  HUNTING_TIME_MS,
+  XLB_PATH_HALF_WIDTH,
+  XLB_SPILL_MS,
+} from './settings'
 
 describe('settings', () => {
   it('keeps the hourglass cooldown at one hour', () => {
     expect(COOLDOWN_MS).toBe(60 * 60 * 1000)
+  })
+
+  it('hides the Clear win records button', () => {
+    expect(CLEAR_WIN_RECORDS_BUTTON).toBe(false)
   })
 
   it('keeps the spill reset at five seconds', () => {
