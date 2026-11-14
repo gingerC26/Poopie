@@ -24,26 +24,6 @@ export const LEVELS: Level[] = [
   },
   {
     id: '2',
-    word: 'PASSWORD',
-    page: 'note',
-    background: '/backgrounds/password.jpg',
-    note: {
-      title: 'Password',
-      body: 'Open the right locker.',
-    },
-  },
-  {
-    id: '3',
-    word: 'ARCADE',
-    page: 'note',
-    background: '/backgrounds/arcade.jpg?v=notext',
-    note: {
-      title: 'Arcade',
-      body: 'A cozy date in a cold typhoone day.',
-    },
-  },
-  {
-    id: '4',
     word: 'TWENTY SECONDS',
     page: 'note',
     background: '/backgrounds/twenty-seconds.jpg',
@@ -53,7 +33,17 @@ export const LEVELS: Level[] = [
     },
   },
   {
-    id: '5',
+    id: '3',
+    word: 'HUNTING',
+    page: 'note',
+    background: '/backgrounds/hunting.jpg?v=notext',
+    note: {
+      title: 'Hunting',
+      body: 'Buy our dinna before time runs out!',
+    },
+  },
+  {
+    id: '4',
     word: 'MEMORY',
     page: 'note',
     background: '/backgrounds/memory.jpg?v=night2',
@@ -63,13 +53,23 @@ export const LEVELS: Level[] = [
     },
   },
   {
-    id: '6',
-    word: 'HUNTING',
+    id: '5',
+    word: 'ARCADE',
     page: 'note',
-    background: '/backgrounds/hunting.jpg?v=notext',
+    background: '/backgrounds/arcade.jpg?v=notext',
     note: {
-      title: 'Hunting',
-      body: 'Buy our dinna before time runs out!',
+      title: 'Arcade',
+      body: 'A cozy date in a cold typhoone day.',
+    },
+  },
+  {
+    id: '6',
+    word: 'PASSWORD',
+    page: 'note',
+    background: '/backgrounds/password.jpg',
+    note: {
+      title: 'Password',
+      body: 'Open the right locker.',
     },
   },
 ]

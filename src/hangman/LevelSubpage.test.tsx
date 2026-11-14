@@ -12,24 +12,6 @@ describe('LevelSubpage', () => {
 
   it('routes the other unlocked pages', () => {
     const { rerender } = render(<LevelSubpage level={LEVELS[1]} />)
-    expect(screen.getByRole('heading', { name: 'Password' })).toBeInTheDocument()
-    expect(screen.getByText('Open the right locker.')).toBeInTheDocument()
-    expect(document.querySelector('.password-scene')).toHaveStyle({
-      backgroundImage: 'url(/backgrounds/password.jpg)',
-    })
-    expect(screen.getByRole('button', { name: 'Open locker 11' })).toBeInTheDocument()
-    expect(screen.getByText('open')).toBeInTheDocument()
-
-    rerender(<LevelSubpage level={LEVELS[2]} />)
-    expect(screen.getByRole('heading', { name: 'Arcade' })).toBeInTheDocument()
-    expect(screen.getByText('A cozy date in a cold typhoone day.')).toBeInTheDocument()
-    expect(document.querySelector('.subpage--arcade')).toBeTruthy()
-    expect(document.querySelector('.subpage--scene')).toHaveStyle({
-      backgroundImage: 'url(/backgrounds/arcade.jpg?v=notext)',
-    })
-    expect(screen.getByRole('button', { name: 'Start' })).toBeInTheDocument()
-
-    rerender(<LevelSubpage level={LEVELS[3]} />)
     expect(screen.getByRole('heading', { name: 'Twenty Seconds' })).toBeInTheDocument()
     expect(screen.getByText('Make a pot of authentic Chinese tea.')).toBeInTheDocument()
     expect(document.querySelector('.tea-scene')).toHaveStyle({
@@ -45,7 +27,16 @@ describe('LevelSubpage', () => {
     expect(document.querySelector('.tea-prop--cup-filled')).toHaveAttribute('hidden')
     expect(screen.getByRole('button', { name: 'Instruction postcard' })).toBeInTheDocument()
 
-    rerender(<LevelSubpage level={LEVELS[4]} />)
+    rerender(<LevelSubpage level={LEVELS[2]} />)
+    expect(screen.getByRole('heading', { name: 'Hunting' })).toBeInTheDocument()
+    expect(document.querySelector('.subpage--hunting')).toBeTruthy()
+    expect(document.querySelector('.subpage--scene')).toHaveStyle({
+      backgroundImage: 'url(/backgrounds/hunting.jpg?v=notext)',
+    })
+    expect(screen.getByRole('button', { name: 'Start' })).toBeInTheDocument()
+    expect(screen.queryByLabelText('Maze')).not.toBeInTheDocument()
+
+    rerender(<LevelSubpage level={LEVELS[3]} />)
     expect(screen.getByRole('heading', { name: 'Memory' })).toBeInTheDocument()
     expect(screen.getByText('Enjoy the Sun Moon Lake view with popcorn chicken.')).toBeInTheDocument()
     expect(document.querySelector('.subpage--memory')).toBeTruthy()
@@ -54,13 +45,22 @@ describe('LevelSubpage', () => {
     })
     expect(screen.getByRole('textbox', { name: 'Terminal' })).toBeInTheDocument()
 
-    rerender(<LevelSubpage level={LEVELS[5]} />)
-    expect(screen.getByRole('heading', { name: 'Hunting' })).toBeInTheDocument()
-    expect(document.querySelector('.subpage--hunting')).toBeTruthy()
+    rerender(<LevelSubpage level={LEVELS[4]} />)
+    expect(screen.getByRole('heading', { name: 'Arcade' })).toBeInTheDocument()
+    expect(screen.getByText('A cozy date in a cold typhoone day.')).toBeInTheDocument()
+    expect(document.querySelector('.subpage--arcade')).toBeTruthy()
     expect(document.querySelector('.subpage--scene')).toHaveStyle({
-      backgroundImage: 'url(/backgrounds/hunting.jpg?v=notext)',
+      backgroundImage: 'url(/backgrounds/arcade.jpg?v=notext)',
     })
     expect(screen.getByRole('button', { name: 'Start' })).toBeInTheDocument()
-    expect(screen.queryByLabelText('Maze')).not.toBeInTheDocument()
+
+    rerender(<LevelSubpage level={LEVELS[5]} />)
+    expect(screen.getByRole('heading', { name: 'Password' })).toBeInTheDocument()
+    expect(screen.getByText('Open the right locker.')).toBeInTheDocument()
+    expect(document.querySelector('.password-scene')).toHaveStyle({
+      backgroundImage: 'url(/backgrounds/password.jpg)',
+    })
+    expect(screen.getByRole('button', { name: 'Open locker 11' })).toBeInTheDocument()
+    expect(screen.getByText('open')).toBeInTheDocument()
   })
 })

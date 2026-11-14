@@ -10,10 +10,11 @@ describe('levels', () => {
 
   it('finds a level by id and misses unknown ids', () => {
     expect(getLevel('1')?.word).toBe('CAREFUL')
-    expect(getLevel('2')?.background).toBe('/backgrounds/password.jpg')
-    expect(getLevel('4')?.background).toBe('/backgrounds/twenty-seconds.jpg')
-    expect(getLevel('5')?.background).toBe('/backgrounds/memory.jpg?v=night2')
-    expect(getLevel('6')?.background).toBe('/backgrounds/hunting.jpg?v=notext')
+    expect(getLevel('2')?.background).toBe('/backgrounds/twenty-seconds.jpg')
+    expect(getLevel('3')?.background).toBe('/backgrounds/hunting.jpg?v=notext')
+    expect(getLevel('4')?.background).toBe('/backgrounds/memory.jpg?v=night2')
+    expect(getLevel('5')?.background).toBe('/backgrounds/arcade.jpg?v=notext')
+    expect(getLevel('6')?.background).toBe('/backgrounds/password.jpg')
     expect(getLevel('missing')).toBeUndefined()
   })
 

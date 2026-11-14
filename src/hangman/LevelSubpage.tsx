@@ -16,7 +16,7 @@ type Props = {
 }
 
 export default function LevelSubpage({ level, onWin }: Props) {
-  if (level.id === '1' && level.background) {
+  if (level.word === 'CAREFUL' && level.background) {
     return (
       <CarefulGame
         title={level.note?.title ?? titleCaseWord(level.word)}
@@ -30,11 +30,11 @@ export default function LevelSubpage({ level, onWin }: Props) {
   if (level.page === 'spline') return <Scene />
   if (level.page === 'games') return <Games />
 
-  const isTea = level.id === '4'
-  const isPassword = level.id === '2'
-  const isArcade = level.id === '3'
-  const isMemory = level.id === '5'
-  const isHunting = level.id === '6'
+  const isTea = level.word === 'TWENTY SECONDS'
+  const isHunting = level.word === 'HUNTING'
+  const isMemory = level.word === 'MEMORY'
+  const isArcade = level.word === 'ARCADE'
+  const isPassword = level.word === 'PASSWORD'
   const coverScene = isTea || isPassword
   const background = level.background ? assetUrl(level.background) : undefined
 
