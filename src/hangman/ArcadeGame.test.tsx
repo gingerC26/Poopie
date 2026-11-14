@@ -94,8 +94,9 @@ describe('ArcadeGame', () => {
     throwDart()
     nextDart()
     throwDart()
+    expect(screen.getByText('-4')).toBeInTheDocument()
     nextDart()
-    expect(screen.getByText(/Bust! You went under zero/i)).toBeInTheDocument()
+    expect(screen.getByText(/Math is hard/i)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Restart' })).toBeInTheDocument()
   })
 
@@ -109,7 +110,8 @@ describe('ArcadeGame', () => {
     }
     throwDart()
     nextDart()
-    expect(screen.getByText(/Out of darts/i)).toBeInTheDocument()
+    expect(screen.getByText(/You ran out of darts/i)).toBeInTheDocument()
+    expect(screen.getByText(/Try again/i)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Restart' })).toBeInTheDocument()
   })
 })

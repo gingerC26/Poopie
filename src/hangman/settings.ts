@@ -115,5 +115,5 @@ export const ARCADE_FLIGHT_MS = 1800
 // default: 1800
 
 /** Pause while Hit X! blinks twice. */
-export const ARCADE_LAND_MS = 1000
-// default: 1000
+export const ARCADE_LAND_MS = 1200
+// default: 1200

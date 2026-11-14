@@ -158,12 +158,18 @@ export default function ArcadeGame({ onWin }: Props) {
   if (phase === 'lobby' || phase === 'lose') {
     const retry = phase === 'lose'
     return (
-      <div className="arcade-play arcade-play--lobby">
+      <div className={`arcade-play arcade-play--lobby${retry ? ' arcade-play--retry' : ''}`}>
         {retry && (
           <p className="arcade-status">
-            {loseKind === 'bust'
-              ? 'Bust! You went under zero. Try again.'
-              : "Out of darts, and you're not at zero. Try again."}
+            {loseKind === 'bust' ? (
+              'Math is hard... Make sure you don\'t bust next time!'
+            ) : (
+              <>
+                You ran out of darts ;-;
+                <br />
+                Try again!
+              </>
+            )}
           </p>
         )}
         <button type="button" className="arcade-start" onClick={enterBoard}>
@@ -176,25 +182,30 @@ export default function ArcadeGame({ onWin }: Props) {
   const briefing = phase === 'brief'
   const windLeft = wind < 0
   const windPips = Math.max(1, Math.round(Math.abs(wind) / 0.12))
+  const windMarks = briefing ? '< >' : windLeft ? '<'.repeat(windPips) : '>'.repeat(windPips)
+  const statLine = briefing ? 'arcade-stat-line' : 'arcade-stat-stack'
 
   return (
     <div className={`arcade-play arcade-play--board${briefing ? ' arcade-play--brief' : ''}`}>
       <div className="arcade-hud">
         <div className="arcade-stat">
-          <p>
-            Score <strong>{Math.max(0, remaining)}</strong>
+          <p className={statLine}>
+            <span className="arcade-stat-label">Score</span>
+            <strong className={remaining < 0 ? 'arcade-score--bust' : undefined}>{remaining}</strong>
           </p>
           {briefing && <p className="arcade-stat-caption">Get to exactly 0 to win.</p>}
         </div>
         <div className="arcade-stat">
-          <p aria-label={`${dartsLeft} darts left`}>
-            Darts <span className="arcade-darts">{'*'.repeat(Math.max(0, dartsLeft))}</span>
+          <p className={statLine} aria-label={`${dartsLeft} darts left`}>
+            <span className="arcade-stat-label">Darts</span>
+            <span className="arcade-darts">{'*'.repeat(Math.max(0, dartsLeft))}</span>
           </p>
           {briefing && <p className="arcade-stat-caption">You have 5 darts.</p>}
         </div>
         <div className="arcade-stat arcade-stat--wind">
-          <p className="arcade-wind" aria-label={windLeft ? 'Typhoon left' : 'Typhoon right'}>
-            Typhoon {briefing ? '< >' : windLeft ? '<'.repeat(windPips) : '>'.repeat(windPips)}
+          <p className={`${statLine} arcade-wind`} aria-label={windLeft ? 'Typhoon left' : 'Typhoon right'}>
+            <span className="arcade-stat-label">Typhoon</span>
+            <span className="arcade-wind-pips">{windMarks}</span>
           </p>
           {briefing && <p className="arcade-stat-caption">Pushes the dart left or right.</p>}
         </div>

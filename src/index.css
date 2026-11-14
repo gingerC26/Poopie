@@ -1524,6 +1524,15 @@ h2 {
   position: relative;
 }
 
+@font-face {
+  font-family: "Arcade Pixel";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  size-adjust: 80%;
+  src: url("https://fonts.gstatic.com/s/pressstart2p/v16/e3t4euO8T-267oIAQAu6jDQyK0nS.ttf") format("truetype");
+}
+
 .arcade-play {
   position: absolute;
   left: 50%;
@@ -1535,6 +1544,11 @@ h2 {
   width: min(34rem, calc(100% - 2.6rem));
   transform: translate(-50%, -50%);
   pointer-events: auto;
+  font-family: "Arcade Pixel", "Press Start 2P", ui-monospace, monospace;
+  font-size: 13px;
+  line-height: 1.45;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 .arcade-start {
@@ -1549,8 +1563,7 @@ h2 {
     0 4px 0 #1a1018,
     0 0 14px rgba(255, 77, 154, 0.28);
   color: #ffe56a;
-  font-family: "Press Start 2P", ui-monospace, monospace;
-  font-size: 0.82rem;
+  font-size: 22px;
   font-weight: 400;
   letter-spacing: 0.12em;
   line-height: 1;
@@ -1575,6 +1588,10 @@ h2 {
   width: min(22rem, calc(100% - 2.4rem));
 }
 
+.arcade-play--retry {
+  top: 58%;
+}
+
 .arcade-status {
   margin: 0;
   max-width: 22rem;
@@ -1583,8 +1600,7 @@ h2 {
   border: 2px solid #ff4d9a;
   border-radius: 6px;
   color: #ffe56a;
-  font-family: "Press Start 2P", ui-monospace, monospace;
-  font-size: 0.58rem;
+  font-size: 16px;
   line-height: 1.7;
   text-align: center;
 }
@@ -1602,18 +1618,20 @@ h2 {
 
 .arcade-hud {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.45rem;
-  width: 100%;
+  width: 94%;
   color: #ffe56a;
-  font-family: "Press Start 2P", ui-monospace, monospace;
-  font-size: 0.48rem;
+  font-size: 13px;
   line-height: 1.45;
 }
 
 .arcade-stat {
   display: grid;
   gap: 0.4rem;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
   min-height: 2.6rem;
   padding: 0.5rem 0.4rem 0.45rem;
   background: rgba(8, 6, 12, 0.88);
@@ -1631,21 +1649,58 @@ h2 {
   margin: 0;
 }
 
-.arcade-hud strong {
+.arcade-stat-line {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: baseline;
+  gap: 0.4rem;
+  white-space: nowrap;
+}
+
+.arcade-stat-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.arcade-stat-stack .arcade-stat-label {
+  color: #ffe56a;
+}
+
+.arcade-hud strong,
+.arcade-stat-stack .arcade-darts {
   color: #fff6b8;
   font-weight: 400;
+  font-size: 16px;
+}
+
+.arcade-stat-stack .arcade-wind-pips {
+  font-size: 16px;
+}
+
+.arcade-play--brief .arcade-hud strong,
+.arcade-play--brief .arcade-darts,
+.arcade-play--brief .arcade-wind-pips {
+  font-size: inherit;
+}
+
+.arcade-score--bust {
+  color: #ff7eb3;
 }
 
 .arcade-stat-caption {
   color: #f3e6c8;
-  font-size: 0.46rem;
+  font-size: 13px;
   line-height: 1.6;
 }
 
 .arcade-start--ready {
   min-width: 0;
   padding: 0.82rem 1.15rem 0.76rem;
-  font-size: 0.58rem;
+  font-size: 16px;
   letter-spacing: 0.06em;
 }
 
@@ -1661,7 +1716,7 @@ h2 {
   position: absolute;
   z-index: 3;
   left: 50%;
-  top: 38%;
+  top: 56%;
   margin: 0;
   padding: 0.55rem 0.75rem 0.5rem;
   transform: translate(-50%, -50%);
@@ -1669,12 +1724,11 @@ h2 {
   border: 2px solid #ffe56a;
   border-radius: 6px;
   color: #ffe56a;
-  font-family: "Press Start 2P", ui-monospace, monospace;
-  font-size: 0.72rem;
+  font-size: 18px;
   line-height: 1.4;
   text-align: center;
   pointer-events: none;
-  animation: arcade-hit-blink 0.5s steps(1, end) 2 both;
+  animation: arcade-hit-blink 0.6s steps(1, end) 2 both;
 }
 
 @keyframes arcade-hit-blink {
@@ -1715,8 +1769,7 @@ h2 {
   margin: 0;
   padding: 0.5rem 0.45rem 0.4rem;
   color: #ffe56a;
-  font-family: "Press Start 2P", ui-monospace, monospace;
-  font-size: 0.46rem;
+  font-size: 13px;
   line-height: 1.6;
   text-align: center;
 }
@@ -1733,8 +1786,7 @@ h2 {
   height: 2.4rem;
   border-right: 1px solid rgba(255, 77, 154, 0.28);
   color: #f3e6c8;
-  font-family: "Press Start 2P", ui-monospace, monospace;
-  font-size: 0.62rem;
+  font-size: 16px;
   background: #161018;
 }
 
@@ -1776,8 +1828,7 @@ h2 {
   border: 2px solid #7af0ff;
   border-radius: 6px;
   color: #7af0ff;
-  font-family: "Press Start 2P", ui-monospace, monospace;
-  font-size: 0.48rem;
+  font-size: 13px;
   line-height: 1.5;
   text-align: center;
   box-shadow: 0 3px 0 #0a2a30;
@@ -1797,8 +1848,7 @@ h2 {
 .arcade-hint {
   margin: 0;
   color: #f3e6c8;
-  font-family: "Press Start 2P", ui-monospace, monospace;
-  font-size: 0.42rem;
+  font-size: 13px;
   line-height: 1.6;
   text-align: center;
   text-shadow: 0 1px 0 #000;
@@ -1817,8 +1867,7 @@ h2 {
   border: 3px solid #ff4d9a;
   border-radius: 8px;
   color: #ffe56a;
-  font-family: "Press Start 2P", ui-monospace, monospace;
-  font-size: 0.58rem;
+  font-size: 16px;
   line-height: 1.75;
   text-align: center;
   box-shadow: 0 0 22px rgba(255, 77, 154, 0.35);
