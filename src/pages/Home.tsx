@@ -1,12 +1,18 @@
+import { useEffect } from 'react'
 import HangmanPlay from '../hangman/HangmanPlay'
 import LevelSidebar from '../hangman/LevelSidebar'
 import LevelSubpage from '../hangman/LevelSubpage'
+import { preloadGiftAssets } from '../hangman/preloadAssets'
 import { TeaSteepProvider } from '../hangman/TeaSteep'
 import { useHangman } from '../hangman/useHangman'
 
 export default function Home() {
   const game = useHangman()
   const showSubpage = game.status === 'unlocked'
+
+  useEffect(() => {
+    preloadGiftAssets()
+  }, [])
 
   return (
     <TeaSteepProvider>
