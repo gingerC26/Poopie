@@ -97,9 +97,9 @@ describe('TeaGame', () => {
         <TeaGame onWin={onWin} />
       </div>,
     )
-    brewTea({ steepMs: 20_300 })
+    brewTea({ steepMs: 20_100 })
     const dialog = screen.getByRole('dialog', { name: 'Brew time' })
-    expect(dialog).toHaveTextContent('Tea brewed for 20.3 seconds.')
+    expect(dialog).toHaveTextContent('Tea brewed for 20.1 seconds.')
     expect(dialog).toHaveTextContent("You've made the perfect tea!")
     expect(dialog).toHaveTextContent('Drink the tea to play again.')
     expect(container.querySelector('.subpage--tea .tea-result')).toBeTruthy()
