@@ -21,7 +21,13 @@ describe('LevelSubpage', () => {
     expect(screen.getByText('open')).toBeInTheDocument()
 
     rerender(<LevelSubpage level={LEVELS[2]} />)
-    expect(screen.getByRole('heading', { name: '3D' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Arcade' })).toBeInTheDocument()
+    expect(screen.getByText('A cozy date in a cold typhoone day.')).toBeInTheDocument()
+    expect(document.querySelector('.subpage--arcade')).toBeTruthy()
+    expect(document.querySelector('.subpage--scene')).toHaveStyle({
+      backgroundImage: 'url(/backgrounds/arcade.jpg?v=notext)',
+    })
+    expect(screen.getByRole('button', { name: 'Start' })).toBeInTheDocument()
 
     rerender(<LevelSubpage level={LEVELS[3]} />)
     expect(screen.getByRole('heading', { name: 'Twenty Seconds' })).toBeInTheDocument()

@@ -2,6 +2,7 @@ import Gallery from '../pages/Gallery'
 import Games from '../pages/Games'
 import Scene from '../pages/Scene'
 import CarefulGame from './CarefulGame'
+import ArcadeGame from './ArcadeGame'
 import HuntingGame from './HuntingGame'
 import MemoryGame from './MemoryGame'
 import PasswordGame from './PasswordGame'
@@ -30,13 +31,14 @@ export default function LevelSubpage({ level, onWin }: Props) {
 
   const isTea = level.id === '4'
   const isPassword = level.id === '2'
+  const isArcade = level.id === '3'
   const isMemory = level.id === '5'
   const isHunting = level.id === '6'
   const coverScene = isTea || isPassword
 
   return (
     <article
-      className={`subpage ${level.background ? 'subpage--scene' : ''} ${isTea ? 'subpage--tea' : ''} ${isPassword ? 'subpage--password' : ''} ${isMemory ? 'subpage--memory' : ''} ${isHunting ? 'subpage--hunting' : ''}`}
+      className={`subpage ${level.background ? 'subpage--scene' : ''} ${isTea ? 'subpage--tea' : ''} ${isPassword ? 'subpage--password' : ''} ${isArcade ? 'subpage--arcade' : ''} ${isMemory ? 'subpage--memory' : ''} ${isHunting ? 'subpage--hunting' : ''}`}
       style={
         level.background && !coverScene
           ? { backgroundImage: `url(${level.background})` }
@@ -67,6 +69,7 @@ export default function LevelSubpage({ level, onWin }: Props) {
           <PasswordGame onWin={onWin} />
         </div>
       )}
+      {isArcade && <ArcadeGame onWin={onWin} />}
       {isMemory && <MemoryGame onWin={onWin} />}
       {isHunting && <HuntingGame onWin={onWin} />}
       <div className="subpage-copy">

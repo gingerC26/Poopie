@@ -1505,16 +1505,68 @@ h2 {
 
 .subpage--memory .lede,
 .subpage--password .lede,
+.subpage--arcade .lede,
 .subpage--hunting .lede {
   color: #fff;
+}
+
+.subpage--arcade h1 {
+  color: #ffe56a;
+  text-shadow: 0 0 10px rgba(255, 77, 154, 0.55);
 }
 
 .subpage--hunting h1 {
   color: #f3e6c8;
 }
 
+.subpage--arcade,
 .subpage--hunting {
   position: relative;
+}
+
+.arcade-play {
+  position: absolute;
+  left: 50%;
+  top: 62%;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(34rem, calc(100% - 2.6rem));
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+}
+
+.arcade-start {
+  min-width: 10.5rem;
+  padding: 0.95rem 1.55rem 0.88rem;
+  border: 3px solid #ff4d9a;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #2a2433 0%, #121018 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 -3px 0 #07060a,
+    0 4px 0 #1a1018,
+    0 0 14px rgba(255, 77, 154, 0.28);
+  color: #ffe56a;
+  font-family: "Press Start 2P", ui-monospace, monospace;
+  font-size: 0.82rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  text-transform: uppercase;
+  text-shadow: 0 2px 0 #2a1020;
+}
+
+.arcade-start:hover,
+.arcade-start:focus-visible {
+  color: #fff6b8;
+  border-color: #7af0ff;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -3px 0 #07060a,
+    0 4px 0 #1a1018,
+    0 0 16px rgba(122, 240, 255, 0.35);
 }
 
 .hunting-play {

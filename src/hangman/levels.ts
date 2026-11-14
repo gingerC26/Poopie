@@ -35,7 +35,12 @@ export const LEVELS: Level[] = [
   {
     id: '3',
     word: 'ARCADE',
-    page: 'spline',
+    page: 'note',
+    background: '/backgrounds/arcade.jpg?v=notext',
+    note: {
+      title: 'Arcade',
+      body: 'A cozy date in a cold typhoone day.',
+    },
   },
   {
     id: '4',
