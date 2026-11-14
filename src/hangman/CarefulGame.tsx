@@ -38,6 +38,7 @@ export default function CarefulGame({ title, body, background, onWin }: Props) {
   const [corridor, setCorridor] = useState<Corridor | null>(null)
   const [spilled, setSpilled] = useState(false)
   const [happy, setHappy] = useState(false)
+  const [noteOpen, setNoteOpen] = useState(false)
   const [dragging, setDragging] = useState(false)
   const drag = useRef<{ dx: number; dy: number } | null>(null)
   const spilledRef = useRef(false)
@@ -132,6 +133,7 @@ export default function CarefulGame({ title, body, background, onWin }: Props) {
     if (!happyRef.current && hitsDish(next, HIT_RADIUS_PX)) {
       happyRef.current = true
       setHappy(true)
+      setNoteOpen(true)
       onWin?.()
     }
     if (!happyRef.current && maze && hitsWalls(next, maze, HIT_RADIUS_PX)) {
@@ -247,6 +249,34 @@ export default function CarefulGame({ title, body, background, onWin }: Props) {
           </span>
         )}
       </button>
+      {happy && noteOpen && (
+        <div className="careful-postcard-layer">
+          <div className="careful-postcard" role="dialog" aria-label="Postcard">
+            <button
+              type="button"
+              className="careful-postcard-close"
+              aria-label="Close"
+              onClick={() => setNoteOpen(false)}
+            >
+              ×
+            </button>
+            <div className="careful-postcard-clips">
+              <span className="careful-postcard-clip careful-postcard-clip--a">
+                <img src="/sprites/careful/win-1.jpg" alt="" />
+              </span>
+              <span className="careful-postcard-clip careful-postcard-clip--b">
+                <img src="/sprites/careful/win-2.jpg" alt="" />
+              </span>
+            </div>
+            <p>
+              From Minoh&apos;s udon to Din Tai Fung&apos;s xiao-long-bao, I observe a great
+              improvement in your chopsticks skill. I am gratified, and I hope you continue
+              mastering this holy craft and enhancing your Asian authenticity.
+            </p>
+            <p>p.s. I miss your kapsalon! When will you make one for me again?</p>
+          </div>
+        </div>
+      )}
     </article>
   )
 }
