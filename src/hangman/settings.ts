@@ -4,14 +4,14 @@
 
 /** Hourglass countdown after a guess starts a round. */
 export const COOLDOWN_MS = 60 * 1000
-// default: 60 * 1000
+// default: 60 * 60 * 1000 (1 hour)
 
 //******************** */
 // CAREFUL SETTINGS
 //******************** */
 
 /** Corridor half-width as % of the Careful background. Lower is harder. The dumpling is 6.4% wide. */
-export const XLB_PATH_HALF_WIDTH = 7.15
+export const XLB_PATH_HALF_WIDTH = 4.15
 // default: 4.15
 
 /** How long the dumpling cries soup after hitting a wall, before reset. */
@@ -27,7 +27,7 @@ export const TWENTY_SECONDS_TARGET_MS = 20 * 1000
 // default: 20 * 1000
 
 /** Offset of time difference allowed in twenty seconds game. */
-export const TWENTY_SECONDS_OFFSET_MS = 10000
+export const TWENTY_SECONDS_OFFSET_MS = 200
 // default: 200
 
 /** How long a tea-table message stays on screen. */
@@ -64,7 +64,7 @@ export const MEMORY_ANSWERS_PATH = 'public/sprites/memory/answers.txt'
 
 /** Show the Memory Reset button. */
 export const MEMORY_RESET_BUTTON = true
-// default: false
+// default: true
 
 /** Folder for Memory Hint clips. Drop m4a/mp3/wav here (1.m4a, 2.m4a, …). */
 export const MEMORY_HINT_SOUNDS_DIR = 'public/sprites/memory/hints'
@@ -84,7 +84,7 @@ export const MEMORY_HINT_NUDGE_MS = 5 * 1000
 
 /** Hunting maze width and height in cells. */
 export const HUNTING_GRID = 14
-// default: 16
+// default: 14
 
 /** Manhattan gap (|dx| + |dy|) between the koala and each food. */
 export const HUNTING_FOOD_MIN_DISTANCE = 8
