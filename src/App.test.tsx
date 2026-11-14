@@ -11,6 +11,7 @@ describe('App', () => {
       </MemoryRouter>,
     )
     expect(screen.getByLabelText('Letter keyboard')).toBeInTheDocument()
+    expect(screen.getByLabelText('Use a computer')).toHaveTextContent(/needs a desk/i)
 
     rerender(
       <MemoryRouter initialEntries={['/not-a-page']}>
