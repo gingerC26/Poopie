@@ -74,7 +74,7 @@ h2 {
   height: 100svh;
   min-height: 100svh;
   display: grid;
-  grid-template-columns: 220px minmax(0, 1fr);
+  grid-template-columns: 260px minmax(0, 1fr);
 }
 
 .board--collapsed {
@@ -301,6 +301,7 @@ h2 {
   line-height: 1.2;
   display: flex;
   align-items: center;
+  white-space: nowrap;
 }
 
 .level-btn--active {
@@ -1856,29 +1857,60 @@ h2 {
 
 .arcade-play--card {
   top: 50%;
-  width: min(26rem, calc(100% - 3rem));
+  width: min(30rem, calc(100% - 2.4rem));
 }
 
 .arcade-win {
   position: relative;
   width: 100%;
-  padding: 1.4rem 1.2rem 1.2rem;
+  max-height: min(86vh, 42rem);
+  overflow: auto;
+  padding: 1.25rem 1.05rem 1.15rem;
   background: rgba(8, 6, 12, 0.92);
   border: 3px solid #ff4d9a;
   border-radius: 8px;
   color: #ffe56a;
-  font-size: 16px;
+  font-size: 13px;
   line-height: 1.75;
   text-align: center;
   box-shadow: 0 0 22px rgba(255, 77, 154, 0.35);
 }
 
+.arcade-win-photo {
+  position: relative;
+  width: min(14.8rem, 72%);
+  margin: 0.15rem auto 1rem;
+  padding: 0.32rem;
+  background: #120c16;
+  border: 3px solid #7af0ff;
+  box-shadow:
+    0 0 0 3px #ff4d9a,
+    0 5px 0 #1a1018;
+  transform: rotate(-2.2deg);
+}
+
+.arcade-win-photo img {
+  display: block;
+  width: 100%;
+  height: 11.4rem;
+  object-fit: cover;
+  object-position: 50% 28%;
+}
+
 .arcade-win-heart {
-  margin: 0 0 0.7rem;
+  position: absolute;
+  right: -0.55rem;
+  bottom: -0.5rem;
+  margin: 0;
   color: #ff7eb3;
-  font-size: 2.1rem;
+  font-size: 1.7rem;
   line-height: 1;
   text-shadow: 0 0 12px #ff4d9a;
+  transform: rotate(12deg);
+}
+
+.arcade-win p {
+  margin: 0 0 0.7rem;
 }
 
 .arcade-win p:last-child {
@@ -2507,7 +2539,7 @@ code {
   }
 
   .board:not(.board--collapsed) #level-drawer {
-    width: min(220px, 86vw);
+    width: min(260px, 86vw);
   }
 
   .board--collapsed #level-drawer {

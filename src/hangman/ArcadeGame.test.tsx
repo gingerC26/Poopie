@@ -71,7 +71,13 @@ describe('ArcadeGame', () => {
     throwDart()
     expect(screen.getByText('Hit 5!')).toBeInTheDocument()
     nextDart()
-    expect(screen.getByRole('dialog', { name: 'Checkout' })).toHaveTextContent(/hand-heart/i)
+    expect(screen.getByRole('dialog', { name: 'Checkout' })).toHaveTextContent(
+      /Playing darts with you is so fun/i,
+    )
+    expect(screen.getByRole('dialog', { name: 'Checkout' }).querySelector('img')).toHaveAttribute(
+      'src',
+      '/sprites/arcade/checkout.jpg',
+    )
     expect(onWin).toHaveBeenCalledTimes(1)
     fireEvent.click(screen.getByRole('button', { name: 'Close' }))
     expect(screen.getByRole('button', { name: 'Start' })).toBeInTheDocument()

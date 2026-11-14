@@ -146,10 +146,21 @@ export default function ArcadeGame({ onWin }: Props) {
           >
             ×
           </button>
-          <p className="arcade-win-heart" aria-hidden="true">
-            ♡
+          <div className="arcade-win-photo">
+            <img src="/sprites/arcade/checkout.jpg" alt="" />
+            <span className="arcade-win-heart" aria-hidden="true">
+              ♡
+            </span>
+          </div>
+          <p>
+            Playing darts with you is so fun - both times. I wanna relive the day we played darts
+            together for the first time, experience having a crush on you and unsure what you feel
+            about me, and then receive a heart gesture from you at the end of the night.
           </p>
-          <p>Checkout. He made a little hand-heart, and you got shy.</p>
+          <p>
+            I thought about it so much after that, and I&apos;ve talked to ChatGPT and Deekseek about
+            it so many times they&apos;re for sure tired of listening...
+          </p>
         </div>
       </div>
     )
