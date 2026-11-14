@@ -1,12 +1,13 @@
+import { assetUrl } from './assetUrl'
 import { HUNTING_FOOD_MIN_DISTANCE } from './settings'
 
 export const HUNTING_PACS = [
-  { id: 'koala', src: '/sprites/hunting/koala.png?v=alpha', alt: 'Koala' },
-  { id: 'gua-bao', src: '/sprites/hunting/gua-bao.png?v=alpha', alt: 'Gua bao' },
-  { id: 'boba', src: '/sprites/hunting/boba.png?v=alpha', alt: 'Bubble tea' },
-  { id: 'xlb', src: '/sprites/hunting/xlb.png?v=alpha', alt: 'Xiao long bao' },
-  { id: 'popcorn-chicken', src: '/sprites/hunting/popcorn-chicken.png?v=alpha', alt: 'Popcorn chicken' },
-  { id: 'skewers', src: '/sprites/hunting/skewers.png?v=alpha', alt: 'Skewers' },
+  { id: 'koala', src: assetUrl('/sprites/hunting/koala.png?v=alpha'), alt: 'Koala' },
+  { id: 'gua-bao', src: assetUrl('/sprites/hunting/gua-bao.png?v=alpha'), alt: 'Gua bao' },
+  { id: 'boba', src: assetUrl('/sprites/hunting/boba.png?v=alpha'), alt: 'Bubble tea' },
+  { id: 'xlb', src: assetUrl('/sprites/hunting/xlb.png?v=alpha'), alt: 'Xiao long bao' },
+  { id: 'popcorn-chicken', src: assetUrl('/sprites/hunting/popcorn-chicken.png?v=alpha'), alt: 'Popcorn chicken' },
+  { id: 'skewers', src: assetUrl('/sprites/hunting/skewers.png?v=alpha'), alt: 'Skewers' },
 ] as const
 
 export const HUNTING_FOODS = HUNTING_PACS.filter((pac) => pac.id !== 'koala')

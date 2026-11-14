@@ -1,7 +1,8 @@
+import { assetUrl } from './assetUrl'
 import { MEMORY_ANSWERS_PATH } from './settings'
 
 export function publicAssetUrl(projectPath: string) {
-  return `/${projectPath.replace(/^public\//, '')}`
+  return assetUrl(projectPath)
 }
 
 export function memoryKey(text: string) {

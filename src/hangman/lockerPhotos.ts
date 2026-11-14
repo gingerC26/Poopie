@@ -1,3 +1,5 @@
+import { assetUrl } from './assetUrl'
+
 const photoModules = import.meta.glob(
   '../../public/sprites/password/photos/*.{jpg,jpeg,png,webp,JPG,JPEG,PNG,WEBP}',
   { eager: true },
@@ -5,7 +7,7 @@ const photoModules = import.meta.glob(
 
 function publicUrl(path: string) {
   const file = path.split('/').pop() ?? ''
-  return `/sprites/password/photos/${file}`
+  return assetUrl(`/sprites/password/photos/${file}`)
 }
 
 const discovered = Object.keys(photoModules)
@@ -16,4 +18,8 @@ const discovered = Object.keys(photoModules)
 export const LOCKER_PHOTOS =
   discovered.length > 0
     ? discovered
-    : ['/sprites/password/photos/1.jpg', '/sprites/password/photos/2.jpg', '/sprites/password/photos/3.jpg']
+    : [
+        assetUrl('/sprites/password/photos/1.jpg'),
+        assetUrl('/sprites/password/photos/2.jpg'),
+        assetUrl('/sprites/password/photos/3.jpg'),
+      ]

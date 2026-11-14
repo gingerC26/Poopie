@@ -8,16 +8,17 @@ import {
 } from './settings'
 import { useTeaSteep } from './TeaSteep'
 import { teaPropAtPoint } from './teaHit'
+import { assetUrl } from './assetUrl'
 
 const PROPS = [
-  { id: 'water-pot', src: '/sprites/tea/water-pot.png', alt: 'Water pot' },
-  { id: 'leaves', src: '/sprites/tea/tea-leaves.png?v=pottery2', alt: 'Tea leaves' },
-  { id: 'pot-big', src: '/sprites/tea/pot-big.png', alt: 'Big teapot' },
-  { id: 'pot-small', src: '/sprites/tea/pot-small.png', alt: 'Small teapot' },
-  { id: 'spoon', src: '/sprites/tea/spoon.png', alt: 'Tea spoon' },
-  { id: 'cup', src: '/sprites/tea/tea-cup.png', alt: 'Tea cup' },
-  { id: 'cup-filled', src: '/sprites/tea/tea-cup-filled.png', alt: 'Filled tea cup' },
-  { id: 'postcard', src: '/sprites/tea/postcard.png', alt: 'Instruction postcard' },
+  { id: 'water-pot', src: assetUrl('/sprites/tea/water-pot.png'), alt: 'Water pot' },
+  { id: 'leaves', src: assetUrl('/sprites/tea/tea-leaves.png?v=pottery2'), alt: 'Tea leaves' },
+  { id: 'pot-big', src: assetUrl('/sprites/tea/pot-big.png'), alt: 'Big teapot' },
+  { id: 'pot-small', src: assetUrl('/sprites/tea/pot-small.png'), alt: 'Small teapot' },
+  { id: 'spoon', src: assetUrl('/sprites/tea/spoon.png'), alt: 'Tea spoon' },
+  { id: 'cup', src: assetUrl('/sprites/tea/tea-cup.png'), alt: 'Tea cup' },
+  { id: 'cup-filled', src: assetUrl('/sprites/tea/tea-cup-filled.png'), alt: 'Filled tea cup' },
+  { id: 'postcard', src: assetUrl('/sprites/tea/postcard.png'), alt: 'Instruction postcard' },
 ] as const
 
 type TeaPropId = (typeof PROPS)[number]['id']
@@ -274,11 +275,11 @@ export default function TeaGame({ onWin }: Props) {
               <p className="tea-postcard-sign">- Your Poopie</p>
             </div>
             <span className="tea-postcard-clip">
-              <img src="/sprites/tea/postcard-clip.jpg" alt="" />
+              <img src={assetUrl('/sprites/tea/postcard-clip.jpg')} alt="" />
             </span>
             <img
               className="tea-postcard-stamp"
-              src="/sprites/tea/postcard-stamp.png"
+              src={assetUrl('/sprites/tea/postcard-stamp.png')}
               alt=""
               draggable={false}
             />

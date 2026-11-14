@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { createPortal } from 'react-dom'
+import { assetUrl } from './assetUrl'
 import { LOCKER_PHOTOS } from './lockerPhotos'
 import { LOCKER_PIN, LOCKER_PIN_LENGTH } from './settings'
 
 const KEYS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'x', '0', 'v'] as const
-const OPEN_BG = 'url(/backgrounds/password-open.jpg)'
+const OPEN_BG = `url(${assetUrl('/backgrounds/password-open.jpg')})`
 
 type ThrownPhoto = {
   id: number
@@ -184,7 +185,7 @@ export default function PasswordGame({ onWin }: Props) {
             setCameraOpen(true)
           }}
         >
-          <img src="/sprites/password/kodak-camera.png?v=shutter" alt="" draggable={false} />
+          <img src={assetUrl('/sprites/password/kodak-camera.png?v=shutter')} alt="" draggable={false} />
         </button>
       )}
       {cameraOpen &&
@@ -247,7 +248,7 @@ export default function PasswordGame({ onWin }: Props) {
                 }
               }}
             >
-              <img src="/sprites/password/kodak-camera.png?v=shutter" alt="Kodak camera" draggable={false} />
+              <img src={assetUrl('/sprites/password/kodak-camera.png?v=shutter')} alt="Kodak camera" draggable={false} />
               <button
                 type="button"
                 className="locker-camera-shutter"

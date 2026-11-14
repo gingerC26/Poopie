@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { assetUrl } from './assetUrl'
 import { ARCADE_LANES, applyDart, pickArcadeWind, scoreAtX } from './arcadeDarts'
 import { ARCADE_DARTS, ARCADE_FLIGHT_MS, ARCADE_LAND_MS, ARCADE_START_SCORE } from './settings'
 
@@ -147,7 +148,7 @@ export default function ArcadeGame({ onWin }: Props) {
             ×
           </button>
           <div className="arcade-win-photo">
-            <img src="/sprites/arcade/checkout.jpg" alt="" />
+            <img src={assetUrl('/sprites/arcade/checkout.jpg')} alt="" />
             <span className="arcade-win-heart" aria-hidden="true">
               ♡
             </span>

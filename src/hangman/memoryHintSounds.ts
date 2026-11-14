@@ -1,3 +1,5 @@
+import { assetUrl } from './assetUrl'
+
 const soundModules = import.meta.glob(
   '../../public/sprites/memory/hints/*.{m4a,mp3,wav,ogg,M4A,MP3,WAV,OGG}',
   { eager: true, query: '?url', import: 'default' },
@@ -5,7 +7,7 @@ const soundModules = import.meta.glob(
 
 function publicUrl(path: string) {
   const file = path.split('/').pop()?.split('?')[0] ?? ''
-  return `/sprites/memory/hints/${file}`
+  return assetUrl(`/sprites/memory/hints/${file}`)
 }
 
 const discovered = Object.keys(soundModules)
@@ -17,12 +19,12 @@ export const MEMORY_HINT_SOUNDS =
   discovered.length > 0
     ? discovered
     : [
-        '/sprites/memory/hints/1.m4a',
-        '/sprites/memory/hints/2.m4a',
-        '/sprites/memory/hints/3.m4a',
-        '/sprites/memory/hints/4.m4a',
-        '/sprites/memory/hints/5.m4a',
-        '/sprites/memory/hints/6.m4a',
+        assetUrl('/sprites/memory/hints/1.m4a'),
+        assetUrl('/sprites/memory/hints/2.m4a'),
+        assetUrl('/sprites/memory/hints/3.m4a'),
+        assetUrl('/sprites/memory/hints/4.m4a'),
+        assetUrl('/sprites/memory/hints/5.m4a'),
+        assetUrl('/sprites/memory/hints/6.m4a'),
       ]
 
 let lastHint: HTMLAudioElement | null = null

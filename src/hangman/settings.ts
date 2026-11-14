@@ -3,7 +3,7 @@
 //******************** */
 
 /** Hourglass countdown after a guess starts a round. */
-export const COOLDOWN_MS = 60 * 1000
+export const COOLDOWN_MS = 60 * 60 * 1000
 // default: 60 * 60 * 1000 (1 hour)
 
 //******************** */

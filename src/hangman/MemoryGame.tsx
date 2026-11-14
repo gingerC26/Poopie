@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { assetUrl } from './assetUrl'
 import { loadMemoryAnswers, memoryKey, type MemoryAnswer } from './memoryAnswers'
 import { playMemoryHintSound } from './memoryHintSounds'
 import {
@@ -119,7 +120,7 @@ export default function MemoryGame({ onWin }: Props) {
           >
             ×
           </button>
-          <img src="/sprites/memory/win.jpg" alt="" />
+          <img src={assetUrl('/sprites/memory/win.jpg')} alt="" />
           <p>{memoryWinNote(answers.length)}</p>
         </div>
       )}

@@ -1,3 +1,4 @@
+import { assetUrl } from './assetUrl'
 import Gallery from '../pages/Gallery'
 import Games from '../pages/Games'
 import Scene from '../pages/Scene'
@@ -35,13 +36,14 @@ export default function LevelSubpage({ level, onWin }: Props) {
   const isMemory = level.id === '5'
   const isHunting = level.id === '6'
   const coverScene = isTea || isPassword
+  const background = level.background ? assetUrl(level.background) : undefined
 
   return (
     <article
       className={`subpage ${level.background ? 'subpage--scene' : ''} ${isTea ? 'subpage--tea' : ''} ${isPassword ? 'subpage--password' : ''} ${isArcade ? 'subpage--arcade' : ''} ${isMemory ? 'subpage--memory' : ''} ${isHunting ? 'subpage--hunting' : ''}`}
       style={
-        level.background && !coverScene
-          ? { backgroundImage: `url(${level.background})` }
+        background && !coverScene
+          ? { backgroundImage: `url(${background})` }
           : undefined
       }
     >
@@ -49,8 +51,8 @@ export default function LevelSubpage({ level, onWin }: Props) {
         <div
           className="tea-scene"
           style={
-            level.background
-              ? { backgroundImage: `url(${level.background})` }
+            background
+              ? { backgroundImage: `url(${background})` }
               : undefined
           }
         >
@@ -61,8 +63,8 @@ export default function LevelSubpage({ level, onWin }: Props) {
         <div
           className="password-scene"
           style={
-            level.background
-              ? { backgroundImage: `url(${level.background})` }
+            background
+              ? { backgroundImage: `url(${background})` }
               : undefined
           }
         >

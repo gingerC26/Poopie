@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { assetUrl } from './assetUrl'
 import { buildCorridor, hitsDish, hitsWalls, type Corridor } from './carefulPath'
 import { XLB_SPILL_MS } from './settings'
 
@@ -164,7 +165,7 @@ export default function CarefulGame({ title, body, background, onWin }: Props) {
       <img
         ref={bgRef}
         className="careful-bg"
-        src={background}
+        src={assetUrl(background)}
         alt=""
         draggable={false}
         onLoad={measure}
@@ -216,10 +217,10 @@ export default function CarefulGame({ title, body, background, onWin }: Props) {
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
       >
-        <img src="/sprites/xlb.png" alt="" draggable={false} />
+        <img src={assetUrl('/sprites/xlb.png')} alt="" draggable={false} />
         {spilled && (
           <span className="xlb-spill" aria-hidden>
-            <img className="xlb-face" src="/sprites/xlb-face.png" alt="" draggable={false} />
+            <img className="xlb-face" src={assetUrl('/sprites/xlb-face.png')} alt="" draggable={false} />
             <i className="xlb-hole" />
             <i className="xlb-stream" />
           </span>
@@ -234,13 +235,13 @@ export default function CarefulGame({ title, body, background, onWin }: Props) {
         )}
         {happy && (
           <span className="xlb-win" aria-hidden>
-            <img className="xlb-face" src="/sprites/xlb-happy-face.png" alt="" draggable={false} />
+            <img className="xlb-face" src={assetUrl('/sprites/xlb-happy-face.png')} alt="" draggable={false} />
             <span className="xlb-hearts">
               {[0, 1, 2, 3, 4].map((i) => (
                 <img
                   key={i}
                   className={`xlb-heart xlb-heart--${i}`}
-                  src="/sprites/xlb-heart.png"
+                  src={assetUrl('/sprites/xlb-heart.png')}
                   alt=""
                   draggable={false}
                 />
@@ -262,10 +263,10 @@ export default function CarefulGame({ title, body, background, onWin }: Props) {
             </button>
             <div className="careful-postcard-clips">
               <span className="careful-postcard-clip careful-postcard-clip--a">
-                <img src="/sprites/careful/win-1.jpg" alt="" />
+                <img src={assetUrl('/sprites/careful/win-1.jpg')} alt="" />
               </span>
               <span className="careful-postcard-clip careful-postcard-clip--b">
-                <img src="/sprites/careful/win-2.jpg" alt="" />
+                <img src={assetUrl('/sprites/careful/win-2.jpg')} alt="" />
               </span>
             </div>
             <p>

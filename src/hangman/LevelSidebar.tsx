@@ -1,3 +1,4 @@
+import { assetUrl } from './assetUrl'
 import Hourglass from './Hourglass'
 import { maskWord, titleCaseWord, type Level } from './levels'
 
@@ -76,7 +77,7 @@ export default function LevelSidebar({
                     <span className="level-trophy" title="Mini-game cleared">
                       <img
                         className="level-trophy-icon"
-                        src="/icons/trophy.svg"
+                        src={assetUrl('/icons/trophy.svg')}
                         alt=""
                         draggable={false}
                       />

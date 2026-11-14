@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest'
 import { COOLDOWN_MS, HUNTING_TIME_MS, XLB_PATH_HALF_WIDTH, XLB_SPILL_MS } from './settings'
 
 describe('settings', () => {
-  it('keeps the hourglass cooldown at one minute', () => {
-    expect(COOLDOWN_MS).toBe(60_000)
+  it('keeps the hourglass cooldown at one hour', () => {
+    expect(COOLDOWN_MS).toBe(60 * 60 * 1000)
   })
 
   it('keeps the spill reset at five seconds', () => {

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import { assetUrl } from './assetUrl'
 import { generateHuntingMaze, huntingStep, type HuntingDir } from './huntingMaze'
 import {
   HUNTING_FOODS,
@@ -156,10 +157,10 @@ export default function HuntingGame({ onWin }: Props) {
           </button>
           <div className="hunting-postcard-clips">
             <span className="hunting-postcard-clip hunting-postcard-clip--a">
-              <img src="/sprites/hunting/win-1.jpg" alt="" />
+              <img src={assetUrl('/sprites/hunting/win-1.jpg')} alt="" />
             </span>
             <span className="hunting-postcard-clip hunting-postcard-clip--b">
-              <img src="/sprites/hunting/win-2.jpg" alt="" />
+              <img src={assetUrl('/sprites/hunting/win-2.jpg')} alt="" />
             </span>
           </div>
           <p>
