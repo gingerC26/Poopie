@@ -63,8 +63,7 @@ export default function LevelSidebar({
           const isOpen = unlocked.has(level.id)
           const isWon = won?.has(level.id) ?? false
           const closed = level.word === 'PASSWORD' && !PASSWORD_LEVEL_ENABLED
-          const name =
-            isOpen || closed ? titleCaseWord(level.word) : maskWord(level.word)
+          const name = isOpen ? titleCaseWord(level.word) : maskWord(level.word)
           return (
             <li key={level.id}>
               <button

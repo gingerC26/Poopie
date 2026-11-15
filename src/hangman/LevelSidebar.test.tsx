@@ -78,7 +78,7 @@ describe('LevelSidebar', () => {
         onToggle={() => {}}
       />,
     )
-    const password = screen.getByRole('button', { name: /6\. Password/ })
+    const password = screen.getByRole('button', { name: /6\. \?+/ })
     expect(password).toBeDisabled()
     expect(password).toHaveClass('level-btn--closed')
     expect(password.querySelector('.level-trophy-icon')).toHaveAttribute(
