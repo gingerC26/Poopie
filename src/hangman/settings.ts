@@ -46,6 +46,10 @@ export const TEA_NOTICE_LIMIT = 3
 // PASSWORD SETTINGS
 //******************** */
 
+/** Play the locker mini-game. Off shows Password as under maintenance. */
+export const PASSWORD_LEVEL_ENABLED = false
+// default: false
+
 /** How many digits the locker PIN holds. */
 export const LOCKER_PIN_LENGTH = 6
 // default: 6

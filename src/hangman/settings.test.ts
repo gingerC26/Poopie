@@ -3,6 +3,7 @@ import {
   CLEAR_WIN_RECORDS_BUTTON,
   COOLDOWN_MS,
   HUNTING_TIME_MS,
+  PASSWORD_LEVEL_ENABLED,
   XLB_PATH_HALF_WIDTH,
   XLB_SPILL_MS,
 } from './settings'
@@ -14,6 +15,10 @@ describe('settings', () => {
 
   it('hides the Clear win records button', () => {
     expect(CLEAR_WIN_RECORDS_BUTTON).toBe(false)
+  })
+
+  it('keeps Password under maintenance', () => {
+    expect(PASSWORD_LEVEL_ENABLED).toBe(false)
   })
 
   it('keeps the spill reset at five seconds', () => {

@@ -9,6 +9,7 @@ import MemoryGame from './MemoryGame'
 import PasswordGame from './PasswordGame'
 import TeaGame from './TeaGame'
 import { titleCaseWord, type Level } from './levels'
+import { PASSWORD_LEVEL_ENABLED } from './settings'
 
 type Props = {
   level: Level
@@ -35,14 +36,15 @@ export default function LevelSubpage({ level, onWin }: Props) {
   const isMemory = level.word === 'MEMORY'
   const isArcade = level.word === 'ARCADE'
   const isPassword = level.word === 'PASSWORD'
-  const coverScene = isTea || isPassword
+  const passwordOpen = isPassword && PASSWORD_LEVEL_ENABLED
+  const coverScene = isTea || passwordOpen
   const background = level.background ? assetUrl(level.background) : undefined
 
   return (
     <article
-      className={`subpage ${level.background ? 'subpage--scene' : ''} ${isTea ? 'subpage--tea' : ''} ${isPassword ? 'subpage--password' : ''} ${isArcade ? 'subpage--arcade' : ''} ${isMemory ? 'subpage--memory' : ''} ${isHunting ? 'subpage--hunting' : ''}`}
+      className={`subpage ${level.background && (passwordOpen || !isPassword) ? 'subpage--scene' : ''} ${isTea ? 'subpage--tea' : ''} ${passwordOpen ? 'subpage--password' : ''} ${isArcade ? 'subpage--arcade' : ''} ${isMemory ? 'subpage--memory' : ''} ${isHunting ? 'subpage--hunting' : ''}`}
       style={
-        background && !coverScene
+        background && !coverScene && !isPassword
           ? { backgroundImage: `url(${background})` }
           : undefined
       }
@@ -59,7 +61,7 @@ export default function LevelSubpage({ level, onWin }: Props) {
           <TeaGame onWin={onWin} />
         </div>
       )}
-      {isPassword && (
+      {passwordOpen && (
         <div
           className="password-scene"
           style={

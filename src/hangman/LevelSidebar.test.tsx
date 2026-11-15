@@ -63,4 +63,30 @@ describe('LevelSidebar', () => {
     await user.click(screen.getByRole('button', { name: 'Hide levels' }))
     expect(onToggle).toHaveBeenCalled()
   })
+
+  it('disables Password and shows a tool icon while the level is closed', async () => {
+    const onSelect = vi.fn()
+    const user = userEvent.setup()
+    render(
+      <LevelSidebar
+        levels={LEVELS}
+        selectedId="1"
+        unlocked={new Set()}
+        open
+        remainingMs={0}
+        onSelect={onSelect}
+        onToggle={() => {}}
+      />,
+    )
+    const password = screen.getByRole('button', { name: /6\. Password/ })
+    expect(password).toBeDisabled()
+    expect(password).toHaveClass('level-btn--closed')
+    expect(password.querySelector('.level-trophy-icon')).toHaveAttribute(
+      'src',
+      '/icons/tool.png?v=ref',
+    )
+    expect(password.querySelector('.level-go')).toBeNull()
+    await user.click(password)
+    expect(onSelect).not.toHaveBeenCalled()
+  })
 })

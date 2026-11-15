@@ -431,6 +431,25 @@ h2 {
   visibility: hidden;
 }
 
+.level-btn--closed,
+.level-btn--closed:disabled {
+  cursor: not-allowed;
+  color: var(--muted);
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--muted) 50%, var(--border));
+  background:
+    repeating-linear-gradient(
+      -48deg,
+      color-mix(in srgb, var(--bg) 72%, #d7b4bd) 0 7px,
+      #fff8f6 7px 14px
+    );
+  box-shadow: none;
+}
+
+.level-btn--closed .level-name {
+  color: var(--muted);
+}
+
 .level-btn--playing {
   box-shadow: inset 3px 0 0 var(--accent);
 }
@@ -704,7 +723,7 @@ h2 {
 .locker-camera-hint {
   position: absolute;
   left: 50%;
-  top: 62%;
+  top: 68%;
   z-index: 32;
   margin: 0;
   transform: translateX(-50%);
@@ -735,7 +754,7 @@ h2 {
   top: 50%;
   transform: translate(-50%, -50%);
   z-index: 31;
-  width: 30%;
+  width: 22.5rem;
   padding: 0;
   border: 0;
   background: transparent;
@@ -822,7 +841,7 @@ h2 {
 .locker-thrown-photo {
   position: absolute;
   z-index: 33;
-  width: 22.1%;
+  width: 16.5rem;
   aspect-ratio: 4 / 3;
   pointer-events: none;
   animation: locker-photo-throw 1.2s cubic-bezier(0.18, 0.82, 0.22, 1.04) forwards;
@@ -854,8 +873,8 @@ h2 {
   height: 100%;
   object-fit: cover;
   pointer-events: auto;
-  border: 0.45vw solid #f4efe6;
-  box-shadow: 0 1.2vw 2.4vw rgba(0, 0, 0, 0.42);
+  border: 0.45rem solid #f4efe6;
+  box-shadow: 0 1.2rem 2.4rem rgba(0, 0, 0, 0.42);
 }
 
 @keyframes locker-photo-throw {

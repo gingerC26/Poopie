@@ -1,7 +1,7 @@
 import { assetUrl } from './assetUrl'
 import Hourglass from './Hourglass'
 import { maskWord, titleCaseWord, type Level } from './levels'
-import { CLEAR_WIN_RECORDS_BUTTON } from './settings'
+import { CLEAR_WIN_RECORDS_BUTTON, PASSWORD_LEVEL_ENABLED } from './settings'
 
 function SidebarIcon({ open }: { open: boolean }) {
   return open ? (
@@ -62,12 +62,15 @@ export default function LevelSidebar({
         {levels.map((level, index) => {
           const isOpen = unlocked.has(level.id)
           const isWon = won?.has(level.id) ?? false
-          const name = isOpen ? titleCaseWord(level.word) : maskWord(level.word)
+          const closed = level.word === 'PASSWORD' && !PASSWORD_LEVEL_ENABLED
+          const name =
+            isOpen || closed ? titleCaseWord(level.word) : maskWord(level.word)
           return (
             <li key={level.id}>
               <button
                 type="button"
-                className={`level-btn ${selectedId === level.id ? 'level-btn--active' : ''} ${isOpen ? 'level-btn--unlocked' : ''} ${isWon ? 'level-btn--won' : ''} ${activeRoundId === level.id ? 'level-btn--playing' : ''}`}
+                className={`level-btn ${selectedId === level.id ? 'level-btn--active' : ''} ${isOpen && !closed ? 'level-btn--unlocked' : ''} ${closed ? 'level-btn--closed' : ''} ${isWon ? 'level-btn--won' : ''} ${activeRoundId === level.id ? 'level-btn--playing' : ''}`}
+                disabled={closed}
                 onClick={() => onSelect(level.id)}
               >
                 <span className="level-name">
@@ -84,12 +87,23 @@ export default function LevelSidebar({
                       />
                     </span>
                   )}
-                  <span
-                    className={`level-go ${isOpen ? '' : 'level-go--hidden'}`}
-                    aria-hidden="true"
-                  >
-                    →
-                  </span>
+                  {closed ? (
+                    <span className="level-trophy" title="Under maintenance">
+                      <img
+                        className="level-trophy-icon"
+                        src={assetUrl('/icons/tool.png?v=ref')}
+                        alt=""
+                        draggable={false}
+                      />
+                    </span>
+                  ) : (
+                    <span
+                      className={`level-go ${isOpen ? '' : 'level-go--hidden'}`}
+                      aria-hidden="true"
+                    >
+                      →
+                    </span>
+                  )}
                 </span>
               </button>
             </li>
