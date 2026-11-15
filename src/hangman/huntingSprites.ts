@@ -8,6 +8,7 @@ export const HUNTING_PACS = [
   { id: 'xlb', src: assetUrl('/sprites/hunting/xlb.png?v=alpha'), alt: 'Xiao long bao' },
   { id: 'popcorn-chicken', src: assetUrl('/sprites/hunting/popcorn-chicken.png?v=alpha'), alt: 'Popcorn chicken' },
   { id: 'skewers', src: assetUrl('/sprites/hunting/skewers.png?v=alpha'), alt: 'Skewers' },
+  { id: 'grilled-oyster', src: assetUrl('/sprites/hunting/grilled-oyster.png?v=alpha'), alt: 'Grilled oyster' },
 ] as const
 
 export const HUNTING_FOODS = HUNTING_PACS.filter((pac) => pac.id !== 'koala')

@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen, within } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import HuntingGame from './HuntingGame'
 import * as huntingMaze from './huntingMaze'
@@ -40,10 +40,19 @@ describe('HuntingGame', () => {
     expect(document.querySelectorAll('.hunting-wall').length).toBeGreaterThanOrEqual(HUNTING_GRID * 4)
     expect(screen.getByAltText('Koala')).toBeInTheDocument()
     expect(screen.getByAltText('Gua bao')).toBeInTheDocument()
+    const buyList = within(screen.getByLabelText('To Buy List'))
+    expect(buyList.getByRole('heading', { name: 'To Buy List:' })).toBeInTheDocument()
+    expect(buyList.getByText('Gua bao').closest('s')).toBeNull()
+    expect(buyList.getByText('Bubble tea')).toBeInTheDocument()
+    expect(buyList.getByText('Xiao long bao')).toBeInTheDocument()
+    expect(buyList.getByText('Popcorn chicken')).toBeInTheDocument()
+    expect(buyList.getByText('Skewers')).toBeInTheDocument()
+    expect(buyList.getByText('Grilled oyster')).toBeInTheDocument()
     expect(screen.queryByAltText('Bubble tea')).not.toBeInTheDocument()
     expect(screen.queryByAltText('Xiao long bao')).not.toBeInTheDocument()
     expect(screen.queryByAltText('Popcorn chicken')).not.toBeInTheDocument()
     expect(screen.queryByAltText('Skewers')).not.toBeInTheDocument()
+    expect(screen.queryByAltText('Grilled oyster')).not.toBeInTheDocument()
 
     act(() => {
       vi.advanceTimersByTime(HUNTING_TIME_MS / 2)
@@ -97,6 +106,9 @@ describe('HuntingGame', () => {
     fireEvent.keyDown(window, { key: 'ArrowRight' })
     expect(screen.queryByAltText('Gua bao')).not.toBeInTheDocument()
     expect(screen.getByAltText('Bubble tea')).toBeInTheDocument()
+    const buyList = within(screen.getByLabelText('To Buy List'))
+    expect(buyList.getByText('Gua bao').closest('s')).toBeTruthy()
+    expect(buyList.getByText('Bubble tea').closest('s')).toBeNull()
     expect(onWin).not.toHaveBeenCalled()
   })
 
@@ -115,7 +127,10 @@ describe('HuntingGame', () => {
     render(<HuntingGame onWin={onWin} />)
     fireEvent.click(screen.getByRole('button', { name: 'Start' }))
     for (let i = 0; i < 5; i++) fireEvent.keyDown(window, { key: 'ArrowRight' })
-    expect(screen.queryByAltText('Skewers')).not.toBeInTheDocument()
+    expect(screen.getByAltText('Grilled oyster')).toBeInTheDocument()
+    expect(onWin).not.toHaveBeenCalled()
+    fireEvent.keyDown(window, { key: 'ArrowRight' })
+    expect(screen.queryByAltText('Grilled oyster')).not.toBeInTheDocument()
     expect(screen.queryByLabelText('Maze')).not.toBeInTheDocument()
     expect(screen.queryByRole('progressbar', { name: 'Time' })).not.toBeInTheDocument()
     expect(screen.getByRole('dialog', { name: 'Congratulations' })).toHaveTextContent(

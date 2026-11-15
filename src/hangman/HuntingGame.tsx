@@ -246,29 +246,47 @@ export default function HuntingGame({ onWin }: Props) {
   })
 
   return (
-    <div className="hunting-play">
-      <div
-        className="hunting-timer"
-        role="progressbar"
-        aria-label="Time"
-        aria-valuemin={0}
-        aria-valuemax={HUNTING_TIME_MS}
-        aria-valuenow={Math.round(remaining)}
-      >
-        <div className="hunting-timer-fill" style={{ transform: `scaleX(${ratio})` }} />
-      </div>
-      <div className="hunting-map" aria-label="Maze">
-        {walls}
-        <div className="hunting-pac hunting-pac--player" style={pacBox(koalaCell)}>
-          <span className="hunting-pac-pointer" aria-hidden="true" />
-          <img src={koalaSprite.src} alt={koalaSprite.alt} />
+    <div className="hunting-play hunting-play--run">
+      <div className="hunting-stage">
+        <div
+          className="hunting-timer"
+          role="progressbar"
+          aria-label="Time"
+          aria-valuemin={0}
+          aria-valuemax={HUNTING_TIME_MS}
+          aria-valuenow={Math.round(remaining)}
+        >
+          <div className="hunting-timer-fill" style={{ transform: `scaleX(${ratio})` }} />
         </div>
-        {food && (
-          <div className="hunting-pac" style={pacBox(foodCell)}>
-            <img src={food.src} alt={food.alt} />
+        <div className="hunting-map" aria-label="Maze">
+          {walls}
+          <div className="hunting-pac hunting-pac--player" style={pacBox(koalaCell)}>
+            <span className="hunting-pac-pointer" aria-hidden="true" />
+            <img src={koalaSprite.src} alt={koalaSprite.alt} />
           </div>
-        )}
+          {food && (
+            <div className="hunting-pac" style={pacBox(foodCell)}>
+              <img src={food.src} alt={food.alt} />
+            </div>
+          )}
+        </div>
       </div>
+      <aside className="hunting-list" aria-label="To Buy List">
+        <h2 className="hunting-list-title">To Buy List:</h2>
+        <ul className="hunting-list-items">
+          {HUNTING_FOODS.map((item, index) => {
+            const eaten = index < foodIndex
+            return (
+              <li
+                key={item.id}
+                className={`hunting-list-item${eaten ? ' hunting-list-item--eaten' : ''}`}
+              >
+                {eaten ? <s>{item.alt}</s> : item.alt}
+              </li>
+            )
+          })}
+        </ul>
+      </aside>
     </div>
   )
 }

@@ -21,6 +21,7 @@ const VERSIONED = [
   '/sprites/hunting/xlb.png?v=alpha',
   '/sprites/hunting/popcorn-chicken.png?v=alpha',
   '/sprites/hunting/skewers.png?v=alpha',
+  '/sprites/hunting/grilled-oyster.png?v=alpha',
 ]
 
 const EXTRA = [
