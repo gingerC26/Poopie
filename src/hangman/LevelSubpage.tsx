@@ -1,7 +1,4 @@
 import { assetUrl } from './assetUrl'
-import Gallery from '../pages/Gallery'
-import Games from '../pages/Games'
-import Scene from '../pages/Scene'
 import CarefulGame from './CarefulGame'
 import ArcadeGame from './ArcadeGame'
 import HuntingGame from './HuntingGame'
@@ -27,10 +24,6 @@ export default function LevelSubpage({ level, onWin }: Props) {
       />
     )
   }
-  if (level.page === 'gallery') return <Gallery />
-  if (level.page === 'spline') return <Scene />
-  if (level.page === 'games') return <Games />
-
   const isTea = level.word === 'TWENTY SECONDS'
   const isHunting = level.word === 'HUNTING'
   const isMemory = level.word === 'MEMORY'

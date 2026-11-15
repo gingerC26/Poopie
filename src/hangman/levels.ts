@@ -1,9 +1,6 @@
-export type LevelPage = 'note' | 'gallery' | 'spline' | 'games'
-
 export type Level = {
   id: string
   word: string
-  page: LevelPage
   background?: string
   note?: { title: string; body: string }
 }
@@ -15,7 +12,6 @@ export const LEVELS: Level[] = [
   {
     id: '1',
     word: 'CAREFUL',
-    page: 'note',
     background: '/backgrounds/careful.jpg',
     note: {
       title: 'Careful',
@@ -25,7 +21,6 @@ export const LEVELS: Level[] = [
   {
     id: '2',
     word: 'TWENTY SECONDS',
-    page: 'note',
     background: '/backgrounds/twenty-seconds.jpg',
     note: {
       title: 'Twenty Seconds',
@@ -35,7 +30,6 @@ export const LEVELS: Level[] = [
   {
     id: '3',
     word: 'HUNTING',
-    page: 'note',
     background: '/backgrounds/hunting.jpg?v=notext',
     note: {
       title: 'Hunting',
@@ -45,7 +39,6 @@ export const LEVELS: Level[] = [
   {
     id: '4',
     word: 'MEMORY',
-    page: 'note',
     background: '/backgrounds/memory.jpg?v=night2',
     note: {
       title: 'Memory',
@@ -55,7 +48,6 @@ export const LEVELS: Level[] = [
   {
     id: '5',
     word: 'ARCADE',
-    page: 'note',
     background: '/backgrounds/arcade.jpg?v=notext',
     note: {
       title: 'Arcade',
@@ -65,7 +57,6 @@ export const LEVELS: Level[] = [
   {
     id: '6',
     word: 'PASSWORD',
-    page: 'note',
     background: '/backgrounds/password.jpg',
     note: {
       title: 'Password',

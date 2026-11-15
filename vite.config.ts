@@ -10,7 +10,6 @@ const base =
 export default defineConfig({
   base,
   plugins: [react()],
-  assetsInclude: ['**/*.splinecode'],
   test: {
     environment: 'jsdom',
     setupFiles: './src/test/setup.ts',

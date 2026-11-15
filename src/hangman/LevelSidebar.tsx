@@ -77,7 +77,7 @@ export default function LevelSidebar({
                   {index + 1}. {name}
                 </span>
                 <span className="level-trail">
-                  {isWon && (
+                  {isWon && !closed && (
                     <span className="level-trophy" title="Mini-game cleared">
                       <img
                         className="level-trophy-icon"

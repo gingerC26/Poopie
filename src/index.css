@@ -556,8 +556,7 @@ h2 {
   opacity: 1;
 }
 
-.subpage,
-.page {
+.subpage {
   width: min(960px, 100%);
   margin: 0 auto;
   display: grid;
@@ -2650,68 +2649,6 @@ h2 {
   border-right: 2.5px solid #e8a0b8;
   border-bottom: 2.5px solid #e8a0b8;
   transform: rotate(45deg);
-}
-
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1rem;
-}
-
-.card {
-  display: grid;
-  gap: 0.5rem;
-  padding: 1.15rem;
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  background: #fff;
-}
-
-.hint {
-  color: var(--muted);
-  font-size: 0.92rem;
-}
-
-.spline-frame {
-  height: min(64vh, 560px);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  overflow: hidden;
-  background: #fff6fa;
-}
-
-.placeholder {
-  height: 100%;
-  display: grid;
-  place-content: center;
-  gap: 0.5rem;
-  padding: 1.5rem;
-  text-align: center;
-}
-
-.gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 0.75rem;
-}
-
-.gallery-slot {
-  aspect-ratio: 1;
-  border-radius: 12px;
-  border: 1px dashed var(--border);
-  background: #fff;
-  color: var(--muted);
-  display: grid;
-  place-items: center;
-  font-size: 0.85rem;
-}
-
-code {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.86em;
-  padding: 0.1em 0.35em;
-  border-radius: 4px;
-  background: var(--bg-elev);
 }
 
 @media (max-width: 800px) {
