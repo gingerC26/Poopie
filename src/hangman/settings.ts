@@ -3,8 +3,8 @@
 //******************** */
 
 /** Hourglass countdown after a guess starts a round. */
-export const COOLDOWN_MS = 60 * 60 * 1000
-// default: 60 * 60 * 1000 (1 hour)
+export const COOLDOWN_MS = 30 * 60 * 1000
+// default: 30 * 60 * 1000 (30 minutes)
 
 /** Show the Clear win records button in the levels list. */
 export const CLEAR_WIN_RECORDS_BUTTON = false

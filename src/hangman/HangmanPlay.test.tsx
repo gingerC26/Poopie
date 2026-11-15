@@ -9,7 +9,7 @@ describe('HangmanPlay', () => {
   it('shows empty slots and the ready prompt', () => {
     render(<HangmanPlay game={mockGame()} />)
     expect(screen.getByLabelText('Phrase in progress')).toBeInTheDocument()
-    expect(screen.getByText('One guess starts the round and the 1-hour wait.')).toBeInTheDocument()
+    expect(screen.getByText('One guess starts the round and the 30-minute wait.')).toBeInTheDocument()
     expect(screen.getByRole('img', { name: /Hangman stage 0 of 7/ })).toBeInTheDocument()
   })
 

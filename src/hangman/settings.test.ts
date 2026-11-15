@@ -9,8 +9,8 @@ import {
 } from './settings'
 
 describe('settings', () => {
-  it('keeps the hourglass cooldown at one hour', () => {
-    expect(COOLDOWN_MS).toBe(60 * 60 * 1000)
+  it('keeps the hourglass cooldown at thirty minutes', () => {
+    expect(COOLDOWN_MS).toBe(30 * 60 * 1000)
   })
 
   it('hides the Clear win records button', () => {

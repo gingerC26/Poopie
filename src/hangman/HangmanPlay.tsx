@@ -4,7 +4,7 @@ import Keyboard from './Keyboard'
 import type { HangmanState } from './useHangman'
 
 const LOSE_LINES = [
-  'The letters ran off to get snacks. No spoilers — see you in an hour.',
+  'The letters ran off to get snacks. No spoilers — see you in 30 minutes.',
   'Nice try. The answer is napping under the hourglass.',
   'Denied. The stick figure took a vow of silence.',
   'That round’s toast. Come back when the sand finishes gossiping.',
@@ -51,12 +51,12 @@ export default function HangmanPlay({ game }: Props) {
       : status === 'lost'
         ? loseLine
         : status === 'cooldown'
-          ? 'The hourglass is still running. One round every hour.'
+          ? 'The hourglass is still running. One round every 30 minutes.'
           : status === 'busy'
             ? `Finish your current round on level ${round?.levelId} first.`
             : status === 'playing'
               ? `${left} miss${left === 1 ? '' : 'es'} left.`
-              : 'One guess starts the round and the 1-hour wait.'
+              : 'One guess starts the round and the 30-minute wait.'
 
   return (
     <div className="hangman">
