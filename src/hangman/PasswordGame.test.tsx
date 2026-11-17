@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
+import { LOCKER_PHOTOS } from './lockerPhotos'
 import PasswordGame from './PasswordGame'
 
 describe('PasswordGame', () => {
@@ -210,10 +211,10 @@ describe('PasswordGame', () => {
 
     const photos = [...document.querySelectorAll('.locker-thrown-photo img')] as HTMLImageElement[]
     expect(photos.map((img) => img.getAttribute('src'))).toEqual([
-      '/sprites/password/photos/1.jpg',
-      '/sprites/password/photos/2.jpg',
-      '/sprites/password/photos/3.jpg',
-      '/sprites/password/photos/1.jpg',
+      LOCKER_PHOTOS[0],
+      LOCKER_PHOTOS[1],
+      LOCKER_PHOTOS[2],
+      LOCKER_PHOTOS[3],
     ])
 
     const card = document.querySelector('.locker-thrown-photo') as HTMLElement

@@ -10,16 +10,20 @@ function publicUrl(path: string) {
   return assetUrl(`/sprites/password/photos/${file}`)
 }
 
+function fileName(path: string) {
+  return path.split('/').pop() ?? path
+}
+
 const discovered = Object.keys(photoModules)
-  .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
+  .sort((a, b) => fileName(b).localeCompare(fileName(a), undefined, { numeric: true }))
   .map(publicUrl)
 
-/** Drop photos into `public/sprites/password/photos`. Names sort numerically (1.jpg, 2.jpg, …). */
+/** Drop photos into `public/sprites/password/photos`. Names sort reverse-alphabetically. */
 export const LOCKER_PHOTOS =
   discovered.length > 0
     ? discovered
     : [
-        assetUrl('/sprites/password/photos/1.jpg'),
-        assetUrl('/sprites/password/photos/2.jpg'),
         assetUrl('/sprites/password/photos/3.jpg'),
+        assetUrl('/sprites/password/photos/2.jpg'),
+        assetUrl('/sprites/password/photos/1.jpg'),
       ]

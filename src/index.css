@@ -840,7 +840,7 @@ h2 {
 .locker-thrown-photo {
   position: absolute;
   z-index: 33;
-  width: 16.5rem;
+  width: 17.45rem;
   aspect-ratio: 4 / 3;
   pointer-events: none;
   animation: locker-photo-throw 1.2s cubic-bezier(0.18, 0.82, 0.22, 1.04) forwards;

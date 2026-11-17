@@ -64,7 +64,7 @@ describe('LevelSidebar', () => {
     expect(onToggle).toHaveBeenCalled()
   })
 
-  it('disables Password and shows a tool icon while the level is closed', async () => {
+  it('masks locked Password and still lets it be selected', async () => {
     const onSelect = vi.fn()
     const user = userEvent.setup()
     render(
@@ -79,14 +79,9 @@ describe('LevelSidebar', () => {
       />,
     )
     const password = screen.getByRole('button', { name: /6\. \?+/ })
-    expect(password).toBeDisabled()
-    expect(password).toHaveClass('level-btn--closed')
-    expect(password.querySelector('.level-trophy-icon')).toHaveAttribute(
-      'src',
-      '/icons/tool.png?v=ref',
-    )
-    expect(password.querySelector('.level-go')).toBeNull()
+    expect(password).toBeEnabled()
+    expect(password).not.toHaveClass('level-btn--closed')
     await user.click(password)
-    expect(onSelect).not.toHaveBeenCalled()
+    expect(onSelect).toHaveBeenCalledWith('6')
   })
 })

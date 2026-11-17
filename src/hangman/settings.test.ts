@@ -17,8 +17,8 @@ describe('settings', () => {
     expect(CLEAR_WIN_RECORDS_BUTTON).toBe(false)
   })
 
-  it('keeps Password under maintenance', () => {
-    expect(PASSWORD_LEVEL_ENABLED).toBe(false)
+  it('keeps Password playable', () => {
+    expect(PASSWORD_LEVEL_ENABLED).toBe(true)
   })
 
   it('keeps the spill reset at five seconds', () => {

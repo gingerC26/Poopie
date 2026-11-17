@@ -60,7 +60,7 @@ export const LEVELS: Level[] = [
     background: '/backgrounds/password.jpg',
     note: {
       title: 'Password',
-      body: 'Open the right locker.',
+      body: 'Do you still remember the password?',
     },
   },
 ]

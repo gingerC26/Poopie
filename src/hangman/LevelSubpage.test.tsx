@@ -56,8 +56,8 @@ describe('LevelSubpage', () => {
 
     rerender(<LevelSubpage level={LEVELS[5]} />)
     expect(screen.getByRole('heading', { name: 'Password' })).toBeInTheDocument()
-    expect(screen.getByText('Open the right locker.')).toBeInTheDocument()
-    expect(document.querySelector('.password-scene')).toBeNull()
-    expect(screen.queryByRole('button', { name: 'Open locker 11' })).not.toBeInTheDocument()
+    expect(screen.getByText('Do you still remember the password?')).toBeInTheDocument()
+    expect(document.querySelector('.password-scene')).toBeTruthy()
+    expect(screen.getByRole('button', { name: 'Open locker 11' })).toBeInTheDocument()
   })
 })

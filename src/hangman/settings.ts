@@ -47,8 +47,8 @@ export const TEA_NOTICE_LIMIT = 3
 //******************** */
 
 /** Play the locker mini-game. Off shows Password as under maintenance. */
-export const PASSWORD_LEVEL_ENABLED = false
-// default: false
+export const PASSWORD_LEVEL_ENABLED = true
+// default: true
 
 /** How many digits the locker PIN holds. */
 export const LOCKER_PIN_LENGTH = 6
@@ -58,7 +58,7 @@ export const LOCKER_PIN_LENGTH = 6
 export const LOCKER_PIN = '030226'
 // default: 030226
 
-/** Folder for locker-camera photos. Drop jpg/png/webp here (1.jpg, 2.jpg, …). */
+/** Folder for locker-camera photos. Drop jpg/png/webp here; filenames sort reverse-alphabetically. */
 export const LOCKER_PHOTOS_DIR = 'public/sprites/password/photos'
 // default: public/sprites/password/photos
 
